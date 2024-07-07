@@ -1,0 +1,18 @@
+.profile-data-card {
+    width: 500px;
+    height: 500px;
+    margin: auto;
+}
+
+.profile-data-form {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+    height: 500px;
+}
+
+.edit-profile-button {
+    margin-top: 20px;
+}

@@ -1,0 +1,44 @@
+.popup-wrapper {
+
+    position: absolute;
+    min-height: 91.9vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+    width: 100%;
+    visibility: hidden;
+
+}
+
+.visible-popup {
+    position: absolute;
+    min-height: 91.9vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+    width: 100%;
+    visibility: visible;
+}
+
+.delete-popup {
+    position: absolute;
+    margin: auto;
+    width: 300px;
+    height: 130px;
+    padding: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.yes-button {
+    width: 60px;
+}
+
+.no-button {
+    width: 60px;
+}

@@ -1,0 +1,69 @@
+.offer-details-page {
+    display: flex;
+    width: 1300px;
+    flex-direction: column;
+    align-content: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+/* .photo-container {
+  border: solid 1px;
+  width: 500px;
+  height: 300px;
+  margin-left: 30px;
+  float: right;
+} */
+
+.offer-details {
+    width: 1300px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+
+}
+
+.offer-title {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.offer-characteristics {
+    width: 1300px;
+    display: flex;
+    justify-content: space-evenly;
+    align-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.offer-specs {
+    font-size: 20px;
+}
+
+/* .right-positioned-specs {
+  position: relative;
+  left: 190px;
+  top: 10px;
+} */
+
+.offer-description-li {
+    width: 900px;
+}
+
+.offer-description-page {
+    width: 100%;
+    font-size: 20px;
+    margin: 30px;
+}
+
+.property-photo {
+    width: 500px;
+    height: 300px;
+}
