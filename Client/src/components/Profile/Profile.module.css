@@ -1,0 +1,10 @@
+.profile-wrapper{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    min-height: 91.9vh;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    align-items: center;
+}

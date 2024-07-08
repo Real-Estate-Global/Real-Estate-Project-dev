@@ -1,0 +1,27 @@
+.add-new-offer-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 500px;
+    height: 530px;
+  }
+
+.create-offer-page {
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+    position: relative;
+    min-height: 91.9vh;
+}
+
+.add-new-offer-form {
+    width: 500px;
+    height: 500px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    row-gap: 10px;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+  }

@@ -1,0 +1,86 @@
+.create-new-offer-wrapper {
+  display: flex;
+  align-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 600px;
+  position: relative;
+  min-height: 91.9vh;
+}
+
+.create-new-offer-card {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  height: 550px;
+  width: 700px;
+  margin-bottom: 3.5rem;
+
+}
+.edit-offer-form-title {
+  font-size: 2.5rem;
+  position: absolute;
+  top: 30px;
+}
+
+.edit-new-offer-form {
+  /* width: 500px;
+  height: 500px;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  row-gap: 10px;
+  align-content: center;
+  justify-content: center;
+  align-items: center; */
+  width: 700px;
+  height: 650px;
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  row-gap: 10px;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  margin-top: 60px;
+}
+
+
+.edit-offer-input {
+  width: 253.7px;
+}
+
+.edit-offer-input-textarea {
+  margin-bottom: 12px;
+  width: 253.7px;
+  height: 80px;
+}
+
+.edit-offer-button {
+  margin-top: 30px;
+
+}
+
+.left-half {
+  /* border: solid 1px; */
+  width: 260px;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+.right-half {
+  /* border: solid 1px; */
+  width: 260px;
+  display: flex;
+  flex-wrap: wrap;
+
+}
+
+.row {
+  display: flex;
+  column-gap: 50px;
+}

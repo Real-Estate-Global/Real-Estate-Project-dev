@@ -1,0 +1,22 @@
+.offer-list-title {
+  display: block;
+  text-align: center;
+  margin-top: 30px;
+  font-size: 30px;
+}
+
+.best-offers-list {
+  margin-bottom: 70px;
+  display: flex;
+  column-gap: 40px;
+  row-gap: 40px;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  padding-top: 30px;
+  width: calc(80vw);
+}
+
+.offer-list-wrapper {
+  display: flex;
+  justify-content: center;
+}

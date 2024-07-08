@@ -1,0 +1,54 @@
+.signup-form-wrapper {
+    display: flex;
+    align-content: center;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+    height: 600px;
+    position: relative;
+    min-height: 91.9vh;
+}
+
+.signup-form-card {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    width: 500px;
+    height: 420px;
+    margin-bottom: 3.5rem;
+    flex-wrap: wrap;
+}
+
+.signup-form {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    width: 500px;
+    height: 420px;
+    margin: auto;
+    column-gap: 60px;
+    flex-direction: column;
+    margin-top: 90px;
+
+}
+
+.registration-input {
+    margin-bottom: 12px;
+    width: 253.7px;
+}
+
+.signup-title {
+    position: absolute;
+    top: 15px;
+    margin-top: 10px;
+    text-align: center;
+    width: 500px;
+}
+
+.signup-button {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    width: 253.7px;
+}
