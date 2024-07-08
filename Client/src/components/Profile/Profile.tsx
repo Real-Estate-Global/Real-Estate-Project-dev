@@ -7,7 +7,7 @@ import ProfileDataInfoCard from "../ProfileDataInfoCard/ProfileDataInfoCard"
 export default function Profile() {
     const { isAuthenticated, token } = useContext(AuthContext)
     const [profileData, setProfileData] = useState({})
-    
+
 
     useEffect(() => {
         if (isAuthenticated) {

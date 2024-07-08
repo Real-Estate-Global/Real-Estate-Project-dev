@@ -6,7 +6,6 @@ import { getProperties } from '../services/propertyService'
 import ErrorContext from '../contexts/errorContext'
 import { useState, useContext } from 'react'
 
-
 export default function HomePage() {
     const [properties, setProperties] = useState([])
     const {setLoading} = useContext(LoaderContext)

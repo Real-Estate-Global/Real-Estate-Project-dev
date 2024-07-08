@@ -4,9 +4,9 @@ import Button from "react-bootstrap/esm/Button"
 import Card from "react-bootstrap/Card"
 import styles from './SignUp.module.css'
 import { Link } from "react-router-dom"
-import { signup } from "../../services/authService.js";
-import LoaderContext from "../../contexts/loaderContext.js";
-import AuthContext from "../../contexts/authContext.js"
+import { signup } from "../../services/authService";
+import LoaderContext from "../../contexts/loaderContext";
+import AuthContext from "../../contexts/authContext"
 
 // User::
 // :userId*

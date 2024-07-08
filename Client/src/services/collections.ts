@@ -1,5 +1,5 @@
 //import { getProfileData } from "./authService";
-import {getAuthorizationToken} from "./utils.js";
+import {getAuthorizationToken} from "./utils";
 
 const baseUrl = "http://localhost:3000/protected/myOffers"
 
