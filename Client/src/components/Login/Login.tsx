@@ -1,6 +1,6 @@
 // import { useState } from "react"
 // import { login } from "../services/loginService"
-import { useContext } from "react"
+import React, { useContext } from "react"
 import useForm from "../../hooks/useForm"
 import AuthContext from "../../contexts/authContext"
 import Card from 'react-bootstrap/Card';
@@ -8,9 +8,9 @@ import Button from 'react-bootstrap/Button';
 import styles from './Login.module.css'
 import { Link } from "react-router-dom";
 
-const LoginFormKeys = {
-    Email: 'email',
-    Password: 'password',
+export enum LoginFormKeys {
+    Email = 'email',
+    Password = 'password',
 }
 
 export default function Login() {
