@@ -1,11 +1,11 @@
 .offer-details-page {
-    display: flex;
-    width: 1300px;
-    flex-direction: column;
-    align-content: center;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  width: 1300px;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
 }
 
 /* .photo-container {
@@ -17,34 +17,33 @@
 } */
 
 .offer-details {
-    width: 1300px;
-    height: 500px;
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-
+  width: 1300px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .offer-title {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 30px;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 .offer-characteristics {
-    width: 1300px;
-    display: flex;
-    justify-content: space-evenly;
-    align-content: center;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: flex-start;
+  width: 1300px;
+  display: flex;
+  justify-content: space-evenly;
+  align-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 
 .offer-specs {
-    font-size: 20px;
+  font-size: 20px;
 }
 
 /* .right-positioned-specs {
@@ -54,16 +53,16 @@
 } */
 
 .offer-description-li {
-    width: 900px;
+  width: 900px;
 }
 
 .offer-description-page {
-    width: 100%;
-    font-size: 20px;
-    margin: 30px;
+  width: 100%;
+  font-size: 20px;
+  margin: 30px;
 }
 
 .property-photo {
-    width: 500px;
-    height: 300px;
+  width: 500px;
+  height: 300px;
 }

@@ -124,7 +124,6 @@ body {
 .nav-link {
   text-decoration: none;
   color: white;
-
 }
 
 #search-form-title {
@@ -160,7 +159,6 @@ body {
   backdrop-filter: blur(10px);
 }
 
-
 .navigation {
   background-color: #6385a8;
   height: 40px;
@@ -184,7 +182,6 @@ body {
 .nav-link {
   text-decoration: none;
   color: white;
-
 }
 
 #guest-navigation {

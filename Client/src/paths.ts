@@ -1,8 +1,8 @@
 const Path = {
-    Home: '/',
-    Logout:'/logout',
-    MyOffers: '/myoffers',
-    CreateOffer: '/createoffer'
-}
+  Home: "/",
+  Logout: "/logout",
+  MyOffers: "/myoffers",
+  CreateOffer: "/createoffer",
+};
 
-export default Path
+export default Path;
