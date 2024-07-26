@@ -1,3 +1,3 @@
 export const getAuthorizationToken = (token: string) => {
-    return `Bearer ${token}`
-}
+  return `Bearer ${token}`;
+};

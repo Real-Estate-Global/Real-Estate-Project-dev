@@ -1,28 +1,28 @@
-import { useState } from "react"
+import { ChangeEvent, FormEventHandler, useState } from "react";
 
-export default function useForm(submitHandler, initialValues) {
-    const [values, setValues] = useState(initialValues)
+export default function useForm(submitHandler: (values: any) => void, initialValues: any) {
+  const [values, setValues] = useState(initialValues);
 
-    const onChange = (e) => {
-        setValues(state => ({
-            ...state,
-            [e.target.name]: e.target.value,
-        }))
-    }
+  const onChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | any >) => {
+    setValues((state: any) => ({
+      ...state,
+      [e.target.name]: e.target.value,
+    }));
+  };
 
-    const updateValues = (newValues) => {
-        setValues(newValues)
-    }
+  const updateValues = (newValues: any) => {
+    setValues(newValues);
+  };
 
-    const onSubmit = (e) => {
-        e.preventDefault()
-        submitHandler(values)
-    }
+  const onSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+    e.preventDefault();
+    submitHandler(values);
+  };
 
-    return ({
-        values,
-        onChange,
-        updateValues,
-        onSubmit
-    })
+  return {
+    values,
+    onChange,
+    updateValues,
+    onSubmit,
+  };
 }

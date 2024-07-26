@@ -1,21 +1,40 @@
-import { useContext, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import { logout } from "../services/authService"
-import AuthContext from "../contexts/authContext"
-import Path from "../paths"
+import { useCallback, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { Path } from "../paths";
+import { useLogoutMutation } from "../store/api/auth";
+import { useAppDispatch } from "../store/hooks";
+import { authSliceActions, authSliceSelectors } from "../store/slices/auth";
+import { useSelector } from "react-redux";
 
-export default function Logout() {
-    const {token, setAuth} = useContext(AuthContext)
-    const navigate = useNavigate()
-    const logoutHandler = async () => {
-        logout(token)
-            .then(setAuth({}))
-            .then(localStorage.removeItem('auth')) // call this if 403 on any request
-            .then(navigate(Path.Home))
+export const Logout = () => {
+  const [logout] = useLogoutMutation();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useSelector(authSliceSelectors.isAuthenticated);
+
+  const setAuth = useCallback(
+    (authToken: string) => {
+      dispatch(authSliceActions.setAuth(authToken));
+    },
+    [dispatch]
+  );
+
+  // TODO: add loader and error hanlding
+  const logoutHandler = useCallback(async () => {
+    logout()
+      .then(() => {
+        // TODO : error handling on fail
+        setAuth("");
+        localStorage.removeItem("auth");
+        navigate(Path.Home);
+      })
+      .then();
+  }, []);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      logoutHandler();
     }
-
-    useEffect(() => {
-        logoutHandler()
-    }, [])
-    return null
-}
+  }, [isAuthenticated]);
+  return null;
+};

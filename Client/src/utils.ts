@@ -1,4 +1,3 @@
-export function onlyUnique(value, index, array) {
-    return array.indexOf(value) === index;
-  }
-  
+export function onlyUnique(value: any, index: number, array: any[]) {
+  return array.indexOf(value) === index;
+}
