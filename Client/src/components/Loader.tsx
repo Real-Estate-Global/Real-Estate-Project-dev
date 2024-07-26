@@ -1,10 +1,11 @@
 import Spinner from "react-bootstrap/Spinner";
-import { useSelector } from "react-redux";
 import { loadingSliceSelectors } from "../store/slices/loading";
+import { useAppSelector } from "../store/hooks";
 
 export const Loader = () => {
-  const loading = useSelector(loadingSliceSelectors.isLoading);
+  const loading = useAppSelector(loadingSliceSelectors.isLoading);
 
+  console.log('loading', loading)
   if (!loading) {
     return null;
   }

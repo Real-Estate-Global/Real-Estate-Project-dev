@@ -45,29 +45,36 @@ export const MyOffers = () => {
   useEffect(() => {
     try {
       setLoading(true);
-      getMyOffers().then((result) => {
-        // TODO: error handling on fetch
-        if (result.data) {
-          setMyOffers(result.data);
-        }
-      });
+      getMyOffers()
+        .then((result) => {
+          // TODO: error handling on fetch
+          if (result.data) {
+            setMyOffers(result.data);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } catch (e: any) {
       setError({ hasError: true, message: e.message });
-    } finally {
-      setLoading(false);
     }
   }, [getMyOffers, setLoading, setError, setMyOffers]);
 
   const onConfirmDelete = useCallback(async () => {
     try {
       if (confirmDeletePopupState.id) {
+        setLoading(true);
         await deleteOffer(confirmDeletePopupState.id);
-        getMyOffers().then((result) => {
-          // TODO: error handling on fetch
-          if (result.data) {
-            setMyOffers(result.data);
-          }
-        });
+        getMyOffers()
+          .then((result) => {
+            // TODO: error handling on fetch
+            if (result.data) {
+              setMyOffers(result.data);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       }
     } catch (error) {
       console.log(error);
@@ -75,6 +82,7 @@ export const MyOffers = () => {
     setConfirmDeletePoupState({ show: false, id: null });
   }, [
     confirmDeletePopupState,
+    setLoading,
     deleteOffer,
     getMyOffers,
     setConfirmDeletePoupState,

@@ -34,11 +34,13 @@ export const CreateOffer = () => {
   const addNewOfferHandler = async (values: OfferType) => {
     try {
       setLoading(true);
-      await addNewOffer(values).then(navigate(Path.MyOffers) as any);
+      await addNewOffer(values)
+        .then(navigate(Path.MyOffers) as any)
+        .finally(() => {
+          setLoading(false);
+        });
     } catch (e: any) {
       setError({ hasError: true, message: e.message });
-    } finally {
-      setLoading(false);
     }
   };
 

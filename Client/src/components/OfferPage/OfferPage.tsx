@@ -31,15 +31,18 @@ export const PublicOfferPage = () => {
   useEffect(() => {
     if (offerId) {
       try {
-        getPublicOffer(offerId).then((result) => {
-          if (result.data) {
-            setOffer(result.data);
-          }
-        });
+        setLoading(true);
+        getPublicOffer(offerId)
+          .then((result) => {
+            if (result.data) {
+              setOffer(result.data);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } catch (e: any) {
         setError({ hasError: true, message: e.message });
-      } finally {
-        setLoading(false);
       }
     }
   }, [offerId, setOffer, setError, setLoading]);

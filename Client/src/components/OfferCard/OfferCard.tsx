@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/esm/Button";
+import { useNavigate } from "react-router-dom";
+import { Card } from "primereact/card";
+import { Button } from "primereact/button";
 import styles from "./OfferCard.module.css";
 import { OfferType } from "../../types/OfferType";
 import { useCallback } from "react";
+import { Path } from "../../paths";
 
 type Props = {
   offer: OfferType;
@@ -19,6 +20,7 @@ export const OfferCard: React.FC<Props> = ({
   editEnabled,
   setConfirmDeletePoupState,
 }) => {
+  const navigate = useNavigate();
   const {
     visited,
     location,
@@ -41,8 +43,7 @@ export const OfferCard: React.FC<Props> = ({
 
   return (
     <>
-      <Card border="secondary" className={styles["best-offers"]}>
-        <h2 className={styles["offer-title"]}>{propertyType}</h2>
+      <Card title={propertyType} className={styles["best-offers"]}>
         <ul className={styles["offer-characteristics"]}>
           <li className={styles["right-positioned-specs"]}>
             {location}, {district}
@@ -59,24 +60,24 @@ export const OfferCard: React.FC<Props> = ({
           <li className={styles["short-offer-description-li"]}>
             <p className={styles["short-offer-description"]}>{description}</p>
           </li>
-          <Link
-            className={styles["link-to-offer"]}
-            to={`${editEnabled ? "/secure" : ""}/properties/${_id}`}
-          >
-            Виж повече
-          </Link>
+          <Button
+            label="Виж повече"
+            link
+            onClick={() => {
+              navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
+            }}
+          />
           <li
             className={styles["right-positioned-specs"]}
           >{`Visited: ${visited}`}</li>
           {editEnabled && (
-            <Button className={styles["btn-edit-offer"]}>
-              <Link
-                className={styles["link-to-edit-offer"]}
-                to={`/edit/${_id}`}
-              >
-                Редактирай обява
-              </Link>
-            </Button>
+            <Button
+              label="Редактирай"
+              link
+              onClick={() => {
+                navigate(`/edit/${_id}`);
+              }}
+            />
           )}
           {editEnabled && (
             <Button

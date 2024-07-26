@@ -47,14 +47,17 @@ export const EditOfferForm = () => {
   useEffect(() => {
     if (_id) {
       setLoading(true);
-      getMyOffer(_id).then((result) => {
-        if (result.data) {
-          setValues(result.data);
-          setLoading(false);
-        }
+      getMyOffer(_id)
+        .then((result) => {
+          if (result.data) {
+            setValues(result.data);
+          }
 
-        // TODO: error handling fetch fail?
-      });
+          // TODO: error handling fetch fail?
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [_id, setValues, setLoading]);
 

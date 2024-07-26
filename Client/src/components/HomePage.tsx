@@ -30,16 +30,18 @@ export const HomePage = () => {
   useEffect(() => {
     try {
       setLoading(true);
-      getPublicOffers(null).then((result) => {
-        // TODO: error handling on fetch
-        if (result.data) {
-          setOffers(result.data);
-        }
-      });
+      getPublicOffers(null)
+        .then((result) => {
+          // TODO: error handling on fetch
+          if (result.data) {
+            setOffers(result.data);
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     } catch (e: any) {
       setError({ hasError: true, message: e.message });
-    } finally {
-      setLoading(false);
     }
   }, [getPublicOffers, setLoading, setError, setOffers]);
 
@@ -47,16 +49,18 @@ export const HomePage = () => {
     async (filters: FiltersType) => {
       try {
         setLoading(true);
-        getPublicOffers(filters).then((result) => {
-          // TODO: error handling on fetch
-          if (result.data) {
-            setOffers(result.data);
-          }
-        });
+        getPublicOffers(filters)
+          .then((result) => {
+            // TODO: error handling on fetch
+            if (result.data) {
+              setOffers(result.data);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } catch (e: any) {
         setError({ hasError: true, message: e.message });
-      } finally {
-        setLoading(false);
       }
     },
     [setLoading, setError, getPublicOffers, setOffers]
@@ -69,4 +73,4 @@ export const HomePage = () => {
       <HomeOffersList offers={offers} />
     </>
   );
-}
+};

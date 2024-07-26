@@ -32,15 +32,17 @@ export const MyOfferPage = () => {
   useEffect(() => {
     if (_id && isAuthenticated) {
       try {
-        getMyOffer(_id).then((result) => {
-          if (result.data) {
-            setMyProperty(result.data);
-          }
-        });
+        getMyOffer(_id)
+          .then((result) => {
+            if (result.data) {
+              setMyProperty(result.data);
+            }
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } catch (e: any) {
         setError({ hasError: true, message: e.message });
-      } finally {
-        setLoading(false);
       }
     }
   }, [_id, isAuthenticated]);

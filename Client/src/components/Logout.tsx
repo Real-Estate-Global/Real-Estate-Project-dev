@@ -28,7 +28,6 @@ export const Logout = () => {
         localStorage.removeItem("auth");
         navigate(Path.Home);
       })
-      .then();
   }, []);
 
   useEffect(() => {
