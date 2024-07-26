@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Card } from "primereact/card";
 import { Button } from "primereact/button";
-import styles from "./OfferCard.module.css";
 import { OfferType } from "../../types/OfferType";
 import { useCallback } from "react";
 import { Path } from "../../paths";
+import "./OfferCard.module.css"
 
 type Props = {
   offer: OfferType;
@@ -42,34 +42,38 @@ export const OfferCard: React.FC<Props> = ({
   }, [_id, editEnabled, setConfirmDeletePoupState]);
 
   return (
-    <>
-      <Card title={propertyType} className={styles["best-offers"]}>
-        <ul className={styles["offer-characteristics"]}>
-          <li className={styles["right-positioned-specs"]}>
+    <div className="offer-card col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
+      <Card
+        title={propertyType}
+        className="border-1 surface-border surface-card border-round p-0"
+        header={
+          <img
+            src={
+              "https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg"
+            }
+            alt={"image"}
+          ></img>
+        }
+      >
+        <div className="flex justify-content-between mt-3 mb-2">
+          <span className="text-900 font-medium text-xl">
             {location}, {district}
-          </li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{` Цена: ${price} ${currency === "EUR" ? " €" : " лв."}`}</li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Площ: ${area} кв.м.`}</li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Година на строителство: ${yearOfBuilding}`}</li>
-          <li className={styles["short-offer-description-li"]}>
-            <p className={styles["short-offer-description"]}>{description}</p>
-          </li>
+          </span>
+          <span className="text-900 text-xl ml-3">{currency + price}</span>
+        </div>
+        <div className="flex justify-content-between mt-3 mb-2">
+          <span className="text-600">{area} кв.м.</span>
+          <span className="text-600">{yearOfBuilding} г.</span>
+        </div>
+        <div className="flex justify-content-between mt-3 mb-2">
           <Button
+            className="p-0"
             label="Виж повече"
             link
             onClick={() => {
               navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
             }}
           />
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Visited: ${visited}`}</li>
           {editEnabled && (
             <Button
               label="Редактирай"
@@ -79,17 +83,9 @@ export const OfferCard: React.FC<Props> = ({
               }}
             />
           )}
-          {editEnabled && (
-            <Button
-              onClick={onDeleteClick}
-              className={styles["btn-delete-offer"]}
-            >
-              Изтрий обява
-            </Button>
-          )}
-        </ul>
-        <img className={styles["offer-heading-img"]} src={img} />
+          {editEnabled && <Button onClick={onDeleteClick}>Изтрий обява</Button>}
+        </div>
       </Card>
-    </>
+    </div>
   );
 };
