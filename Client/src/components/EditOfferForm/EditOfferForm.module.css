@@ -19,7 +19,6 @@
   height: 550px;
   width: 700px;
   margin-bottom: 3.5rem;
-
 }
 .edit-offer-form-title {
   font-size: 2.5rem;
@@ -49,7 +48,6 @@
   margin-top: 60px;
 }
 
-
 .edit-offer-input {
   width: 253.7px;
 }
@@ -62,7 +60,6 @@
 
 .edit-offer-button {
   margin-top: 30px;
-
 }
 
 .left-half {
@@ -70,14 +67,12 @@
   width: 260px;
   display: flex;
   flex-wrap: wrap;
-
 }
 .right-half {
   /* border: solid 1px; */
   width: 260px;
   display: flex;
   flex-wrap: wrap;
-
 }
 
 .row {
