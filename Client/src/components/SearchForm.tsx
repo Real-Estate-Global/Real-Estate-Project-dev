@@ -1,11 +1,16 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import locations from "../locations";
 import { onlyUnique } from "../utils";
+import { FiltersType } from "../types/FiltersType";
 
-export default function SearchForm({ getHomeOfferList }) {
-  const [values, setValues] = useState({
+type Props = {
+  getHomeOfferList: (values: FiltersType) => void;
+};
+
+export const SearchForm: React.FC<Props> = ({ getHomeOfferList }) => {
+  const [values, setValues] = useState<FiltersType>({
     city: "",
     type: "",
     district: "",
@@ -13,15 +18,15 @@ export default function SearchForm({ getHomeOfferList }) {
     budgetHighest: 0,
   });
 
-  const onChange = (e) => {
+  const onChange = useCallback((e: any) => {
     setValues((state) => ({
       ...state,
       [e.target.name]: e.target.value,
     }));
-  };
-  const onSearch = () => {
+  }, []);
+  const onSearch = useCallback(() => {
     getHomeOfferList(values);
-  };
+  }, [values]);
 
   return (
     <Card border="dark" className={"searchFormDiv"}>
@@ -38,7 +43,7 @@ export default function SearchForm({ getHomeOfferList }) {
 
         <label htmlFor="city"></label>
         <select id="city" name="city" required onChange={onChange}>
-          <option value={null} selected hidden>
+          <option value={undefined} selected hidden>
             Град
           </option>
           {locations
@@ -58,7 +63,7 @@ export default function SearchForm({ getHomeOfferList }) {
           disabled={!values.city}
           onChange={onChange}
         >
-          <option value={null} selected hidden>
+          <option value={undefined} selected hidden>
             Квартал
           </option>
           {locations
@@ -107,4 +112,4 @@ export default function SearchForm({ getHomeOfferList }) {
       </Button>
     </Card>
   );
-}
+};

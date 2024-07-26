@@ -1,10 +1,27 @@
 import { configureStore } from "@reduxjs/toolkit";
+import { authSlice } from "./slices/auth";
+import { loadingSlice } from "./slices/loading";
+import { errorSlice } from "./slices/error";
+import { authApi } from "./api/auth";
+import { privateOffersApi } from "./api/privateOffers";
+import { publicOffersApi } from "./api/publicOffers";
 
 export const makeStore = () => {
   const store = configureStore({
-    reducer: {},
+    reducer: {
+      auth: authSlice.reducer,
+      loading: loadingSlice.reducer,
+      error: errorSlice.reducer,
+      [authApi.reducerPath]: authApi.reducer,
+      [privateOffersApi.reducerPath]: privateOffersApi.reducer,
+      [publicOffersApi.reducerPath]: publicOffersApi.reducer,
+    },
     middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat([]);
+      return getDefaultMiddleware().concat([
+        authApi.middleware,
+        privateOffersApi.middleware,
+        publicOffersApi.middleware,
+      ]);
     },
   });
 

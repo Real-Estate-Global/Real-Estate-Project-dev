@@ -1,18 +1,19 @@
-import { useContext } from "react";
 import useForm from "../../hooks/useForm";
-import AuthContext from "../../contexts/authContext";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
+import { LoginDataType } from "../../types/LoginDataType";
 
 export enum LoginFormKeys {
   Email = "email",
   Password = "password",
 }
 
-export default function Login() {
-  const { loginSubmitHandler } = useContext(AuthContext);
+type Props = {
+    loginSubmitHandler: (values: LoginDataType) => void;
+}
+export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
   const { values, onChange, onSubmit } = useForm(loginSubmitHandler, {
     [LoginFormKeys.Email]: "",
     [LoginFormKeys.Password]: "",

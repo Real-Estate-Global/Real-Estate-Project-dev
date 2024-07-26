@@ -1,57 +1,58 @@
 import useForm from "../../hooks/useForm";
-import { useContext } from "react";
-import AuthContext from "../../contexts/authContext";
 import Button from "react-bootstrap/esm/Button";
 import Card from "react-bootstrap/Card";
 import cities from "../../locations";
 import { onlyUnique } from "../../utils";
 import styles from "./CreateOffer.module.css";
-import LoaderContext from "../../contexts/loaderContext";
-import { addNewOffer } from "../../services/collections";
 import { useNavigate } from "react-router-dom";
-import Path from "../../paths";
-import ErrorContext from "../../contexts/errorContext";
+import { Path } from "../../paths";
+import { useAppDispatch } from "../../store/hooks";
+import { useCallback } from "react";
+import { loadingSliceActions } from "../../store/slices/loading";
+import { errorSliceActions } from "../../store/slices/error";
+import { ErrorType } from "../../types/ErrorType";
+import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
+import { useAddNewOfferMutation } from "../../store/api/privateOffers";
 
-const CreateOfferFormKeys = {
-  PropertyType: "propertyType",
-  Location: "location",
-  District: "district",
-  Rooms: "rooms",
-  Floor: "floor",
-  Price: "price",
-  Currency: "currency",
-  Area: "area",
-  YearOfBuilding: "yearOfBuilding",
-  Description: "description",
-};
+export const CreateOffer = () => {
+  const [addNewOffer] = useAddNewOfferMutation();
+  const dispatch = useAppDispatch();
 
-export default function CreateOffer() {
-  const { token } = useContext(AuthContext);
-  const { setLoading } = useContext(LoaderContext);
-  const { setError } = useContext(ErrorContext);
+  const setLoading = useCallback(
+    (isLoading: boolean) => {
+      dispatch(loadingSliceActions.setLoading(isLoading));
+    },
+    [dispatch]
+  );
+  const setError = useCallback(
+    (error: ErrorType) => {
+      dispatch(errorSliceActions.setError(error));
+    },
+    [dispatch]
+  );
   const navigate = useNavigate();
-  const addNewOfferHandler = async (values) => {
+  const addNewOfferHandler = async (values: OfferType) => {
     try {
-      setLoading({ isLoading: true });
-      await addNewOffer(values, token).then(navigate(Path.MyOffers));
-    } catch (e) {
+      setLoading(true);
+      await addNewOffer(values).then(navigate(Path.MyOffers) as any);
+    } catch (e: any) {
       setError({ hasError: true, message: e.message });
     } finally {
-      setLoading({ isLoading: false });
+      setLoading(false);
     }
   };
 
   const { values, onChange, onSubmit } = useForm(addNewOfferHandler, {
-    [CreateOfferFormKeys.PropertyType]: "Апартамент",
-    [CreateOfferFormKeys.Location]: "",
-    [CreateOfferFormKeys.District]: "",
-    [CreateOfferFormKeys.Rooms]: "",
-    [CreateOfferFormKeys.Floor]: "",
-    [CreateOfferFormKeys.Price]: "",
-    [CreateOfferFormKeys.Currency]: "",
-    [CreateOfferFormKeys.Area]: "",
-    [CreateOfferFormKeys.YearOfBuilding]: "",
-    [CreateOfferFormKeys.Description]: "",
+    [OfferFormDataEnum.PropertyType]: "Апартамент",
+    [OfferFormDataEnum.Location]: "",
+    [OfferFormDataEnum.District]: "",
+    [OfferFormDataEnum.Rooms]: "",
+    [OfferFormDataEnum.Floor]: "",
+    [OfferFormDataEnum.Price]: "",
+    [OfferFormDataEnum.Currency]: "",
+    [OfferFormDataEnum.Area]: "",
+    [OfferFormDataEnum.YearOfBuilding]: "",
+    [OfferFormDataEnum.Description]: "",
   });
 
   return (
@@ -79,7 +80,7 @@ export default function CreateOffer() {
           <div>
             <label htmlFor="location">Град:</label>
             <select id="location" name="location" required onChange={onChange}>
-              <option value={null} selected hidden>
+              <option value={undefined} selected hidden>
                 Град
               </option>
               {cities
@@ -97,15 +98,15 @@ export default function CreateOffer() {
             <select
               id="district"
               name="district"
-              disabled={!values[CreateOfferFormKeys.Location]}
+              disabled={!values[OfferFormDataEnum.Location]}
               onChange={onChange}
             >
-              <option value={null} selected hidden>
+              <option value={undefined} selected hidden>
                 Квартал
               </option>
               {cities
                 .filter(
-                  (city) => city.City === values[CreateOfferFormKeys.Location]
+                  (city) => city.City === values[OfferFormDataEnum.Location]
                 )
                 .map((location) => location.District)
                 .map((district) => (
@@ -123,7 +124,7 @@ export default function CreateOffer() {
               id="rooms"
               name="rooms"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Rooms]}
+              value={values[OfferFormDataEnum.Rooms]}
               min={1}
             />
           </div>
@@ -135,7 +136,7 @@ export default function CreateOffer() {
               id="floor"
               name="floor"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Floor]}
+              value={values[OfferFormDataEnum.Floor]}
               min={-3}
               max={100}
             />
@@ -148,7 +149,7 @@ export default function CreateOffer() {
               id="price"
               name="price"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Price]}
+              value={values[OfferFormDataEnum.Price]}
               min={0}
             />
           </div>
@@ -160,7 +161,7 @@ export default function CreateOffer() {
               id="currency"
               name="currency"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Currency]}
+              value={values[OfferFormDataEnum.Currency]}
             />
           </div>
           <div>
@@ -171,7 +172,7 @@ export default function CreateOffer() {
               id="area"
               name="area"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Area]}
+              value={values[OfferFormDataEnum.Area]}
               min={1}
             />
           </div>
@@ -183,7 +184,7 @@ export default function CreateOffer() {
               id="yearOfBuilding"
               name="yearOfBuilding"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.YearOfBuilding]}
+              value={values[OfferFormDataEnum.YearOfBuilding]}
               min={1900}
               max={2030}
             />
@@ -193,11 +194,10 @@ export default function CreateOffer() {
             <label htmlFor="description">Описание:</label>
             <textarea
               required
-              type="text"
               id="description"
               name="description"
               onChange={onChange}
-              value={values[CreateOfferFormKeys.Description]}
+              value={values[OfferFormDataEnum.Description]}
               minLength={100}
               maxLength={1200}
             />
@@ -209,4 +209,4 @@ export default function CreateOffer() {
       </Card>
     </div>
   );
-}
+};

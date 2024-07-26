@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
-import AuthContext from "../../contexts/authContext";
-import { useContext } from "react";
+import { authSliceSelectors } from "../../store/slices/auth";
+import { useAppSelector } from "../../store/hooks";
 
-export default function Header() {
-  const { isAuthenticated } = useContext(AuthContext);
+export const Header = () => {
+  const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
 
   return (
     <>

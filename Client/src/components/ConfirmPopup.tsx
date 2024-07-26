@@ -2,7 +2,19 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/esm/Button";
 import styles from "./ConfirmPopup.module.css";
 
-export default function ConfirmPopup({ show, text, onConfirm, onCancel }) {
+type Props = {
+  show: boolean;
+  text: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+};
+
+export const ConfirmPopup: React.FC<Props> = ({
+  show,
+  text,
+  onConfirm,
+  onCancel,
+}) => {
   if (!show) {
     return null;
   }
@@ -22,4 +34,4 @@ export default function ConfirmPopup({ show, text, onConfirm, onCancel }) {
       </Card>
     </div>
   );
-}
+};

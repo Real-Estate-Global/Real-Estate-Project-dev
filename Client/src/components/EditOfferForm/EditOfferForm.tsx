@@ -1,80 +1,112 @@
-import { useContext, useEffect, useState } from "react";
-import AuthContext from "../../contexts/authContext";
+import {
+  ChangeEventHandler,
+  FormEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { editMyOffer, getMyOffer } from "../../services/collections";
 import styles from "./EditOfferForm.module.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import LoaderContext from "../../contexts/loaderContext";
-import Path from "../../paths";
-import ErrorContext from "../../contexts/errorContext";
+import { Path } from "../../paths";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import {
+  useEditMyOfferMutation,
+  useGetMyOfferMutation,
+} from "../../store/api/privateOffers";
+import { loadingSliceActions } from "../../store/slices/loading";
+import { errorSliceActions } from "../../store/slices/error";
+import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
+import { ErrorType } from "../../types/ErrorType";
+import { authSliceSelectors } from "../../store/slices/auth";
 
-const EditOfferFormKeys = {
-  Type: "type",
-  Location: "location",
-  District: "district",
-  Rooms: "rooms",
-  Floor: "floor",
-  Price: "price",
-  Currency: "currency",
-  Area: "area",
-  YearOfBuilding: "yearOfBuilding",
-  Description: "description",
-};
-
-export default function EditOfferForm() {
-  const { isAuthenticated, token } = useContext(AuthContext);
-  const [values, setValues] = useState();
-  const { _id } = useParams();
-  const { setLoading } = useContext(LoaderContext);
+export const EditOfferForm = () => {
   // TODO: implement local error handling
-  const { setError } = useContext(ErrorContext);
+  const { _id } = useParams();
   const navigate = useNavigate();
+  const [editMyOffer] = useEditMyOfferMutation();
+  const [getMyOffer] = useGetMyOfferMutation();
+  const dispatch = useAppDispatch();
+  const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
 
-  const editOfferHandler = async (_id, values) => {
-    try {
-      setLoading({ isLoading: true });
-      await editMyOffer(_id, token, values).then(navigate(Path.MyOffers));
-    } catch (e) {
-      setError({ hasError: true, message: e.message });
-    } finally {
-      setLoading({ isLoading: false });
-    }
-  };
+  const [values, setValues] = useState<OfferType | null>();
+  const setLoading = useCallback(
+    (isLoading: boolean) => {
+      dispatch(loadingSliceActions.setLoading(isLoading));
+    },
+    [dispatch]
+  );
+  const setError = useCallback(
+    (error: ErrorType) => {
+      dispatch(errorSliceActions.setError(error));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
-    if (isAuthenticated) {
-      getMyOffer(_id, token).then((result) =>
-        setValues({
-          area: result.area,
-          currency: result.currency,
-          description: result.description,
-          district: result.district,
-          floor: result.floor,
-          location: result.location,
-          price: result.price,
-          propertyType: result.propertyType,
-          rooms: result.rooms,
-        })
-      );
+    if (_id) {
+      setLoading(true);
+      getMyOffer(_id).then((result) => {
+        if (result.data) {
+          setValues(result.data);
+          setLoading(false);
+        }
+
+        // TODO: error handling fetch fail?
+      });
     }
-  }, [isAuthenticated, setValues, token]);
+  }, [_id, setValues, setLoading]);
 
-  const onChange = (e) => {
-    setValues((state) => ({
-      ...state,
-      [e.target.name]: e.target.value,
-    }));
-  };
+  const editOfferHandler = useCallback(
+    async (id: string, values: OfferType) => {
+      try {
+        setLoading(true);
+        await editMyOffer({ id, editOfferData: values }).then(() => {
+          navigate(Path.MyOffers) as any;
+        });
+      } catch (e: any) {
+        setError({ hasError: true, message: e.message });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [editMyOffer, setLoading, setError, navigate]
+  );
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    editOfferHandler(_id, values);
-  };
+  const onChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> =
+    useCallback(
+      (e) => {
+        if (typeof e.target.name === "string") {
+          if (values) {
+            setValues({
+              ...values,
+              [e.target.name as any]: e.target.value as any,
+            });
+          }
+        }
+      },
+      [values]
+    );
+
+  const onSubmit: FormEventHandler<HTMLFormElement> = useCallback(
+    (e) => {
+      e.preventDefault();
+      if (_id && values) {
+        editOfferHandler(_id, values);
+      }
+    },
+    [_id, values]
+  );
 
   if (!values) {
-    return;
+    return null;
   }
+
+  if (!isAuthenticated) {
+    return <div>Login please</div>;
+  }
+
   return (
     <>
       <div className={styles["create-new-offer-wrapper"]}>
@@ -95,7 +127,7 @@ export default function EditOfferForm() {
                     id="type-edit-form"
                     name="propertyType"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Type]}
+                    value={values[OfferFormDataEnum.PropertyType]}
                   />
                 </div>
 
@@ -107,7 +139,7 @@ export default function EditOfferForm() {
                     id="location-edit-form"
                     name="location"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Location]}
+                    value={values[OfferFormDataEnum.Location]}
                   />
                 </div>
 
@@ -119,7 +151,7 @@ export default function EditOfferForm() {
                     id="district-edit-form"
                     name="district"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.District]}
+                    value={values[OfferFormDataEnum.District]}
                   />
                 </div>
 
@@ -131,7 +163,7 @@ export default function EditOfferForm() {
                     id="rooms-edit-form"
                     name="rooms"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Rooms]}
+                    value={values[OfferFormDataEnum.Rooms]}
                   />
                 </div>
 
@@ -143,7 +175,7 @@ export default function EditOfferForm() {
                     id="floor-edit-form"
                     name="floor"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Floor]}
+                    value={values[OfferFormDataEnum.Floor]}
                   />
                 </div>
               </div>
@@ -157,7 +189,7 @@ export default function EditOfferForm() {
                     id="price-edit-form"
                     name="price"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Price]}
+                    value={values[OfferFormDataEnum.Price]}
                   />
                 </div>
 
@@ -169,7 +201,7 @@ export default function EditOfferForm() {
                     id="currency-edit-form"
                     name="currency"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Currency]}
+                    value={values[OfferFormDataEnum.Currency]}
                   />
                 </div>
 
@@ -181,7 +213,7 @@ export default function EditOfferForm() {
                     id="area-edit-form"
                     name="area"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Area]}
+                    value={values[OfferFormDataEnum.Area]}
                   />
                 </div>
 
@@ -195,7 +227,7 @@ export default function EditOfferForm() {
                     id="yearOfBuilding-edit-form"
                     name="yearOfBuilding"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.YearOfBuilding]}
+                    value={values[OfferFormDataEnum.YearOfBuilding]}
                   />
                 </div>
 
@@ -203,19 +235,14 @@ export default function EditOfferForm() {
                   <label htmlFor="description-edit-form">Описание:</label>
                   <textarea
                     className={styles["edit-offer-input-textarea"]}
-                    type="text"
                     id="description-edit-form"
                     name="description"
                     onChange={onChange}
-                    value={values[EditOfferFormKeys.Description]}
+                    value={values[OfferFormDataEnum.Description]}
                   />
                 </div>
               </div>
             </div>
-            {/*
-                        <input
-                            type="submit" value="Submit"
-                        /> */}
             <Button
               className={styles["edit-offer-button"]}
               variant="primary"
@@ -226,20 +253,7 @@ export default function EditOfferForm() {
             </Button>
           </form>
         </Card>
-
-        {/* "property
-                Type": "Апартамент",
-        "location": "София",
-        "district": "Манастирски ливади" ,
-        "rooms": 2,
-        "floor": 4,
-        "price": 200000,
-        "currency": "EUR",
-        "area": 70,
-        "yearOfBuilding": 2008,
-        "description": "Двустаен апартамент със страхотна локация, южно изложение и паркомясто. Продава се с обзавеждането, което се вижда на снимките, като има въжможност и да се махне.",
-        "id": "c64db398-91cd-487c-b900-86058c0422f8" */}
       </div>
     </>
   );
-}
+};

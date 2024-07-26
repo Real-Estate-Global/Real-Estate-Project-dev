@@ -1,5 +1,5 @@
 .login-div {
-    /* display: flex;
+  /* display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
@@ -7,18 +7,18 @@
     padding-bottom: 3.5rem;
     min-height: 91.9vh; */
 
-    display: flex;
-    align-content: center;
-    width: 100%;
-    flex-wrap: wrap;
-    justify-content: center;
-    height: 600px;
-    position: relative;
-    min-height: 91.9vh;
-  }
+  display: flex;
+  align-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  height: 600px;
+  position: relative;
+  min-height: 91.9vh;
+}
 
-  .login-form-card {
-    /* display: flex;
+.login-form-card {
+  /* display: flex;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
@@ -26,17 +26,17 @@
     width: 350px;
     height: 200px; */
 
-    display: flex;
-    align-content: center;
-    justify-content: center;
-    width: 500px;
-    height: 420px;
-    margin-bottom: 3.5rem;
-    flex-wrap: wrap;
-  }
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  width: 500px;
+  height: 420px;
+  margin-bottom: 3.5rem;
+  flex-wrap: wrap;
+}
 
-  .login-form {
-    /* display: flex;
+.login-form {
+  /* display: flex;
     justify-content: center;
     flex-wrap: wrap;
     align-content: center;
@@ -44,17 +44,17 @@
     width: 260px;
     height: 140px; */
 
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-wrap: wrap;
-    width: 500px;
-    height: 420px;
-    margin: auto;
-    column-gap: 60px;
-    flex-direction: column;
-    margin-top: 45px;
-  }
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 500px;
+  height: 420px;
+  margin: auto;
+  column-gap: 60px;
+  flex-direction: column;
+  margin-top: 45px;
+}
 
 .password-input {
   margin-bottom: 30px;

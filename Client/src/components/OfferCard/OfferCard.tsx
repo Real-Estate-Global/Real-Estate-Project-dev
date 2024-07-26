@@ -1,16 +1,24 @@
-import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/esm/Button";
 import styles from "./OfferCard.module.css";
-import AuthContext from "../../contexts/authContext";
+import { OfferType } from "../../types/OfferType";
+import { useCallback } from "react";
 
-export default function OfferCard({
-  property,
+type Props = {
+  offer: OfferType;
+  editEnabled: boolean;
+  setConfirmDeletePoupState?: (data: {
+    show: boolean;
+    id: string | null;
+  }) => void;
+};
+
+export const OfferCard: React.FC<Props> = ({
+  offer,
   editEnabled,
-  setConfirmPopupState,
-}) {
-  const { token } = useContext(AuthContext);
+  setConfirmDeletePoupState,
+}) => {
   const {
     visited,
     location,
@@ -23,15 +31,13 @@ export default function OfferCard({
     description,
     _id,
     img,
-  } = property;
+  } = offer;
 
-  const onDeleteClick = () => {
-    setConfirmPopupState({ show: true, id: _id });
-  };
-
-  if (!property) {
-    return null;
-  }
+  const onDeleteClick = useCallback(() => {
+    if (editEnabled && setConfirmDeletePoupState) {
+      setConfirmDeletePoupState({ show: true, id: _id });
+    }
+  }, [_id, editEnabled, setConfirmDeletePoupState]);
 
   return (
     <>
@@ -85,4 +91,4 @@ export default function OfferCard({
       </Card>
     </>
   );
-}
+};

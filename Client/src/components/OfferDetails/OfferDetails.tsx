@@ -1,46 +1,48 @@
+import { OfferType } from "../../types/OfferType";
 import styles from "./OfferDetails.module.css";
 
-export default function OfferDetails({ isLoading, propertyDetails }) {
-  if (isLoading) {
-    <div>Loader</div>;
-  }
-  if (!propertyDetails && !isLoading) {
+type Props = {
+  offerDetails: OfferType;
+};
+
+export const OfferDetails: React.FC<Props> = ({ offerDetails }) => {
+  if (!offerDetails) {
     return null;
   }
 
   return (
     <div className={styles["offer-details-page"]}>
-      <h1 className={styles["offer-title"]}>{propertyDetails.propertyType}</h1>
+      <h1 className={styles["offer-title"]}>{offerDetails.propertyType}</h1>
       <div className={styles["offer-details"]}>
         <div className={styles["offer-characteristics"]}>
           <div className={styles["photo-container"]}>
             <img
               className={styles["property-photo"]}
-              src={propertyDetails.img}
+              src={offerDetails.img}
               alt="apartment photo"
             />
           </div>
           <ul className={styles["offer-specs"]}>
             <li className={styles["right-positioned-specs"]}>
-              {propertyDetails.location}, {propertyDetails.district}
+              {offerDetails.location}, {offerDetails.district}
             </li>
             <li
               className={styles["right-positioned-specs"]}
-            >{` Цена: ${propertyDetails.price} ${propertyDetails.currency === "EUR" ? " €" : " лв."}`}</li>
+            >{` Цена: ${offerDetails.price} ${offerDetails.currency === "EUR" ? " €" : " лв."}`}</li>
             <li
               className={styles["right-positioned-specs"]}
-            >{`Площ: ${propertyDetails.area} кв.м.`}</li>
+            >{`Площ: ${offerDetails.area} кв.м.`}</li>
             <li
               className={styles["right-positioned-specs"]}
-            >{`Година на строителство: ${propertyDetails.yearOfBuilding}`}</li>
+            >{`Година на строителство: ${offerDetails.yearOfBuilding}`}</li>
           </ul>
         </div>
         <div className={styles["offer-description-li"]}>
           <p className={styles["offer-description-page"]}>
-            {propertyDetails.description}
+            {offerDetails.description}
           </p>
         </div>
       </div>
     </div>
   );
-}
+};

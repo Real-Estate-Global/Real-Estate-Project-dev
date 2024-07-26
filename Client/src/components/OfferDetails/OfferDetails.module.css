@@ -8,13 +8,13 @@
   align-items: center;
 }
 
-/* .photo-container {
+.photo-container {
   border: solid 1px;
   width: 500px;
   height: 300px;
   margin-left: 30px;
   float: right;
-} */
+}
 
 .offer-details {
   width: 1300px;
@@ -46,11 +46,11 @@
   font-size: 20px;
 }
 
-/* .right-positioned-specs {
+.right-positioned-specs {
   position: relative;
   left: 190px;
   top: 10px;
-} */
+}
 
 .offer-description-li {
   width: 900px;

@@ -1,9 +1,13 @@
 import styles from "./ProfileDataInfoCard.module.css";
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
+import { ProfileDataType } from "../../types/ProfileDataType";
 
-export default function ProfileDataInfoCard({ profileData }) {
-  console.log("profile Data", profileData);
+type Props = {
+  profileData: ProfileDataType;
+};
+
+export const ProfileDataInfoCard: React.FC<Props> = ({ profileData }) => {
   return (
     <>
       <Card className={styles["profile-data-card"]}>
@@ -13,7 +17,7 @@ export default function ProfileDataInfoCard({ profileData }) {
           <label>Смяна на паролата:</label>
           <input type="text" />
           <label>Име:</label>
-          <input type="text" defaultValue={profileData.fullName}></input>
+          <input type="text" defaultValue={profileData.name}></input>
           <label>Вид на профила:</label>
           <input
             type="text"

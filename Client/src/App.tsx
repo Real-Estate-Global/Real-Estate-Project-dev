@@ -1,33 +1,53 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-import AuthContext from "./contexts/authContext";
-import ErrorContext from "./contexts/errorContext";
-import { login } from "./services/authService";
+import { useCallback, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Header from "./components/Header/Header";
-import HomePage from "./components/HomePage";
-import Login from "./components/Login/Login";
 import "./App.css";
-import SignUp from "./components/SignUp/SignUp";
-import OfferPage from "./components/OfferPage/OfferPage";
-import Path from "./paths";
-import Logout from "./components/Logout";
-import MyOffers from "./components/MyOffers/MyOffers";
-import CreateOffer from "./components/CreateOffer/CreateOffer";
-import MyOfferPage from "./components/MyOfferPage";
-import EditOfferForm from "./components/EditOfferForm/EditOfferForm";
-import Profile from "./components/Profile/Profile";
-import ErrorPopup from "./components/ErrorPopup/ErrorPopup";
-import Loader from "./components/Loader";
-import LoaderContext from "./contexts/loaderContext";
-import StoreProvider from "./store/StoreProvider";
+
+import { Header } from "./components/Header/Header";
+import { HomePage } from "./components/HomePage";
+import { Login } from "./components/Login/Login";
+import { SignUp } from "./components/SignUp/SignUp";
+import { PublicOfferPage } from "./components/OfferPage/OfferPage";
+import { Path } from "./paths";
+import { Logout } from "./components/Logout";
+import { MyOffers } from "./components/MyOffers/MyOffers";
+import { CreateOffer } from "./components/CreateOffer/CreateOffer";
+import { MyOfferPage } from "./components/MyOfferPage";
+import { EditOfferForm } from "./components/EditOfferForm/EditOfferForm";
+import { Profile } from "./components/Profile/Profile";
+import { ErrorPopup } from "./components/ErrorPopup/ErrorPopup";
+import { Loader } from "./components/Loader";
+import { useAppDispatch } from "./store/hooks";
+import { authSliceActions } from "./store/slices/auth";
+import { loadingSliceActions } from "./store/slices/loading";
+import { errorSliceActions } from "./store/slices/error";
+import { ErrorType } from "./types/ErrorType";
+import { useLoginMutation } from "./store/api/auth";
+import { LoginDataType } from "./types/LoginDataType";
 
 function App() {
-  const [auth, setAuth] = useState({});
-  const [error, setError] = useState({ hasError: false });
-  const [loading, setLoading] = useState({ isLoading: false });
+  const [postCredentials] = useLoginMutation();
   const navigate = useNavigate();
+
+  const dispatch = useAppDispatch();
+  const setAuth = useCallback(
+    (authToken: string) => {
+      dispatch(authSliceActions.setAuth(authToken));
+    },
+    [dispatch]
+  );
+  const setLoading = useCallback(
+    (isLoading: boolean) => {
+      dispatch(loadingSliceActions.setLoading(isLoading));
+    },
+    [dispatch]
+  );
+  const setError = useCallback(
+    (error: ErrorType) => {
+      dispatch(errorSliceActions.setError(error));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     const authFromLocalStorage = window.localStorage.getItem("auth");
@@ -40,67 +60,52 @@ function App() {
     }
   }, []);
 
-  const loginSubmitHandler = async (values) => {
-    try {
-      setLoading({ isLoading: true });
-      const result = await login(values);
-      setAuth(result);
-      window.localStorage.setItem("auth", JSON.stringify(result));
-      navigate(Path.Home);
-    } catch (e) {
-      setError({ hasError: true, message: e.message });
-    } finally {
-      setLoading({ isLoading: false });
-    }
-  };
+  // TODO fix username / email?
+  const loginSubmitHandler = useCallback(
+    async (values: LoginDataType) => {
+      try {
+        setLoading(true);
+        const result = await postCredentials(values);
 
-  const authContextValues = {
-    loginSubmitHandler,
-    isAuthenticated: !!auth.accessToken,
-    token: auth.accessToken,
-    setAuth,
-  };
+        if (result.data) {
+          setAuth(result.data);
+          window.localStorage.setItem("auth", JSON.stringify(result.data));
 
-  const errorContextValues = {
-    error: error,
-    setError: setError,
-  };
-
-  const loadingContextValues = {
-    loading,
-    setLoading,
-  };
+          navigate(Path.Home);
+        }
+      } catch (e: any) {
+        setError({ hasError: true, message: e.message });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setLoading, setError, setAuth]
+  );
 
   return (
-    <LoaderContext.Provider value={loadingContextValues}>
-      <ErrorContext.Provider value={errorContextValues}>
-        <AuthContext.Provider value={authContextValues}>
-          <StoreProvider>
-            <Header />
-            <ErrorPopup />
-            <Loader />
-            <Routes>
-              <Route path="/" element={<HomePage />}></Route>
-              <Route path="/login" element={<Login />}></Route>
-              <Route path="/signup" element={<SignUp />}></Route>
-              <Route
-                path="/properties/:offerId"
-                element={<OfferPage />}
-              ></Route>
-              <Route path={Path.Logout} element={<Logout />}></Route>
-              <Route path={Path.MyOffers} element={<MyOffers />}></Route>
-              <Route path={Path.CreateOffer} element={<CreateOffer />}></Route>
-              <Route
-                path="/secure/properties/:_id"
-                element={<MyOfferPage />}
-              ></Route>
-              <Route path="/edit/:_id" element={<EditOfferForm />}></Route>
-              <Route path="/myprofile" element={<Profile />}></Route>
-            </Routes>
-          </StoreProvider>
-        </AuthContext.Provider>
-      </ErrorContext.Provider>
-    </LoaderContext.Provider>
+    <>
+      <Header />
+      <ErrorPopup />
+      <Loader />
+      <Routes>
+        <Route path="/" element={<HomePage />}></Route>
+        <Route
+          path="/login"
+          element={<Login loginSubmitHandler={loginSubmitHandler} />}
+        ></Route>
+        <Route
+          path="/signup"
+          element={<SignUp loginSubmitHandler={loginSubmitHandler} />}
+        ></Route>
+        <Route path="/properties/:offerId" element={<PublicOfferPage />}></Route>
+        <Route path={Path.Logout} element={<Logout />}></Route>
+        <Route path={Path.MyOffers} element={<MyOffers />}></Route>
+        <Route path={Path.CreateOffer} element={<CreateOffer />}></Route>
+        <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
+        <Route path="/edit/:_id" element={<EditOfferForm />}></Route>
+        <Route path="/myprofile" element={<Profile />}></Route>
+      </Routes>
+    </>
   );
 }
 
