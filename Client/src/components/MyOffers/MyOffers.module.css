@@ -5,27 +5,16 @@
   flex-direction: column;
   row-gap: 20px;
   position: relative;
-  min-height: 91.9vh;
   flex-wrap: wrap;
   align-items: center;
   width: calc(100vw - 20px);
   overflow: hidden;
+  padding: 8px;
 }
 
 .add-offer-link {
   text-decoration: none;
   color: white;
-}
-
-.my-offers-list {
-  width: -webkit-fill-available;
-  margin-top: 10px;
-  margin-bottom: 70px;
-  display: flex inline;
-  column-gap: 40px;
-  row-gap: 40px;
-  justify-content: center;
-  flex-wrap: wrap;
 }
 
 .my-offers-title {

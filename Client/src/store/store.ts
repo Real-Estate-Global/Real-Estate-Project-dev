@@ -9,15 +9,15 @@ import { publicOffersApi } from "./api/publicOffers";
 export const makeStore = () => {
   const store = configureStore({
     reducer: {
-      auth: authSlice.reducer,
-      loading: loadingSlice.reducer,
-      error: errorSlice.reducer,
+      [authSlice.reducerPath]: authSlice.reducer,
+      [loadingSlice.reducerPath]: loadingSlice.reducer,
+      [errorSlice.reducerPath]: errorSlice.reducer,
       [authApi.reducerPath]: authApi.reducer,
       [privateOffersApi.reducerPath]: privateOffersApi.reducer,
       [publicOffersApi.reducerPath]: publicOffersApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat([
+      return getDefaultMiddleware({ serializableCheck: false }).concat([
         authApi.middleware,
         privateOffersApi.middleware,
         publicOffersApi.middleware,

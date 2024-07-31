@@ -77,6 +77,7 @@ const editOfferById = async (req, res) => {
                 price: req.body.price,
                 propertyType: req.body.propertyType,
                 rooms: req.body.rooms,
+                yearOfBuilding: req.body.yearOfBuilding,
             }
         });
 

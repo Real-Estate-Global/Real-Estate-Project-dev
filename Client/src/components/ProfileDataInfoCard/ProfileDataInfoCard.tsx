@@ -1,6 +1,6 @@
 import styles from "./ProfileDataInfoCard.module.css";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 import { ProfileDataType } from "../../types/ProfileDataType";
 
 type Props = {
@@ -32,7 +32,6 @@ export const ProfileDataInfoCard: React.FC<Props> = ({ profileData }) => {
 
           <Button
             className={styles["edit-profile-button"]}
-            variant="primary"
             type="submit"
             value="Редактирай"
           >

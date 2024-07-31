@@ -1,24 +1,27 @@
-import { Link } from "react-router-dom";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/esm/Button";
-import styles from "./OfferCard.module.css";
+import { useNavigate } from "react-router-dom";
+import { Card } from "primereact/card";
+import { Button } from "primereact/button";
+import { Image } from "primereact/image";
 import { OfferType } from "../../types/OfferType";
-import { useCallback } from "react";
+// TODO: use routes from path
+import { Path } from "../../paths";
+import "./OfferCard.module.css";
+import { DateTime } from "luxon";
 
 type Props = {
   offer: OfferType;
-  editEnabled: boolean;
-  setConfirmDeletePoupState?: (data: {
-    show: boolean;
-    id: string | null;
-  }) => void;
+  editEnabled?: boolean;
+  onEditClick?: (id: string, values: OfferType) => void;
+  onDeleteClick?: (id: string) => void;
 };
 
 export const OfferCard: React.FC<Props> = ({
   offer,
-  editEnabled,
-  setConfirmDeletePoupState,
+  editEnabled = false,
+  onEditClick,
+  onDeleteClick,
 }) => {
+  const navigate = useNavigate();
   const {
     visited,
     location,
@@ -33,62 +36,65 @@ export const OfferCard: React.FC<Props> = ({
     img,
   } = offer;
 
-  const onDeleteClick = useCallback(() => {
-    if (editEnabled && setConfirmDeletePoupState) {
-      setConfirmDeletePoupState({ show: true, id: _id });
-    }
-  }, [_id, editEnabled, setConfirmDeletePoupState]);
-
   return (
-    <>
-      <Card border="secondary" className={styles["best-offers"]}>
-        <h2 className={styles["offer-title"]}>{propertyType}</h2>
-        <ul className={styles["offer-characteristics"]}>
-          <li className={styles["right-positioned-specs"]}>
+    <div className="offer-card col-12 sm:col-6 lg:col-12 xl:col-4 p-2">
+      <Card
+        title={propertyType}
+        className="border-1 surface-border surface-card border-round p-0"
+        header={
+          <Image
+            src={
+              "https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg"
+            }
+            alt={"image"}
+          ></Image>
+        }
+      >
+        <div className="flex justify-content-between mt-3 mb-2">
+          <span className="text-900 font-medium text-xl">
             {location}, {district}
-          </li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{` Цена: ${price} ${currency === "EUR" ? " €" : " лв."}`}</li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Площ: ${area} кв.м.`}</li>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Година на строителство: ${yearOfBuilding}`}</li>
-          <li className={styles["short-offer-description-li"]}>
-            <p className={styles["short-offer-description"]}>{description}</p>
-          </li>
-          <Link
-            className={styles["link-to-offer"]}
-            to={`${editEnabled ? "/secure" : ""}/properties/${_id}`}
-          >
-            Виж повече
-          </Link>
-          <li
-            className={styles["right-positioned-specs"]}
-          >{`Visited: ${visited}`}</li>
-          {editEnabled && (
-            <Button className={styles["btn-edit-offer"]}>
-              <Link
-                className={styles["link-to-edit-offer"]}
-                to={`/edit/${_id}`}
-              >
-                Редактирай обява
-              </Link>
-            </Button>
-          )}
-          {editEnabled && (
-            <Button
-              onClick={onDeleteClick}
-              className={styles["btn-delete-offer"]}
-            >
-              Изтрий обява
-            </Button>
-          )}
-        </ul>
-        <img className={styles["offer-heading-img"]} src={img} />
+          </span>
+          <span className="text-900 text-xl ml-3">{currency + price}</span>
+        </div>
+        <div className="flex justify-content-between mt-3 mb-2">
+          <span className="text-600">{area} кв.м.</span>
+          <span className="text-600">
+            {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')} г`}
+          </span>
+        </div>
+        <div className="flex justify-content-between mt-3 mb-2">
+          <Button
+            label="Виж повече"
+            className="p-0"
+            text
+            link
+            onClick={() => {
+              navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
+            }}
+          />
+          <div className="flex justify-content-between mt-3 mb-2">
+            {editEnabled && (
+              <Button
+                raised
+                icon="pi pi-pencil"
+                onClick={() => {
+                  onEditClick && onEditClick(_id, offer);
+                }}
+              />
+            )}
+            {editEnabled && (
+              <Button
+                severity="danger"
+                raised
+                icon="pi pi-trash"
+                onClick={() => {
+                  onDeleteClick && onDeleteClick(_id);
+                }}
+              />
+            )}
+          </div>
+        </div>
       </Card>
-    </>
+    </div>
   );
 };
