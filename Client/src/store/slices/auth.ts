@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+// TODO: auth error ErrorType
 interface AuthState {
   accessToken: string;
 }

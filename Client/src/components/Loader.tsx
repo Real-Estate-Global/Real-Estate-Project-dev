@@ -1,18 +1,20 @@
-import Spinner from "react-bootstrap/Spinner";
-import { useSelector } from "react-redux";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { loadingSliceSelectors } from "../store/slices/loading";
+import { useAppSelector } from "../store/hooks";
 
-export const Loader = () => {
-  const loading = useSelector(loadingSliceSelectors.isLoading);
+export const Loader = ({ show }: { show?: boolean }) => {
+  const loading = useAppSelector(loadingSliceSelectors.isLoading);
 
-  if (!loading) {
+  if (!loading && !show) {
     return null;
   }
   return (
-    <div className={`loader-wrapper ${loading ? "show-loader" : ""}`}>
-      <Spinner animation="border" role="status">
-        {/* <span className="visually-hidden">Loading...</span> */}
-      </Spinner>
+    <div className={`loader-wrapper ${loading || show ? "show-loader" : ""}`}>
+      <ProgressSpinner
+        color="cyan"
+        aria-label="Loader"
+        animationDuration=".5s"
+      ></ProgressSpinner>
     </div>
   );
 };

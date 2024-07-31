@@ -72,7 +72,7 @@ export const publicOffersApi = createApi({
       },
     });
 
-    const getPublicOffer = builder.mutation<OfferType, string>({
+    const getPublicOffer = builder.query<OfferType, string>({
       queryFn: async (id) => {
         try {
           const response = await fetch(
@@ -104,5 +104,5 @@ export const publicOffersApi = createApi({
   },
 });
 
-export const { useGetPublicOffersMutation, useGetPublicOfferMutation } =
+export const { useGetPublicOffersMutation, useGetPublicOfferQuery } =
   publicOffersApi;

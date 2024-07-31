@@ -1,9 +1,9 @@
-import useForm from "../../hooks/useForm";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { useForm } from "../../hooks/useForm";
 import styles from "./Login.module.css";
 import { Link } from "react-router-dom";
 import { LoginDataType } from "../../types/LoginDataType";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 
 export enum LoginFormKeys {
   Email = "email",
@@ -11,8 +11,8 @@ export enum LoginFormKeys {
 }
 
 type Props = {
-    loginSubmitHandler: (values: LoginDataType) => void;
-}
+  loginSubmitHandler: (values: LoginDataType) => void;
+};
 export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
   const { values, onChange, onSubmit } = useForm(loginSubmitHandler, {
     [LoginFormKeys.Email]: "",
@@ -46,7 +46,6 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
             />
             <Button
               className={styles["login-button"]}
-              variant="primary"
               type="submit"
               value="Вход"
             >
@@ -62,4 +61,4 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
       </div>
     </>
   );
-}
+};

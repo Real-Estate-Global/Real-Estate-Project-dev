@@ -8,7 +8,7 @@ export type OfferType = {
   number: string;
   currency: string;
   area: number;
-  yearOfBuilding: number;
+  yearOfBuilding: Date;
   description: string;
   price: number;
   visited: boolean;
@@ -24,6 +24,7 @@ export enum OfferFormDataEnum {
   Price = "price",
   Currency = "currency",
   Area = "area",
+  // TODO: date of building
   YearOfBuilding = "yearOfBuilding",
   Description = "description",
 }
