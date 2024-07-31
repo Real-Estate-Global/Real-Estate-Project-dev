@@ -17,7 +17,7 @@ export const makeStore = () => {
       [publicOffersApi.reducerPath]: publicOffersApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat([
+      return getDefaultMiddleware({ serializableCheck: false }).concat([
         authApi.middleware,
         privateOffersApi.middleware,
         publicOffersApi.middleware,

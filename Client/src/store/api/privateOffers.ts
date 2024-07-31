@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getAuthorizationToken } from "../../utils/utils";
 import { RootState } from "../store";
 import { authSliceSelectors } from "../slices/auth";
-import { OfferType } from "../../types/OfferType";
+import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
 
 export const privateOffersApi = createApi({
   reducerPath: "privateOffersApi",
@@ -10,12 +10,13 @@ export const privateOffersApi = createApi({
     baseUrl: "http://localhost:3000",
   }),
   endpoints: (builder) => {
-    const getMyOffers = builder.mutation<OfferType[], void>({
+    const getMyOffers = builder.query<OfferType[], void>({
       queryFn: async (_, { getState }) => {
         try {
-          const token: string = authSliceSelectors.accessToken(
-            getState() as RootState
-          );
+          const token: string =
+            authSliceSelectors.accessToken(getState() as RootState) ||
+            JSON.parse(localStorage.getItem("auth") as string);
+
           const response = await fetch(
             "http://localhost:3000/protected/myOffers",
             {
@@ -34,9 +35,14 @@ export const privateOffersApi = createApi({
             throw await response.json();
           }
 
-          const result = await response.json();
+          const result: OfferType[] = await response.json();
 
-          return { data: result };
+          return {
+            data: result.map((offer) => ({
+              ...offer,
+              yearOfBuilding: new Date(offer.yearOfBuilding),
+            })),
+          };
         } catch (error: any) {
           return { error };
         }
@@ -54,7 +60,11 @@ export const privateOffersApi = createApi({
             "http://localhost:3000/protected/myOffers",
             {
               method: "POST",
-              body: JSON.stringify(offer),
+              body: JSON.stringify({
+                ...offer,
+                [OfferFormDataEnum.YearOfBuilding]:
+                  offer[OfferFormDataEnum.YearOfBuilding].toISOString(),
+              }),
               headers: {
                 "Content-type": "application/json; charset=UTF-8",
                 "X-Authorization": getAuthorizationToken(token),
@@ -75,7 +85,7 @@ export const privateOffersApi = createApi({
       },
     });
 
-    const getMyOffer = builder.mutation<OfferType, string>({
+    const getMyOffer = builder.query<OfferType, string>({
       queryFn: async (id, { getState }) => {
         const token: string = authSliceSelectors.accessToken(
           getState() as RootState
@@ -99,7 +109,12 @@ export const privateOffersApi = createApi({
 
           const result = await response.json();
 
-          return { data: result };
+          return {
+            data: {
+              ...result,
+              yearOfBuilding: new Date(result.yearOfBuilding),
+            },
+          };
         } catch (error: any) {
           return { error };
         }
@@ -184,9 +199,9 @@ export const privateOffersApi = createApi({
 });
 
 export const {
-  useGetMyOffersMutation,
+  useGetMyOffersQuery,
   useAddNewOfferMutation,
-  useGetMyOfferMutation,
+  useGetMyOfferQuery,
   useEditMyOfferMutation,
   useDeleteOfferMutation,
 } = privateOffersApi;

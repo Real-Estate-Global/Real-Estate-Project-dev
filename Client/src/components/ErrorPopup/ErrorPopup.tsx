@@ -1,4 +1,3 @@
-import Alert from "react-bootstrap/Alert";
 import { useCallback } from "react";
 import styles from "./ErrorPopup.module.css";
 import { useAppDispatch } from "../../store/hooks";
@@ -17,19 +16,10 @@ export const ErrorPopup = () => {
     return null;
   }
 
+  // TODO: implement alert or use toaster
   return (
     <div className={styles["alert-wrapper"]}>
-      <Alert
-        style={{ zIndex: "6" }}
-        className={`${styles.alert} ${error?.hasError ? styles["show-alert"] : ""}`}
-        variant={"danger"}
-        onClose={() => {
-          setError({ hasError: false });
-        }}
-        dismissible
-      >
-        {error?.message}
-      </Alert>
+      {error?.message}
     </div>
   );
 }

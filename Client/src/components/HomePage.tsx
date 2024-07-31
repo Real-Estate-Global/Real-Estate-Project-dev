@@ -1,4 +1,4 @@
-import { HomeOffersList } from "./HomeOffersList/HomeOffersList";
+import { OfferList } from "./OfferList/OfferList";
 import { HeadingImage } from "./HeadingImage";
 import { SearchForm } from "./SearchForm";
 import { useState, useCallback, useEffect } from "react";
@@ -70,7 +70,7 @@ export const HomePage = () => {
     <>
       <HeadingImage />
       <SearchForm getHomeOfferList={getHomeOfferList} />
-      <HomeOffersList offers={offers} />
+      <OfferList offers={offers} />
     </>
   );
 };

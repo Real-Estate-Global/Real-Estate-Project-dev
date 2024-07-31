@@ -1,126 +1,177 @@
-import { useState, useEffect, useCallback } from "react";
-import { OfferCard } from "../OfferCard/OfferCard";
-import { Link } from "react-router-dom";
-import Button from "react-bootstrap/esm/Button";
+import { useState, useCallback } from "react";
+import { Button } from "primereact/button";
 import styles from "./MyOffers.module.css";
-import { ConfirmPopup } from "../ConfirmPopup";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { useAppSelector } from "../../store/hooks";
 import { authSliceSelectors } from "../../store/slices/auth";
 import {
-  useGetMyOffersMutation,
+  useGetMyOffersQuery,
   useDeleteOfferMutation,
+  useAddNewOfferMutation,
+  useEditMyOfferMutation,
 } from "../../store/api/privateOffers";
-import { OfferType } from "../../types/OfferType";
-import { loadingSliceActions } from "../../store/slices/loading";
-import { errorSliceActions } from "../../store/slices/error";
-import { ErrorType } from "../../types/ErrorType";
+import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
+import { OfferList } from "../OfferList/OfferList";
+import { Loader } from "../Loader";
+import { OfferFormDialog } from "../OfferForm/OfferFormDialog";
+import { DateTime } from "luxon";
 
 export const MyOffers = () => {
-  const dispatch = useAppDispatch();
-  const [myOffers, setMyOffers] = useState<OfferType[]>([]);
-  const [confirmDeletePopupState, setConfirmDeletePoupState] = useState<{
-    show: boolean;
-    id: null | string;
+  const [deleteDialogState, setDeleteDialogState] = useState<{
+    isOpen: boolean;
+    id: string | null;
   }>({
-    show: false,
+    isOpen: false,
     id: null,
   });
-  const [getMyOffers] = useGetMyOffersMutation();
-  const [deleteOffer] = useDeleteOfferMutation();
+  const [editDialogState, setEditDialogState] = useState<{
+    isOpen: boolean;
+    id: string | null;
+    initialValues?: OfferType | null;
+  }>({
+    isOpen: false,
+    id: null,
+    initialValues: null,
+  });
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+  const [editMyOffer, { isLoading: isEditOfferLoading }] =
+    useEditMyOfferMutation();
+  const getMyOffersQuery = useGetMyOffersQuery();
+  const [deleteOffer, { isLoading: isDeleteOfferLoading }] =
+    useDeleteOfferMutation();
+  const [addNewOffer, { isLoading: isAddNewOfferLoading }] =
+    useAddNewOfferMutation();
   const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
 
-  const setLoading = useCallback(
-    (isLoading: boolean) => {
-      dispatch(loadingSliceActions.setLoading(isLoading));
+  const onCreateOfferClick = useCallback(() => {
+    setCreateDialogOpen(true);
+  }, [setCreateDialogOpen]);
+  const onCreateOfferClose = useCallback(() => {
+    setCreateDialogOpen(false);
+  }, [setCreateDialogOpen]);
+  const onCreateNewOfferSubmit = useCallback(
+    async (values: OfferType) => {
+      await addNewOffer({
+        ...values,
+        [OfferFormDataEnum.YearOfBuilding]: values[
+          OfferFormDataEnum.YearOfBuilding
+        ] as Date,
+      }).then(() => {
+        getMyOffersQuery.refetch();
+        onCreateOfferClose();
+      });
     },
-    [dispatch]
-  );
-  const setError = useCallback(
-    (error: ErrorType) => {
-      dispatch(errorSliceActions.setError(error));
-    },
-    [dispatch]
+    [getMyOffersQuery, addNewOffer, onCreateOfferClose]
   );
 
-  useEffect(() => {
-    try {
-      setLoading(true);
-      getMyOffers()
-        .then((result) => {
-          // TODO: error handling on fetch
-          if (result.data) {
-            setMyOffers(result.data);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } catch (e: any) {
-      setError({ hasError: true, message: e.message });
+  const onDeleteCancel = useCallback(() => {
+    setDeleteDialogState({ id: null, isOpen: false });
+  }, [setDeleteDialogState]);
+  const onDeleteConfirm = useCallback(() => {
+    if (deleteDialogState.id && !isDeleteOfferLoading) {
+      deleteOffer(deleteDialogState.id).then(() => {
+        getMyOffersQuery.refetch();
+        onDeleteCancel();
+      });
     }
-  }, [getMyOffers, setLoading, setError, setMyOffers]);
-
-  const onConfirmDelete = useCallback(async () => {
-    try {
-      if (confirmDeletePopupState.id) {
-        setLoading(true);
-        await deleteOffer(confirmDeletePopupState.id);
-        getMyOffers()
-          .then((result) => {
-            // TODO: error handling on fetch
-            if (result.data) {
-              setMyOffers(result.data);
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      }
-    } catch (error) {
-      console.log(error);
-    }
-    setConfirmDeletePoupState({ show: false, id: null });
   }, [
-    confirmDeletePopupState,
-    setLoading,
     deleteOffer,
-    getMyOffers,
-    setConfirmDeletePoupState,
+    getMyOffersQuery,
+    deleteDialogState.id,
+    isDeleteOfferLoading,
+    onDeleteCancel,
   ]);
+  const onDeleteClick = useCallback(
+    (id: string) => {
+      setDeleteDialogState({ id, isOpen: true });
+    },
+    [setDeleteDialogState]
+  );
 
-  const onCancelPopup = useCallback(() => {
-    setConfirmDeletePoupState({ show: false, id: null });
-  }, [setConfirmDeletePoupState]);
+  const onEditOfferClose = useCallback(() => {
+    setEditDialogState({ id: null, isOpen: false, initialValues: null });
+  }, [setEditDialogState]);
 
+  const onEditOfferSubmit = useCallback(
+    async (newValues: OfferType) => {
+      if (editDialogState.id && !isEditOfferLoading) {
+        await editMyOffer({
+          id: editDialogState.id,
+          editOfferData: newValues,
+        }).then(() => {
+          getMyOffersQuery.refetch();
+          onEditOfferClose();
+        });
+      }
+    },
+    [
+      isEditOfferLoading,
+      getMyOffersQuery,
+      editDialogState.id,
+      editMyOffer,
+      onEditOfferClose,
+    ]
+  );
+  const onEditOfferClick = useCallback(
+    (id: string, values: OfferType) => {
+      setEditDialogState({
+        isOpen: true,
+        id,
+        initialValues: values,
+      });
+    },
+    [setEditDialogState]
+  );
+
+  // TODO: better login prompt
   if (!isAuthenticated) {
     return <div>Login please</div>;
   }
 
   return (
-    <div className={styles["my-offers-list-wrapper"]}>
-      <ConfirmPopup
-        show={confirmDeletePopupState.show}
-        text="Iskate li triete obqva molia??"
-        onConfirm={onConfirmDelete}
-        onCancel={onCancelPopup}
+    <div>
+      <Loader
+        show={
+          isAddNewOfferLoading || isDeleteOfferLoading || isEditOfferLoading
+        }
       />
-      <h1 className={styles["my-offers-title"]}>Моите обяви</h1>
-      <Button>
-        <Link className={styles["add-offer-link"]} to="/createoffer">
-          Добави обява
-        </Link>
-      </Button>
-      <div className={styles["my-offers-list"]}>
-        {myOffers &&
-          myOffers.map((offer) => (
-            <OfferCard
-              key={offer._id}
-              offer={offer}
-              editEnabled={true}
-              setConfirmDeletePoupState={setConfirmDeletePoupState}
-            />
-          ))}
+      {deleteDialogState.isOpen && (
+        <ConfirmDialog
+          visible={deleteDialogState.isOpen}
+          onHide={onDeleteCancel}
+          message="Искате ли да изтриете тази обява?"
+          header="Моля потвърдете"
+          icon="pi pi-exclamation-triangle"
+          accept={onDeleteConfirm}
+          reject={onDeleteCancel}
+        />
+      )}
+      {createDialogOpen && (
+        <OfferFormDialog
+          show={createDialogOpen}
+          onClose={onCreateOfferClose}
+          onSubmit={onCreateNewOfferSubmit}
+        />
+      )}
+      {editDialogState.isOpen && (
+        <OfferFormDialog
+          show={editDialogState.isOpen}
+          initialFormValues={editDialogState.initialValues}
+          onClose={onEditOfferClose}
+          onSubmit={onEditOfferSubmit}
+        />
+      )}
+
+      <div className={styles["my-offers-list-wrapper"]}>
+        <h1 className={styles["my-offers-title"]}>Моите обяви</h1>
+        <Button label="Добави Обява" onClick={onCreateOfferClick} />
       </div>
+      <OfferList
+        offers={getMyOffersQuery.data}
+        editEnabled={true}
+        onEditClick={onEditOfferClick}
+        onDeleteClick={onDeleteClick}
+      />
     </div>
   );
 };

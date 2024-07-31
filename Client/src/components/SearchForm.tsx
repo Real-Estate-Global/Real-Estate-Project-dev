@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 import locations from "../locations";
 import { onlyUnique } from "../utils";
 import { FiltersType } from "../types/FiltersType";
@@ -29,7 +29,7 @@ export const SearchForm: React.FC<Props> = ({ getHomeOfferList }) => {
   }, [values]);
 
   return (
-    <Card border="dark" className={"searchFormDiv"}>
+    <Card className={"searchFormDiv"}>
       <h4 id="search-form-title">Започни търсенето</h4>
       <form className="search-form" action="url">
         <label htmlFor="offer-type"></label>
@@ -107,7 +107,7 @@ export const SearchForm: React.FC<Props> = ({ getHomeOfferList }) => {
         />
       </form>
 
-      <Button variant="primary" className="search-btn-form" onClick={onSearch}>
+      <Button outlined className="search-btn-form" onClick={onSearch}>
         Търсене
       </Button>
     </Card>

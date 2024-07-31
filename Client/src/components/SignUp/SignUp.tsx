@@ -1,7 +1,7 @@
 import { useCallback } from "react";
-import useForm from "../../hooks/useForm";
-import Button from "react-bootstrap/esm/Button";
-import Card from "react-bootstrap/Card";
+import { useForm } from "../../hooks/useForm";
+import { Button } from "primereact/button";
+import { Card } from "primereact/card";
 import styles from "./SignUp.module.css";
 import { Link } from "react-router-dom";
 import { LoginDataType } from "../../types/LoginDataType";
@@ -133,7 +133,7 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
               required
               id="profileTypr"
               name="profileType"
-              onChange={onChange}
+              onChange={onChange as any}
               className={styles["registration-input"]}
             >
               <option value="" disabled selected hidden>
@@ -167,7 +167,6 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
 
             <Button
               className={styles["signup-button"]}
-              variant="primary"
               type="submit"
               value="Регистрирай"
             >
