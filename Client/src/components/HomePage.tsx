@@ -1,75 +1,40 @@
 import { OfferList } from "./OfferList/OfferList";
 import { HeadingImage } from "./HeadingImage";
-import { SearchForm } from "./SearchForm";
+import { SearchForm } from "./SearchFormLegacy";
 import { useState, useCallback, useEffect } from "react";
-import { useAppDispatch } from "../store/hooks";
-import { loadingSliceActions } from "../store/slices/loading";
-import { ErrorType } from "../types/ErrorType";
-import { errorSliceActions } from "../store/slices/error";
 import { FiltersType } from "../types/FiltersType";
 import { useGetPublicOffersMutation } from "../store/api/publicOffers";
 import { OfferType } from "../types/OfferType";
+import { Loader } from "./Loader";
+import { HomeSearchToolbar } from "./HomeSearchToolbar/HomeSearchToolbar";
 
 export const HomePage = () => {
   const [offers, setOffers] = useState<OfferType[]>([]);
-  const [getPublicOffers] = useGetPublicOffersMutation();
-  const dispatch = useAppDispatch();
-  const setLoading = useCallback(
-    (isLoading: boolean) => {
-      dispatch(loadingSliceActions.setLoading(isLoading));
-    },
-    [dispatch]
-  );
-  const setError = useCallback(
-    (error: ErrorType) => {
-      dispatch(errorSliceActions.setError(error));
-    },
-    [dispatch]
-  );
+  const [getPublicOffers, { isLoading, isError }] = useGetPublicOffersMutation();
 
   useEffect(() => {
-    try {
-      setLoading(true);
-      getPublicOffers(null)
-        .then((result) => {
-          // TODO: error handling on fetch
-          if (result.data) {
-            setOffers(result.data);
-          }
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } catch (e: any) {
-      setError({ hasError: true, message: e.message });
-    }
-  }, [getPublicOffers, setLoading, setError, setOffers]);
+    getPublicOffers(null).then((result) => {
+      if (result.data) {
+        setOffers(result.data);
+      }
+    });
+  }, [getPublicOffers, setOffers]);
 
   const getHomeOfferList = useCallback(
     async (filters: FiltersType) => {
-      try {
-        setLoading(true);
-        getPublicOffers(filters)
-          .then((result) => {
-            // TODO: error handling on fetch
-            if (result.data) {
-              setOffers(result.data);
-            }
-          })
-          .finally(() => {
-            setLoading(false);
-          });
-      } catch (e: any) {
-        setError({ hasError: true, message: e.message });
-      }
+      getPublicOffers(filters).then((result) => {
+        if (result.data) {
+          setOffers(result.data);
+        }
+      });
     },
-    [setLoading, setError, getPublicOffers, setOffers]
+    [getPublicOffers, setOffers]
   );
 
   return (
     <>
-      <HeadingImage />
-      <SearchForm getHomeOfferList={getHomeOfferList} />
+      <Loader show={isLoading} />
+      <HomeSearchToolbar />
       <OfferList offers={offers} />
     </>
   );
