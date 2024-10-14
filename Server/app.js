@@ -18,8 +18,9 @@ const {
     deleteOfferById,
 } = require('./offers')
 const {
-    getSearchData
-} = require('./searchData')
+    getSearchData,
+    getSelectedFitlers,
+} = require('./search')
 
 const app = express();
 const PORT = 3000;
@@ -36,7 +37,8 @@ app.post('/user/login', userLogin);
 app.get('/user/logout', userLogout);
 app.get('/user/me', authenticateUser, getUserData);
 
-app.get('/data/searchData', getSearchData);
+app.get('/data/search/getSelectedFitlers', getSelectedFitlers);
+app.get('/data/search/searchData', getSearchData);
 
 app.get('/data/offers', getPublicOffers);
 app.get('/data/offers/:id', getPublicOfferById);

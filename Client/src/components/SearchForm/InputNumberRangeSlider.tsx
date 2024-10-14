@@ -67,17 +67,17 @@ export const InputNumberRangeSlider: React.FC<Props> = ({
     );
   return (
     <>
-      <div style={{ display: "flex" }}>
-        <div className="flex flex-column gap-1">
-          <label htmlFor={"from"}>от</label>
+      <div className="flex flex-row gap-1 align-items-center">
+        <div className="flex flex-row gap-1 align-items-center">
+          <label htmlFor={"from"}>от:</label>
           <InputNumber
             name="from"
             value={valueFrom}
             onValueChange={onInputChangeBuilder("from")}
           />
         </div>
-        <div className="flex flex-column gap-1">
-          <label htmlFor={"to"}>до</label>
+        <div className="flex flex-row gap-1 align-items-center">
+          <label htmlFor={"to"}>до:</label>
           <InputNumber
             name="to"
             value={valueTo}
@@ -85,7 +85,7 @@ export const InputNumberRangeSlider: React.FC<Props> = ({
           />
         </div>
       </div>
-      <div style={{ display: "flex", width: "100%", position: "relative" }}>
+      <div style={{ display: "flex", width: "100%", position: "relative", marginTop: "4px" }}>
         <Slider
           min={min}
           max={max}

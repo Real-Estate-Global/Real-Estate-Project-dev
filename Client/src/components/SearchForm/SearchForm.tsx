@@ -8,7 +8,8 @@ import { InputNumberRangeSlider } from "./InputNumberRangeSlider";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 
 type Props = {
-  initialFormValues?: FiltersType | null;
+  initialFormValues?: Partial<FiltersType>;
+  updatedFormValues?: Partial<FiltersType>;
   onSearch: (values: FiltersType) => void;
 };
 
@@ -23,6 +24,7 @@ const defaultFormValues = {
 
 export const SearchForm: React.FC<Props> = ({
   initialFormValues,
+  updatedFormValues,
   onSearch,
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
@@ -33,7 +35,7 @@ export const SearchForm: React.FC<Props> = ({
     onChange: onFormChange,
     onSubmit: onFormSubmit,
     setValues,
-  } = useForm(onSearch, { ...initialFormValues, ...defaultFormValues });
+  } = useForm(onSearch, { ...defaultFormValues, ...initialFormValues }, updatedFormValues);
   const [touched, setTouched] = useState<Map<keyof FiltersType, boolean>>(
     new Map([
       [FiltersTypeEnum.PropertyType, false],

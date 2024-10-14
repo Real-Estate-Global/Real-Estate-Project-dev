@@ -3,16 +3,73 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import { useRef } from "react";
+import {
+  ChangeEventHandler,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
+import { useGetSelectedFitlersMutation } from "../../store/api/searchData";
+import { FiltersType } from "../../types/FiltersType";
 
 type Props = {};
 
 export const HomeSearchToolbar: React.FC<Props> = () => {
+  const [searchString, setSearchString] = useState("");
+  const [selectedFilters, setSelectedFilters] =
+    useState<Partial<FiltersType>>();
+  const [getSelectedFiltres, { isLoading, isError }] =
+    useGetSelectedFitlersMutation();
   const overlayPanelRef: any = useRef(null);
 
+  useEffect(() => {}, [selectedFilters]);
+  const onSearchChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    (e) => {
+      setSearchString(e.target.value);
+    },
+    [setSearchString]
+  );
+  const onSearchClick = async () => {
+    try {
+      const result = await getSelectedFiltres(searchString);
+      const data = result.data;
+      if (data) {
+        const filterKeys = Object.keys(data) as Array<keyof typeof data>;
+
+        const newSelectedFilters =
+          filterKeys.reduce<Partial<FiltersType> | null>((acc, key) => {
+            if (data[key]) {
+              if (acc !== null) {
+                return {
+                  ...acc,
+                  [key]: data[key],
+                };
+              }
+
+              return {
+                [key]: data[key],
+              };
+            }
+
+            return acc;
+          }, null);
+
+        if (newSelectedFilters) {
+          setSelectedFilters(newSelectedFilters);
+        }
+      } else {
+        setSelectedFilters(undefined);
+      }
+    } catch (e: any) {
+      console.log("Error::onSearchCLick", e);
+    }
+  };
+
+  console.log("selectedFilters", selectedFilters);
   const startContent = (
     <div className="flex flex-row flex-wrap gap-2">
       <Button
@@ -30,30 +87,42 @@ export const HomeSearchToolbar: React.FC<Props> = () => {
 
   const centerContent = (
     <>
-      <IconField iconPosition="left">
+      <IconField>
         <InputIcon
-          className="pi pi-search p-overlay-badge"
+          className="pi pi-filter p-overlay-badge"
           onClick={(e) => overlayPanelRef?.current?.toggle(e)}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", marginLeft: "12px" }}
         >
-          <Badge
-            value="2"
-            style={{
-              fontSize: "0.5rem",
-              minWidth: "15px",
-              minHeight: "15px",
-              height: "5px",
-              lineHeight: "15px",
-            }}
-          ></Badge>
+          {selectedFilters && (
+            <Badge
+              value={Object.keys(selectedFilters).length}
+              style={{
+                fontSize: "0.5rem",
+                minWidth: "15px",
+                minHeight: "15px",
+                height: "5px",
+                lineHeight: "15px",
+              }}
+            ></Badge>
+          )}
         </InputIcon>
 
         <InputText
           placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
-          style={{ width: "600px", display: "inline-block" }}
+          style={{
+            width: "600px",
+            display: "inline-block",
+            paddingLeft: "40px",
+          }}
+          onChange={onSearchChange}
+        />
+        <InputIcon
+          className="pi pi-search"
+          style={{ cursor: "pointer", marginLeft: "12px" }}
+          onClick={onSearchClick}
         />
         <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-          <SearchForm onSearch={() => {}} />
+          <SearchForm updatedFormValues={selectedFilters} onSearch={() => {}} />
         </OverlayPanel>
       </IconField>
     </>
