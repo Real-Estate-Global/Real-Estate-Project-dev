@@ -62,6 +62,7 @@ export const OfferList: React.FC<Props> = ({
       listTemplate={listTemplate}
       layout={"grid"}
       header={header()}
+      className="offer-list"
     />
   );
 };
