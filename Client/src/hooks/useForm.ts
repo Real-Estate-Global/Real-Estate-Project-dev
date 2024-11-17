@@ -6,10 +6,8 @@ export const useForm = (
   initialValues: any,
   updatedFormValues: any
 ) => {
-  console.log('initialValues', initialValues)
   const [values, setValues] = useState<any>(initialValues);
 
-  console.log('values', values)
   useEffect(() => {
     if (updatedFormValues && values) {
       for (const value in updatedFormValues) {
@@ -19,7 +17,7 @@ export const useForm = (
         })
       }
     }
-  }, [updatedFormValues])
+  }, [updatedFormValues, values])
 
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | DropdownChangeEvent
