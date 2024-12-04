@@ -12,7 +12,17 @@ const getSearchData = async (req, res) => {
   }
 };
 
-const getFilterByKeyWord = ({ keyWords, matches }) => {
+const getFilterByKeyWordCities = ({ keyWords, matches }) => {
+  return keyWords.reduce((acc, word) => {
+    for (const match of matches) {
+      if (word.toLowerCase().includes(match.toLowerCase())) {
+        return match;
+      }
+    }
+    return acc;
+  }, null);
+};
+const getFilterByKeyWordPropertyType = ({ keyWords, matches }) => {
   return keyWords.reduce((acc, word) => {
     for (const match of matches) {
       if (word.toLowerCase().includes(match.toLowerCase())) {
@@ -30,9 +40,9 @@ const getSelectedFitlersByKSearchString = (searchString) => {
 
   const keyWords = searchString.split(/\s+/);
   const filters = {
-    city: getFilterByKeyWord({ keyWords, matches: citiesOnly }),
-    district: getFilterByKeyWord({ keyWords, matches: districtsOnly }),
-    propertyType: getFilterByKeyWord({ keyWords, matches: [] }),
+    city: getFilterByKeyWordCities({ keyWords, matches: citiesOnly }),
+    district: getFilterByKeyWordCities({ keyWords, matches: districtsOnly }),
+    propertyType: getFilterByKeyWordCities({ keyWords, matches: [] }),
     budgetLowest: null,
     budgetHighest: null,
     areatLowest: null,
