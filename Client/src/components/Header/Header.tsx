@@ -51,4 +51,4 @@ export const Header = () => {
       </header>
     </>
   );
-}
+};

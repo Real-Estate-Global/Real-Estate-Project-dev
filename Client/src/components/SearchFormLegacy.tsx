@@ -9,7 +9,7 @@ type Props = {
   getHomeOfferList: (values: FiltersType) => void;
 };
 
-export const SearchForm: React.FC<Props> = ({ getHomeOfferList }) => {
+export const SearchFormLegacy: React.FC<Props> = ({ getHomeOfferList }) => {
   const [values, setValues] = useState<FiltersType>({
     city: "",
     type: "",

@@ -5,6 +5,7 @@ import { errorSlice } from "./slices/error";
 import { authApi } from "./api/auth";
 import { privateOffersApi } from "./api/privateOffers";
 import { publicOffersApi } from "./api/publicOffers";
+import { searchDataApi } from "./api/searchData";
 
 export const makeStore = () => {
   const store = configureStore({
@@ -15,12 +16,14 @@ export const makeStore = () => {
       [authApi.reducerPath]: authApi.reducer,
       [privateOffersApi.reducerPath]: privateOffersApi.reducer,
       [publicOffersApi.reducerPath]: publicOffersApi.reducer,
+      [searchDataApi.reducerPath]: searchDataApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({ serializableCheck: false }).concat([
         authApi.middleware,
         privateOffersApi.middleware,
         publicOffersApi.middleware,
+        searchDataApi.middleware,
       ]);
     },
   });
