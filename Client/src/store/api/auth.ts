@@ -4,17 +4,18 @@ import { LoginDataType } from "../../types/LoginDataType";
 import { ProfileDataType } from "../../types/ProfileDataType";
 import { authSliceSelectors } from "../slices/auth";
 import { RootState } from "../store";
+import { BASE_URL } from "./const";
 
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000",
+    baseUrl: BASE_URL,
   }),
   endpoints: (builder) => {
     const login = builder.mutation<string, LoginDataType>({
       queryFn: async (loginData) => {
         try {
-          const response = await fetch("http://localhost:3000/user/login", {
+          const response = await fetch("http://localhost:3000/api/user/login", {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -40,7 +41,7 @@ export const authApi = createApi({
     const signup = builder.mutation<any, ProfileDataType>({
       queryFn: async (signupData) => {
         try {
-          const response = await fetch("http://localhost:3000/user/register", {
+          const response = await fetch("http://localhost:3000/api/user/register", {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -69,7 +70,7 @@ export const authApi = createApi({
             getState() as RootState
           );
 
-          const response = await fetch("http://localhost:3000/user/logout", {
+          const response = await fetch("http://localhost:3000/api/user/logout", {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -104,7 +105,7 @@ export const authApi = createApi({
         );
 
         try {
-          const response = await fetch("http://localhost:3000/user/me", {
+          const response = await fetch("http://localhost:3000/api/user/me", {
             method: "GET",
             headers: {
               "Content-type": "application/json; charset=UTF-8",

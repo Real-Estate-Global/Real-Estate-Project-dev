@@ -3,11 +3,12 @@ import { getAuthorizationToken } from "../../utils/utils";
 import { RootState } from "../store";
 import { authSliceSelectors } from "../slices/auth";
 import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
+import { BASE_URL } from "./const";
 
 export const privateOffersApi = createApi({
   reducerPath: "privateOffersApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000",
+    baseUrl: BASE_URL,
   }),
   endpoints: (builder) => {
     const getMyOffers = builder.query<OfferType[], void>({
@@ -18,7 +19,7 @@ export const privateOffersApi = createApi({
             JSON.parse(localStorage.getItem("auth") as string);
 
           const response = await fetch(
-            "http://localhost:3000/protected/myOffers",
+            "http://localhost:3000/api/protected/myOffers",
             {
               method: "GET",
               headers: {
@@ -57,7 +58,7 @@ export const privateOffersApi = createApi({
         );
         try {
           const response = await fetch(
-            "http://localhost:3000/protected/myOffers",
+            "http://localhost:3000/api/protected/myOffers",
             {
               method: "POST",
               body: JSON.stringify({

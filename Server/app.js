@@ -1,6 +1,8 @@
 const express = require('express')
 const cors = require('cors')
-const {authenticateUser, authorizeUser} = require('./auth')
+const router = express.Router()
+const serverless = require('serverless-http')
+const { authenticateUser, authorizeUser } = require('./auth')
 const {
     checkUserRegister,
     userRegister,
@@ -19,30 +21,32 @@ const {
 } = require('./offers')
 
 const app = express();
-const PORT = 3000;
 
-app.use(express.json());
-app.use(cors())
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-})
+router.post('/user/register', checkUserRegister, userRegister);
+router.post('/user/login', userLogin);
+router.get('/user/logout', userLogout);
+router.get('/user/me', authenticateUser, getUserData);
 
-app.post('/user/register', checkUserRegister, userRegister);
-app.post('/user/login', userLogin);
-app.get('/user/logout', userLogout);
-app.get('/user/me', authenticateUser, getUserData);
+router.get('/data/search/getSelectedFitlers', getSelectedFitlers);
+router.get('/data/search/searchData', getSearchData);
 
-app.get('/data/offers', getPublicOffers);
-app.get('/data/offers/:id', getPublicOfferById);
+router.get('/data/offers', getPublicOffers);
+router.get('/data/offers/:id', getPublicOfferById);
 
-app.get('/protected/myOffers', authenticateUser, getOffersForUser);
-app.post('/protected/myOffers', authenticateUser, createOffer);
-app.get('/protected/myOffers/:id', authenticateUser, getOfferById);
-app.put('/protected/myOffers/:id', authenticateUser, editOfferById);
-app.delete('/protected/myOffers/:id', authenticateUser, deleteOfferById);
+router.get('/protected/myOffers', authenticateUser, getOffersForUser);
+router.post('/protected/myOffers', authenticateUser, createOffer);
+router.get('/protected/myOffers/:id', authenticateUser, getOfferById);
+router.put('/protected/myOffers/:id', authenticateUser, editOfferById);
+router.delete('/protected/myOffers/:id', authenticateUser, deleteOfferById);
 
 // Apply authorization middleware to restricted routes
-app.get('/admin', authenticateUser, authorizeUser('admin'), (req, res) => {
+router.get('/admin', authenticateUser, authorizeUser('admin'), (req, res) => {
     // Handle admin-only route logic here
 });
+
+app.use(express.json());
+app.use(cors());
+app.use('/router');
+app.use('/.netlify/functions/app', router);  // path must route to lambda
+
+module.exports.handler = serverless(app);
