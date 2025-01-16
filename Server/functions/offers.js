@@ -1,21 +1,22 @@
 const MongoDB = require("./db");
-const {v4: uuidv4} = require("uuid");
+const { v4: uuidv4 } = require("uuid");
 
 const getPublicOffers = async (req, res) => {
+    console.log('getPublicOffers', req, res)
     try {
         const propertiesCollection = MongoDB.collection('properties');
-        const query = req.query
+        const query = req.query || {};
         const properties = await propertiesCollection.find(query).toArray();
 
         res.status(200).json(properties);
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while fetching the properties'});
+        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
     }
 }
 const getPublicOfferById = async (req, res) => {
     try {
         const propertiesCollection = MongoDB.collection('properties');
-        const query = {_id: req.params.id};
+        const query = { _id: req.params.id };
         const propertyById = await propertiesCollection.findOne(query);
 
         await propertiesCollection.updateOne(query, {
@@ -29,18 +30,18 @@ const getPublicOfferById = async (req, res) => {
             visited: propertyById.visited + 1
         });
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while fetching the properties'});
+        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
     }
 }
 const getOffersForUser = async (req, res) => {
     try {
         const propertiesCollection = MongoDB.collection('properties');
-        const query = {ownerId: req.userId};
+        const query = { ownerId: req.userId };
         const properties = await propertiesCollection.find(query).toArray();
 
         res.status(200).json(properties);
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while fetching the properties'});
+        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
     }
 }
 const createOffer = async (req, res) => {
@@ -55,7 +56,7 @@ const createOffer = async (req, res) => {
 
         res.status(200).json(newProperty);
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while deleting the property'});
+        res.status(500).json({ error: 'Something went wrong while deleting the property' });
     }
 }
 const getOfferById = async (req, res) => {
@@ -64,7 +65,7 @@ const getOfferById = async (req, res) => {
 const editOfferById = async (req, res) => {
     try {
         const propertiesCollection = MongoDB.collection('properties');
-        const query = {_id: req.params.id};
+        const query = { _id: req.params.id };
 
         const result = await propertiesCollection.updateOne(query, {
             $set: {
@@ -83,18 +84,18 @@ const editOfferById = async (req, res) => {
 
         res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while editing the property'});
+        res.status(500).json({ error: 'Something went wrong while editing the property' });
     }
 }
 const deleteOfferById = async (req, res) => {
     try {
         const propertiesCollection = MongoDB.collection('properties');
-        const query = {_id: req.params.id};
+        const query = { _id: req.params.id };
         await propertiesCollection.deleteOne(query);
 
-        res.status(200).json({message: 'Successfully deleted'});
+        res.status(200).json({ message: 'Successfully deleted' });
     } catch (error) {
-        res.status(500).json({error: 'Something went wrong while deleting the property'});
+        res.status(500).json({ error: 'Something went wrong while deleting the property' });
     }
 }
 
