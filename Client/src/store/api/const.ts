@@ -1,1 +1,2 @@
-export const BASE_URL = "http://localhost:3000/api";
+// TODO: add env variable
+export const BASE_URL = "/api";

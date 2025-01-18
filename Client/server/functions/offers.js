@@ -2,6 +2,7 @@ const MongoDB = require("./db");
 const { v4: uuidv4 } = require("uuid");
 
 const getPublicOffers = async (req, res) => {
+    console.log('getPublicOffers', req, res)
     try {
         const propertiesCollection = MongoDB.collection('properties');
         const query = req.query || {};
