@@ -9,31 +9,11 @@ const buildFiltersQuery = (filters: FiltersType) => {
   }
   let filtersQuery = "?";
 
-  if (filters.city) {
-    filtersQuery += `location=${filters.city}`;
-  }
-  if (filters.district) {
-    filtersQuery += `district=${filters.district}`;
+  for (const item in filters) {
+    filtersQuery += `item=${filters[item as keyof FiltersType]}`;
   }
 
   return filtersQuery;
-};
-const filterOffers = (filters: FiltersType, properties: OfferType[]) => {
-  return properties.filter((property) => {
-    if (filters.budgetLowest) {
-      if (property.price < filters.budgetLowest) {
-        return false;
-      }
-    }
-
-    if (filters.budgetHighest) {
-      if (property.price > filters.budgetHighest) {
-        return false;
-      }
-    }
-
-    return true;
-  });
 };
 
 export const publicOffersApi = createApi({
@@ -61,10 +41,6 @@ export const publicOffersApi = createApi({
             throw await response.json();
           }
           const properties = await response.json();
-
-          if (filters) {
-            return { data: filterOffers(filters, properties) };
-          }
 
           return { data: properties };
         } catch (error: any) {

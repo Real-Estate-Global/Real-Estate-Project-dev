@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-// import { CityType } from "../../types/SearchDataType";
+import { CityType  } from "../../types/SearchDataType";
 import { FiltersType } from "../../types/FiltersType";
 import { BASE_URL } from "./const";
 
@@ -9,7 +9,7 @@ export const searchDataApi = createApi({
     baseUrl: BASE_URL,
   }),
   endpoints: (builder) => {
-    const getCities = builder.query<any[], void>({
+    const getCities = builder.query<CityType[], void>({
       queryFn: async () => {
         try {
           const response = await fetch(

@@ -1,12 +1,23 @@
 import { DropdownChangeEvent } from "primereact/dropdown";
-import { Calendar, CalendarViewChangeEvent } from "primereact/calendar";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 export const useForm = (
   submitHandler: (values: any) => void,
-  initialValues: any
+  initialValues: any,
+  updatedFormValues: any
 ) => {
-  const [values, setValues] = useState(initialValues);
+  const [values, setValues] = useState<any>(initialValues);
+
+  useEffect(() => {
+    if (updatedFormValues && values) {
+      for (const value in updatedFormValues) {
+        setValues({
+          ...values,
+          [value]: updatedFormValues[value]
+        })
+      }
+    }
+  }, [updatedFormValues, values])
 
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | DropdownChangeEvent

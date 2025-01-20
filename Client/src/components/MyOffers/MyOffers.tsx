@@ -14,7 +14,6 @@ import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
 import { OfferList } from "../OfferList/OfferList";
 import { Loader } from "../Loader";
 import { OfferFormDialog } from "../OfferForm/OfferFormDialog";
-import { DateTime } from "luxon";
 
 export const MyOffers = () => {
   const [deleteDialogState, setDeleteDialogState] = useState<{

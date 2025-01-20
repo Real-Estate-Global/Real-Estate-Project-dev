@@ -4,11 +4,11 @@ import { Dialog } from "primereact/dialog";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { useForm } from "../../hooks/useForm";
 import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
-import cities from "../../locations";
 import { onlyUnique } from "../../utils";
 import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
+import { useGetCitiesQuery } from "../../store/api/searchData";
 
 type Props = {
   show: boolean;
@@ -29,6 +29,9 @@ export const OfferFormDialog: React.FC<Props> = ({
   onClose,
   onSubmit,
 }) => {
+  const getCitiesQuery = useGetCitiesQuery();
+  const cities = getCitiesQuery.data;
+
   const {
     values,
     onChange: onFormChange,
@@ -159,7 +162,7 @@ export const OfferFormDialog: React.FC<Props> = ({
               value={values[OfferFormDataEnum.Location]}
               name={OfferFormDataEnum.Location}
               onChange={onChange}
-              options={cities.map((city) => city.City).filter(onlyUnique)}
+              options={cities?.map((city) => city.City).filter(onlyUnique)}
               placeholder="Избери град"
               checkmark={true}
               highlightOnSelect={false}
@@ -174,7 +177,7 @@ export const OfferFormDialog: React.FC<Props> = ({
               onChange={onChange}
               disabled={!values[OfferFormDataEnum.Location]}
               options={cities
-                .filter(
+                ?.filter(
                   (city) => city.City === values[OfferFormDataEnum.Location]
                 )
                 .map((location) => location.District)}

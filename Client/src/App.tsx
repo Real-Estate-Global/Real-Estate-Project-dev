@@ -12,29 +12,20 @@ import { Logout } from "./components/Logout";
 import { MyOffers } from "./components/MyOffers/MyOffers";
 import { MyOfferPage } from "./components/OfferPage/MyOfferPage";
 import { Profile } from "./components/Profile/Profile";
-import { ErrorPopup } from "./components/ErrorPopup/ErrorPopup";
 import { Loader } from "./components/Loader";
 import { useAppDispatch } from "./store/hooks";
 import { authSliceActions } from "./store/slices/auth";
-import { errorSliceActions } from "./store/slices/error";
-import { ErrorType } from "./types/ErrorType";
 import { useLoginMutation } from "./store/api/auth";
 import { LoginDataType } from "./types/LoginDataType";
 
 function App() {
-  const [postCredentials, { isLoading }] = useLoginMutation();
+  const [postCredentials, { isLoading, isError }] = useLoginMutation();
   const navigate = useNavigate();
 
   const dispatch = useAppDispatch();
   const setAuth = useCallback(
     (authToken: string) => {
       dispatch(authSliceActions.setAuth(authToken));
-    },
-    [dispatch]
-  );
-  const setError = useCallback(
-    (error: ErrorType) => {
-      dispatch(errorSliceActions.setError(error));
     },
     [dispatch]
   );
@@ -64,16 +55,15 @@ function App() {
           navigate(Path.Home);
         }
       } catch (e: any) {
-        setError({ hasError: true, message: e.message });
+        console.log("Error::loginSubmitHandler", e)
       }
     },
-    [setError, setAuth]
+    [setAuth]
   );
 
   return (
     <>
       <Header />
-      <ErrorPopup />
       <Loader show={isLoading} />
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
@@ -89,7 +79,7 @@ function App() {
         <Route path={Path.Logout} element={<Logout />}></Route>
         <Route path={Path.MyOffers} element={<MyOffers />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
-        <Route path="/myprofile" element={<Profile />}></Route>
+        <Route path={Path.Profile} element={<Profile />}></Route>
       </Routes>
     </>
   );
