@@ -24,6 +24,8 @@ const {
 } = require('./search')
 
 const app = express();
+app.use(express.json());
+app.use(cors());
 
 app.post('/api/user/register', checkUserRegister, userRegister);
 app.post('/api/user/login', userLogin);
@@ -45,9 +47,6 @@ app.delete('/api/protected/myOffers/:id', authenticateUser, deleteOfferById);
 app.get('/api/admin', authenticateUser, authorizeUser('admin'), (req, res) => {
     // Handle admin-only route logic here
 });
-
-app.use(express.json());
-app.use(cors());
 
 // TODO: for dev only
 app.listen(3000, () => {
