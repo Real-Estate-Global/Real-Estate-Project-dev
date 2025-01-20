@@ -19,7 +19,7 @@ export const privateOffersApi = createApi({
             JSON.parse(localStorage.getItem("auth") as string);
 
           const response = await fetch(
-            "http://localhost:3000/api/protected/myOffers",
+            `${BASE_URL}/protected/myOffers`,
             {
               method: "GET",
               headers: {
@@ -58,7 +58,7 @@ export const privateOffersApi = createApi({
         );
         try {
           const response = await fetch(
-            "http://localhost:3000/api/protected/myOffers",
+            `${BASE_URL}/protected/myOffers`,
             {
               method: "POST",
               body: JSON.stringify({
@@ -94,7 +94,7 @@ export const privateOffersApi = createApi({
 
         try {
           const response = await fetch(
-            `http://localhost:3000/protected/myOffers/${id}`,
+            `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "GET",
               headers: {
@@ -133,7 +133,7 @@ export const privateOffersApi = createApi({
         );
         try {
           const response = await fetch(
-            `http://localhost:3000/protected/myOffers/${id}`,
+            `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "PUT",
               body: JSON.stringify(editOfferData),
@@ -166,7 +166,7 @@ export const privateOffersApi = createApi({
 
         try {
           const response = await fetch(
-            `http://localhost:3000/protected/myOffers/${id}`,
+            `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "DELETE",
               headers: {

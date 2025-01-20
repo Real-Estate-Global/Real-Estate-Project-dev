@@ -13,7 +13,7 @@ export const searchDataApi = createApi({
       queryFn: async () => {
         try {
           const response = await fetch(
-            "http://localhost:3000/api/data/search/searchData",
+            `${BASE_URL}/data/search/searchData`,
             {
               method: "GET",
               headers: {
@@ -38,7 +38,7 @@ export const searchDataApi = createApi({
       queryFn: async (searchString) => {
         try {
           const response = await fetch(
-            `http://localhost:3000/data/search/getSelectedFitlers?searchString=${searchString}`,
+            `${BASE_URL}/data/search/getSelectedFitlers?searchString=${searchString}`,
             {
               method: "GET",
               headers: {

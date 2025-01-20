@@ -1,5 +1,5 @@
 [build]
-  functions="functions"
+  functions="server/functions"
 [[redirects]]
   force = true
   from = "/api/*"

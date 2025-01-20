@@ -47,8 +47,8 @@ export const publicOffersApi = createApi({
         try {
           const response = await fetch(
             filters
-              ? `http://localhost:3000/data/offers${buildFiltersQuery(filters)}`
-              : "http://localhost:3000/api/data/offers",
+              ? `${BASE_URL}/data/offers${buildFiltersQuery(filters)}`
+              : `${BASE_URL}/data/offers`,
             {
               method: "GET",
               headers: {
@@ -77,7 +77,7 @@ export const publicOffersApi = createApi({
       queryFn: async (id) => {
         try {
           const response = await fetch(
-            `http://localhost:3000/data/offers/${id}`,
+            `${BASE_URL}/data/offers/${id}`,
             {
               method: "GET",
               headers: {

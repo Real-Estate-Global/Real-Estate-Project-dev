@@ -15,7 +15,7 @@ export const authApi = createApi({
     const login = builder.mutation<string, LoginDataType>({
       queryFn: async (loginData) => {
         try {
-          const response = await fetch("http://localhost:3000/api/user/login", {
+          const response = await fetch(`${BASE_URL}/user/login`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -41,7 +41,7 @@ export const authApi = createApi({
     const signup = builder.mutation<any, ProfileDataType>({
       queryFn: async (signupData) => {
         try {
-          const response = await fetch("http://localhost:3000/api/user/register", {
+          const response = await fetch(`${BASE_URL}/user/register`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -70,7 +70,7 @@ export const authApi = createApi({
             getState() as RootState
           );
 
-          const response = await fetch("http://localhost:3000/api/user/logout", {
+          const response = await fetch(`${BASE_URL}/user/logout`, {
             method: "POST",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
@@ -105,7 +105,7 @@ export const authApi = createApi({
         );
 
         try {
-          const response = await fetch("http://localhost:3000/api/user/me", {
+          const response = await fetch(`${BASE_URL}/user/me`, {
             method: "GET",
             headers: {
               "Content-type": "application/json; charset=UTF-8",
