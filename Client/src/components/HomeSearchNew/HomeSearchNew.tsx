@@ -35,6 +35,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
     const [getSelectedFiltres, { isLoading, isError }] =
         useGetSelectedFitlersMutation();
     const overlayPanelRef: any = useRef(null);
+    const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
 
     useEffect(() => { }, [selectedFilters]);
     const onSearchChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -95,47 +96,156 @@ export const HomeSearchNew: React.FC<Props> = () => {
         </div>
     );
 
-    const centerContent = (
-        <>
-            <IconField>
-                <InputIcon
-                    className="pi pi-filter p-overlay-badge"
-                    onClick={(e) => overlayPanelRef?.current?.toggle(e)}
-                    style={{ cursor: "pointer", marginLeft: "12px" }}
-                >
-                    {selectedFilters && (
-                        <Badge
-                            value={Object.keys(selectedFilters).length}
-                            style={{
-                                fontSize: "0.5rem",
-                                minWidth: "15px",
-                                minHeight: "15px",
-                                height: "5px",
-                                lineHeight: "15px",
-                            }}
-                        ></Badge>
-                    )}
-                </InputIcon>
+    // const centerContent = (
+    //     <>
+    //         <IconField>
+    //             <InputIcon
+    //                 className="pi pi-filter p-overlay-badge"
+    //                 onClick={(e) => overlayPanelRef?.current?.toggle(e)}
+    //                 style={{ cursor: "pointer", marginLeft: "12px" }}
+    //             >
+    //                 {selectedFilters && (
+    //                     <Badge
+    //                         value={Object.keys(selectedFilters).length}
+    //                         style={{
+    //                             fontSize: "0.5rem",
+    //                             minWidth: "15px",
+    //                             minHeight: "15px",
+    //                             height: "5px",
+    //                             lineHeight: "15px",
+    //                         }}
+    //                     ></Badge>
+    //                 )}
+    //             </InputIcon>
 
-                <InputText
-                    placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
-                    style={{
-                        width: "600px",
-                        display: "inline-block",
-                        paddingLeft: "40px",
-                    }}
-                    onChange={onSearchChange}
-                />
-                <InputIcon
-                    className="pi pi-search"
-                    style={{ cursor: "pointer", marginLeft: "12px" }}
-                    onClick={onSearchClick}
-                />
-                <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                    <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
-                </OverlayPanel>
-            </IconField>
-        </>
+    //             <InputText
+    //                 placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
+    //                 style={{
+    //                     width: "600px",
+    //                     display: "inline-block",
+    //                     paddingLeft: "40px",
+    //                 }}
+    //                 onChange={onSearchChange}
+    //             />
+    //             <InputIcon
+    //                 className="pi pi-search"
+    //                 style={{ cursor: "pointer", marginLeft: "12px" }}
+    //                 onClick={onSearchClick}
+    //             />
+    //             <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
+    //                 <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
+    //             </OverlayPanel>
+    //         </IconField>
+    //     </>
+    // );
+
+    const centerContent = (
+
+        <div className="search-wrapper">
+            <div className="buttons-wrapper">
+                {/* <button>Buy</button>
+                <button>Rent</button> */}
+                <button 
+                    className={activeButton === "buy" ? "active" : "unactive"} 
+                    onClick={() => setActiveButton("buy")}
+                >
+                    Buy
+                </button>
+                <button 
+                    className={activeButton === "rent" ? "active" : "unactive"} 
+                    onClick={() => setActiveButton("rent")}
+                >
+                    Rent
+                </button>
+            </div>
+            <div className="filters-wrapper">
+                <IconField style={{ margin: "auto", width: "95%" }}>
+                    <InputIcon
+                        className="pi pi-filter p-overlay-badge"
+                        onClick={(e) => overlayPanelRef?.current?.toggle(e)}
+                        style={{ cursor: "pointer", marginLeft: "12px" }}
+                    >
+                        {selectedFilters && (
+                            <Badge
+                                value={Object.keys(selectedFilters).length}
+                                style={{
+                                    fontSize: "0.5rem",
+                                    minWidth: "15px",
+                                    minHeight: "15px",
+                                    height: "5px",
+                                    lineHeight: "15px",
+                                }}
+                            ></Badge>
+                        )}
+                    </InputIcon>
+
+                    <InputText
+                        placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
+                        style={{
+                            width: "100%",
+                            display: "inline-block",
+                            paddingLeft: "40px",
+                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                        }}
+                        onChange={onSearchChange}
+                    />
+                    <InputIcon
+                        className="pi pi-search"
+                        style={{ cursor: "pointer", marginRight: "10px" }}
+                        onClick={onSearchClick}
+                    />
+                    <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
+                        <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
+                    </OverlayPanel>
+                </IconField>
+                <div style={{ display: "flex", width: "95%", margin: "auto", marginTop: "15px", gap: "12px" }}>
+                    {/* <div>test</div>
+                    <div>test</div>
+                    <div>test</div> */}
+                    <InputText
+                        placeholder="Апартамент"
+                        style={{
+                            // width: "100%",
+                            display: "inline-block",
+                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                            // paddingLeft: "40px",
+                        }}
+                        onChange={onSearchChange}
+                    />
+                    <InputText
+                        placeholder="гр. София"
+                        style={{
+                            // width: "100%",
+                            display: "inline-block",
+                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                            // paddingLeft: "40px",
+                        }}
+                        onChange={onSearchChange}
+                    />
+                    {/* <InputText
+                        
+                        placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
+                        style={{
+                            width: "100%",
+                            display: "inline-block",
+                            paddingLeft: "40px",
+                        }}
+                        onChange={onSearchChange}
+                    /> */}
+                    <div className="price-input-container">
+                        <div className="icon">€</div>
+                        <input type="text" placeholder="100,000" />
+                        <div className="divider"></div>
+                        <div className="icon">€</div>
+                        <input type="text" placeholder="100,000" />
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+
+
     );
 
     const endContent = <></>;
@@ -151,11 +261,11 @@ export const HomeSearchNew: React.FC<Props> = () => {
                     <button className="heading-button heading-why-us-button">Why us?</button>
                 </div>
             </div>
-            <div className="card" style={{position: "relative", zIndex: "1"}}>
+            <div className="card" style={{ position: "relative", zIndex: "1" }}>
                 <Toolbar
-                    start={startContent}
+                    // start={startContent}
                     center={centerContent}
-                    end={endContent}
+                    // end={endContent}
                     style={{
                         padding: "24px",
                         marginLeft: "18px",
