@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "full-install": "concurrently --kill-others \"npm i\" \"cd ./server && npm i\"",
+    "full-install": "concurrently --kill-others \"npm i\" \"cd server && npm i\"",
     "start": "concurrently --kill-others \"npm run start-web\" \"npm run start-server\"",
     "start-server": "node ./server/functions/app.js",
     "start-web": "vite",
@@ -14,7 +14,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.2.6",
-    "luxon": "^3.5.0",
     "prettier": "^3.2.4",
     "primeflex": "^3.3.1",
     "primeicons": "^7.0.0",

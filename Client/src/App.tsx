@@ -1,6 +1,7 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
 import { useCallback, useEffect } from "react";
 import "./App.css";
+import "./styles/index.css";
 
 import { Header } from "./components/Header/Header";
 import { HomePage } from "./components/HomePage";
