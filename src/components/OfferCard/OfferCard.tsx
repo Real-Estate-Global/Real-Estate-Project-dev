@@ -163,15 +163,15 @@ export const OfferCard: React.FC<Props> = ({
         </div>
         <div className="flex justify-content-between mt-3 mb-2">
           <span className="text-900 font-medium text-xl">
-            <img className="offer-location-icon" src="../../public/location-icon.png" />{location}, {district}
+            <img className="offer-location-icon" src="./location-icon.png" />{location}, {district}
           </span>
           {/* <span className="text-900 text-xl ml-3">{currency + price}</span> */}
         </div>
         <div className="flex justify-content-between mt-3 mb-2">
-          <span className="text-600"> <img className="offer-ruler-icon" src="../../public/ruler-icon.png" />{area} кв.м.</span>
+          <span className="text-600"> <img className="offer-ruler-icon" src="./ruler-icon.png" />{area} кв.м.</span>
           <span className="text-600">
             {/* {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')}г.`} */}
-            <img className="offer-location-icon" src="../../public/build-icon.png" />
+            <img className="offer-location-icon" src="./build-icon.png" />
             {`2000 г.`}
           </span>
           <Button
