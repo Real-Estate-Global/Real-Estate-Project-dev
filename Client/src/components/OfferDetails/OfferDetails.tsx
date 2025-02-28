@@ -1,6 +1,6 @@
 import { OfferType } from "../../types/OfferType";
 // import styles from "./OfferDetails.module.css";
-import { DateTime } from 'luxon'
+import styles from "./OfferDetails.module.css";
 
 type Props = {
   offerDetails?: OfferType;

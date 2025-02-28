@@ -7,7 +7,6 @@ import { OfferType } from "../../types/OfferType";
 // TODO: use routes from path
 import { Path } from "../../paths";
 import "./OfferCard.module.css";
-import { DateTime } from "luxon";
 
 const roomsToName: { [key: string]: string } = {
   1: "Едностаен",

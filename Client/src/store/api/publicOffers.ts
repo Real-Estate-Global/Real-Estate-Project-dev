@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersType } from "../../types/FiltersType";
 import { OfferType } from "../../types/OfferType";
+import { BASE_URL } from "./const";
 
 const buildFiltersQuery = (filters: FiltersType) => {
   if (!filters) {
@@ -18,7 +19,7 @@ const buildFiltersQuery = (filters: FiltersType) => {
 export const publicOffersApi = createApi({
   reducerPath: "publicOffersApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3000",
+    baseUrl: BASE_URL,
   }),
   endpoints: (builder) => {
     const getPublicOffers = builder.mutation<OfferType[], FiltersType | null>({
@@ -26,8 +27,8 @@ export const publicOffersApi = createApi({
         try {
           const response = await fetch(
             filters
-              ? `http://localhost:3000/data/offers${buildFiltersQuery(filters)}`
-              : "http://localhost:3000/data/offers",
+              ? `${BASE_URL}/data/offers${buildFiltersQuery(filters)}`
+              : `${BASE_URL}/data/offers`,
             {
               method: "GET",
               headers: {
@@ -52,7 +53,7 @@ export const publicOffersApi = createApi({
       queryFn: async (id) => {
         try {
           const response = await fetch(
-            `http://localhost:3000/data/offers/${id}`,
+            `${BASE_URL}/data/offers/${id}`,
             {
               method: "GET",
               headers: {
