@@ -145,14 +145,14 @@ export const HomeSearchNew: React.FC<Props> = () => {
             <div className="buttons-wrapper">
                 {/* <button>Buy</button>
                 <button>Rent</button> */}
-                <button 
-                    className={activeButton === "buy" ? "active" : "unactive"} 
+                <button
+                    className={activeButton === "buy" ? "active" : "unactive"}
                     onClick={() => setActiveButton("buy")}
                 >
                     Buy
                 </button>
-                <button 
-                    className={activeButton === "rent" ? "active" : "unactive"} 
+                <button
+                    className={activeButton === "rent" ? "active" : "unactive"}
                     onClick={() => setActiveButton("rent")}
                 >
                     Rent
@@ -198,26 +198,35 @@ export const HomeSearchNew: React.FC<Props> = () => {
                         <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
                     </OverlayPanel>
                 </IconField>
-                <div style={{ display: "flex", width: "95%", margin: "auto", marginTop: "15px", gap: "12px" }}>
+                <div className="search-input-homepage-wrapper" style={{
+                    // display: "flex",
+                    // width: "95%",
+                    // margin: "auto",
+                    // marginTop: "15px",
+                    // flexWrap: "wrap",
+                    // justifyContent: "space-between"
+                }}>
                     {/* <div>test</div>
                     <div>test</div>
                     <div>test</div> */}
                     <InputText
+                        className="search-input-homepage"
                         placeholder="Апартамент"
                         style={{
-                            // width: "100%",
-                            display: "inline-block",
-                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                            // width: "32%",
+                            // display: "inline-block",
+                            // boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
                             // paddingLeft: "40px",
                         }}
                         onChange={onSearchChange}
                     />
                     <InputText
+                        className="search-input-homepage"
                         placeholder="гр. София"
                         style={{
-                            // width: "100%",
-                            display: "inline-block",
-                            boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                            // width: "32%",
+                            // display: "inline-block",
+                            // boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
                             // paddingLeft: "40px",
                         }}
                         onChange={onSearchChange}
@@ -263,6 +272,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
             </div>
             <div className="card" style={{ position: "relative", zIndex: "1" }}>
                 <Toolbar
+                    className="toolbar-homepage"
                     // start={startContent}
                     center={centerContent}
                     // end={endContent}

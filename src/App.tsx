@@ -18,6 +18,7 @@ import { useAppDispatch } from "./store/hooks";
 import { authSliceActions } from "./store/slices/auth";
 import { useLoginMutation } from "./store/api/auth";
 import { LoginDataType } from "./types/LoginDataType";
+import { Footer } from "./components/Footer/Footer";
 
 function App() {
   const [postCredentials, { isLoading, isError }] = useLoginMutation();
@@ -82,6 +83,8 @@ function App() {
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
         <Route path={Path.Profile} element={<Profile />}></Route>
       </Routes>
+      <Footer />
+
     </>
   );
 }
