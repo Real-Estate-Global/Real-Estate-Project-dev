@@ -60,7 +60,7 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
           });
           await loginSubmitHandler({
             password: values.password,
-            userName: values.email,
+            email: values.email,
           });
         } catch (e: any) {
           setError({ hasError: true, message: e.message });

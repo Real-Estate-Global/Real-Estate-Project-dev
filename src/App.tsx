@@ -18,49 +18,47 @@ import { useAppDispatch } from "./store/hooks";
 import { authSliceActions } from "./store/slices/auth";
 import { useLoginMutation } from "./store/api/auth";
 import { LoginDataType } from "./types/LoginDataType";
+import { loginSubmitHandler } from "./utils/login";
+import Cookies from "js-cookie";
+import { buildExtendedFetch } from './utils/fetch'
 
 function App() {
-  const [postCredentials, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading, isError }] = useLoginMutation();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    buildExtendedFetch(navigate);
+  }, [navigate])
   const dispatch = useAppDispatch();
   const setAuth = useCallback(
-    (authToken: string) => {
-      dispatch(authSliceActions.setAuth(authToken));
+    (accessToken: string) => {
+      dispatch(authSliceActions.setAuth({ accessToken }));
     },
     [dispatch]
   );
 
   useEffect(() => {
-    const authFromLocalStorage = window.localStorage.getItem("auth");
+    const authFromCookies = Cookies.get("auth");
 
-    if (authFromLocalStorage) {
-      const persistedAuth = JSON.parse(authFromLocalStorage);
-
-      if (persistedAuth) {
-        setAuth(persistedAuth);
-      }
+    if (authFromCookies) {
+      setAuth(authFromCookies);
+      // dispatch(authSliceActions.setAuth({ accessToken: authFromCookies }));
     }
   }, []);
 
-  // TODO fix username / email?
-  const loginSubmitHandler = useCallback(
+  const onLoginSuccess = useCallback(
+    (accessToken: string) => {
+      setAuth(accessToken);
+      navigate(Path.Home);
+    }, [])
+  const onLoginSubmit =
     async (values: LoginDataType) => {
-      try {
-        const result = await postCredentials(values);
-
-        if (result.data) {
-          setAuth(result.data);
-          window.localStorage.setItem("auth", JSON.stringify(result.data));
-
-          navigate(Path.Home);
-        }
-      } catch (e: any) {
-        console.log("Error::loginSubmitHandler", e)
-      }
-    },
-    [setAuth]
-  );
+      loginSubmitHandler({
+        values,
+        successCb: onLoginSuccess,
+        login
+      })
+    }
 
   return (
     <>
@@ -70,11 +68,11 @@ function App() {
         <Route path="/" element={<HomePage />}></Route>
         <Route
           path="/login"
-          element={<Login loginSubmitHandler={loginSubmitHandler} />}
+          element={<Login loginSubmitHandler={onLoginSubmit} />}
         ></Route>
         <Route
           path="/signup"
-          element={<SignUp loginSubmitHandler={loginSubmitHandler} />}
+          element={<SignUp loginSubmitHandler={onLoginSubmit} />}
         ></Route>
         <Route path="/properties/:offerId" element={<PublicOfferPage />}></Route>
         <Route path={Path.Logout} element={<Logout />}></Route>

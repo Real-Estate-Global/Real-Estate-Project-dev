@@ -16,9 +16,6 @@ export const searchDataApi = createApi({
             `${BASE_URL}/data/search/searchData`,
             {
               method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
             }
           );
 
@@ -41,9 +38,6 @@ export const searchDataApi = createApi({
             `${BASE_URL}/data/search/getSelectedFitlers?searchString=${searchString}`,
             {
               method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
             }
           );
 

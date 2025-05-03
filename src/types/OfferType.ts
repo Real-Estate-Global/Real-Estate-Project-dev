@@ -1,3 +1,5 @@
+import { ImageFileType } from "./ImageFileType";
+
 export type OfferType = {
   _id: string;
   propertyType: string;
@@ -12,7 +14,7 @@ export type OfferType = {
   description: string;
   price: number;
   visited: boolean;
-  img: string;
+  images: ImageFileType[];
 };
 
 export enum OfferFormDataEnum {
@@ -27,4 +29,5 @@ export enum OfferFormDataEnum {
   // TODO: date of building
   YearOfBuilding = "yearOfBuilding",
   Description = "description",
+  Images = "images",
 }

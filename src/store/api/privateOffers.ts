@@ -1,7 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthorizationToken } from "../../utils/utils";
-import { RootState } from "../store";
-import { authSliceSelectors } from "../slices/auth";
 import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
 import { BASE_URL } from "./const";
 
@@ -14,18 +11,10 @@ export const privateOffersApi = createApi({
     const getMyOffers = builder.query<OfferType[], void>({
       queryFn: async (_, { getState }) => {
         try {
-          const token: string =
-            authSliceSelectors.accessToken(getState() as RootState) ||
-            JSON.parse(localStorage.getItem("auth") as string);
-
           const response = await fetch(
             `${BASE_URL}/protected/myOffers`,
             {
               method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "X-Authorization": getAuthorizationToken(token),
-              },
             }
           );
 
@@ -53,9 +42,6 @@ export const privateOffersApi = createApi({
     // TODO: type
     const addNewOffer = builder.mutation<any, OfferType>({
       queryFn: async (offer, { getState }) => {
-        const token: string = authSliceSelectors.accessToken(
-          getState() as RootState
-        );
         try {
           const response = await fetch(
             `${BASE_URL}/protected/myOffers`,
@@ -66,10 +52,6 @@ export const privateOffersApi = createApi({
                 [OfferFormDataEnum.YearOfBuilding]:
                   offer[OfferFormDataEnum.YearOfBuilding].toISOString(),
               }),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "X-Authorization": getAuthorizationToken(token),
-              },
             }
           );
 
@@ -88,19 +70,11 @@ export const privateOffersApi = createApi({
 
     const getMyOffer = builder.query<OfferType, string>({
       queryFn: async (id, { getState }) => {
-        const token: string = authSliceSelectors.accessToken(
-          getState() as RootState
-        );
-
         try {
           const response = await fetch(
             `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "X-Authorization": getAuthorizationToken(token),
-              },
             }
           );
 
@@ -128,19 +102,12 @@ export const privateOffersApi = createApi({
       { id: string; editOfferData: Partial<OfferType> }
     >({
       queryFn: async ({ id, editOfferData }, { getState }) => {
-        const token: string = authSliceSelectors.accessToken(
-          getState() as RootState
-        );
         try {
           const response = await fetch(
             `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "PUT",
               body: JSON.stringify(editOfferData),
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "X-Authorization": getAuthorizationToken(token),
-              },
             }
           );
 
@@ -157,22 +124,13 @@ export const privateOffersApi = createApi({
       },
     });
 
-    // TODO: return type
     const deleteOffer = builder.mutation<any, string>({
       queryFn: async (id, { getState }) => {
-        const token: string = authSliceSelectors.accessToken(
-          getState() as RootState
-        );
-
         try {
           const response = await fetch(
             `${BASE_URL}/protected/myOffers/${id}`,
             {
               method: "DELETE",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-                "X-Authorization": getAuthorizationToken(token),
-              },
             }
           );
 

@@ -80,7 +80,6 @@ export const HomeSearchNew: React.FC<Props> = () => {
         }
     };
 
-    console.log("selectedFilters", selectedFilters);
     const startContent = (
         <div className="flex flex-row flex-wrap gap-2">
             <Button

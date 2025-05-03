@@ -5,8 +5,9 @@ const authenticateUser = (req, res, next) => {
     try {
         const token = req.headers['x-authorization'].split(' ')[1];
 
+        const secretKey = process.env.JWT_SECRET || 'default_secret_key';
         // Verify the token
-        const decodedToken = jwt.verify(token, 'secretKey');
+        const decodedToken = jwt.verify(token, secretKey);
 
         // Attach the user ID to the request object
         req.userId = decodedToken.userId;
@@ -14,23 +15,23 @@ const authenticateUser = (req, res, next) => {
         next();
     } catch (error) {
         console.error('Error authenticating user:', error);
-        res.status(401).json({error: 'Unauthorized'});
+        res.status(401).json({ error: 'Unauthorized' });
     }
 };
 const authorizeUser = (requiredRole) => async (req, res, next) => {
     try {
         const usersCollection = MongoDB.collection('users');
-        const query = {email: req.userId};
+        const query = { email: req.userId };
         const loggedInUser = await usersCollection.findOne(query);
 
         if (loggedInUser.role !== requiredRole) {
-            return res.status(403).json({error: 'Forbidden'});
+            return res.status(403).json({ error: 'Forbidden' });
         }
 
         next();
     } catch (error) {
         console.error('Error authorizing user:', error);
-        res.status(500).json({error: 'An error occurred while authorizing the user'});
+        res.status(500).json({ error: 'An error occurred while authorizing the user' });
     }
 };
 

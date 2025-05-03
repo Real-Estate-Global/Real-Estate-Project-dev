@@ -30,10 +30,7 @@ export const publicOffersApi = createApi({
               ? `${BASE_URL}/data/offers${buildFiltersQuery(filters)}`
               : `${BASE_URL}/data/offers`,
             {
-              method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
+              method: "GET",   
             }
           );
 
@@ -56,9 +53,6 @@ export const publicOffersApi = createApi({
             `${BASE_URL}/data/offers/${id}`,
             {
               method: "GET",
-              headers: {
-                "Content-type": "application/json; charset=UTF-8",
-              },
             }
           );
 
