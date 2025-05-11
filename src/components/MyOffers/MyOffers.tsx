@@ -15,6 +15,8 @@ import { OfferList } from "../OfferList/OfferList";
 import { Loader } from "../Loader";
 import { OfferFormDialog } from "../OfferForm/OfferFormDialog";
 
+type Props = {
+}
 export const MyOffers = () => {
   const [deleteDialogState, setDeleteDialogState] = useState<{
     isOpen: boolean;
@@ -32,15 +34,18 @@ export const MyOffers = () => {
     id: null,
     initialValues: null,
   });
-  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
-  const [editMyOffer, { isLoading: isEditOfferLoading }] =
-    useEditMyOfferMutation();
-  const getMyOffersQuery = useGetMyOffersQuery();
-  const [deleteOffer, { isLoading: isDeleteOfferLoading }] =
-    useDeleteOfferMutation();
-  const [addNewOffer, { isLoading: isAddNewOfferLoading }] =
-    useAddNewOfferMutation();
   const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
+
+  const { isLoading: isGetMyOffersLoading, refetch: refetchMyOffers, data: myOffers, error: getMyOffersError } = useGetMyOffersQuery();
+  const [editMyOffer, { isLoading: isEditOfferLoading, error: editOfferError }] =
+    useEditMyOfferMutation();
+  const [deleteOffer, { isLoading: isDeleteOfferLoading, error: deleteOfferError }] =
+    useDeleteOfferMutation();
+  const [addNewOffer, { isLoading: isAddNewOfferLoading, error: addNewOfferError }] =
+    useAddNewOfferMutation();
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+
+  const isLoading = isGetMyOffersLoading || isAddNewOfferLoading || isDeleteOfferLoading || isEditOfferLoading
 
   const onCreateOfferClick = useCallback(() => {
     setCreateDialogOpen(true);
@@ -56,11 +61,11 @@ export const MyOffers = () => {
           OfferFormDataEnum.YearOfBuilding
         ] as Date,
       }).then(() => {
-        getMyOffersQuery.refetch();
+        refetchMyOffers();
         onCreateOfferClose();
       });
     },
-    [getMyOffersQuery, addNewOffer, onCreateOfferClose]
+    [refetchMyOffers, addNewOffer, onCreateOfferClose]
   );
 
   const onDeleteCancel = useCallback(() => {
@@ -69,13 +74,13 @@ export const MyOffers = () => {
   const onDeleteConfirm = useCallback(() => {
     if (deleteDialogState.id && !isDeleteOfferLoading) {
       deleteOffer(deleteDialogState.id).then(() => {
-        getMyOffersQuery.refetch();
+        refetchMyOffers();
         onDeleteCancel();
       });
     }
   }, [
     deleteOffer,
-    getMyOffersQuery,
+    refetchMyOffers,
     deleteDialogState.id,
     isDeleteOfferLoading,
     onDeleteCancel,
@@ -98,14 +103,14 @@ export const MyOffers = () => {
           id: editDialogState.id,
           editOfferData: newValues,
         }).then(() => {
-          getMyOffersQuery.refetch();
+          refetchMyOffers();
           onEditOfferClose();
         });
       }
     },
     [
       isEditOfferLoading,
-      getMyOffersQuery,
+      refetchMyOffers,
       editDialogState.id,
       editMyOffer,
       onEditOfferClose,
@@ -129,11 +134,7 @@ export const MyOffers = () => {
 
   return (
     <div>
-      <Loader
-        show={
-          isAddNewOfferLoading || isDeleteOfferLoading || isEditOfferLoading
-        }
-      />
+      <Loader show={isLoading} />
       {deleteDialogState.isOpen && (
         <ConfirmDialog
           visible={deleteDialogState.isOpen}
@@ -166,8 +167,8 @@ export const MyOffers = () => {
         <Button label="Добави Обява" onClick={onCreateOfferClick} />
       </div>
       <OfferList
-        offers={getMyOffersQuery.data}
-        editEnabled={true}
+        offers={myOffers}
+        editEnabled={isAuthenticated}
         onEditClick={onEditOfferClick}
         onDeleteClick={onDeleteClick}
       />

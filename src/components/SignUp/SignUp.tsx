@@ -10,7 +10,7 @@ import { loadingSliceActions } from "../../store/slices/loading";
 import { errorSliceActions } from "../../store/slices/error";
 import { ErrorType } from "../../types/ErrorType";
 import { ProfileDataType, SignupFormDataEnum } from "../../types/ProfileDataType";
-import { useSignupMutation } from "../../store/api/auth";
+import { useSignupMutation } from "../../store/api/user";
 import { FloatLabel } from "primereact/floatlabel";
 import { InputText } from "primereact/inputtext";
 import { Dropdown, DropdownProps } from 'primereact/dropdown'
@@ -66,7 +66,7 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
           });
           await loginSubmitHandler({
             password: values.password,
-            userName: values.email,
+            email: values.email,
           });
         } catch (e: any) {
           setError({ hasError: true, message: e.message });
@@ -117,7 +117,6 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
     name: value,
     value: key,
   }));
-console.log(profileTypesOptions);
 
   return (
     <div className={"signup-form-wrapper"}>

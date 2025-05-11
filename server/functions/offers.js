@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require("uuid");
 
 const getPublicOffers = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const query = req.query || {};
         const properties = await propertiesCollection.find(query).toArray();
 
@@ -14,7 +14,7 @@ const getPublicOffers = async (req, res) => {
 }
 const getPublicOfferById = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const query = { _id: req.params.id };
         const propertyById = await propertiesCollection.findOne(query);
 
@@ -34,7 +34,7 @@ const getPublicOfferById = async (req, res) => {
 }
 const getOffersForUser = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const query = { ownerId: req.userId };
         const properties = await propertiesCollection.find(query).toArray();
 
@@ -45,17 +45,16 @@ const getOffersForUser = async (req, res) => {
 }
 const createOffer = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const newProperty = await propertiesCollection.insertOne({
             ...req.body,
             ownerId: req.userId,
             _id: uuidv4(),
             visited: 0
         })
-
         res.status(200).json(newProperty);
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while deleting the property' });
+        res.status(500).json({ error: 'Something went wrong while creating the property' });
     }
 }
 const getOfferById = async (req, res) => {
@@ -63,7 +62,7 @@ const getOfferById = async (req, res) => {
 }
 const editOfferById = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const query = { _id: req.params.id };
 
         const result = await propertiesCollection.updateOne(query, {
@@ -78,6 +77,7 @@ const editOfferById = async (req, res) => {
                 propertyType: req.body.propertyType,
                 rooms: req.body.rooms,
                 yearOfBuilding: req.body.yearOfBuilding,
+                images: req.body.images,
             }
         });
 
@@ -88,7 +88,7 @@ const editOfferById = async (req, res) => {
 }
 const deleteOfferById = async (req, res) => {
     try {
-        const propertiesCollection = MongoDB.collection('properties');
+        const propertiesCollection = MongoDB.collection('offers');
         const query = { _id: req.params.id };
         await propertiesCollection.deleteOne(query);
 

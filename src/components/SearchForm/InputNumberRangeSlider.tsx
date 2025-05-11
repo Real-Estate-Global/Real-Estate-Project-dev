@@ -4,7 +4,7 @@ import {
   InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
 import { Slider, SliderChangeEvent } from "primereact/slider";
-import { ChangeEvent, useCallback, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 
 type Props = {
   nameFrom: string;
@@ -27,6 +27,12 @@ export const InputNumberRangeSlider: React.FC<Props> = ({
 }) => {
   const [valueFrom, setValueFrom] = useState<number>(initalValueFrom);
   const [valueTo, setValueTo] = useState<number>(initialValueTo);
+  useEffect(() => {
+    setValueTo(initialValueTo);
+  }, [initialValueTo]);
+  useEffect(() => {
+    setValueFrom(initalValueFrom);
+  }, [initalValueFrom]);
   const onInputChangeBuilder = (type: "from" | "to" | "range") =>
     useCallback(
       (e: InputNumberValueChangeEvent | SliderChangeEvent) => {

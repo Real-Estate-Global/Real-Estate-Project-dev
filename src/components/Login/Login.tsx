@@ -22,8 +22,6 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
     [LoginFormKeys.Password]: "",
   });
 
-
-  console.log("password", values[LoginFormKeys.Password])
   return (
     <>
       <div className={styles["login-div"]}>

@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-// TODO: auth error ErrorType
 interface AuthState {
   accessToken: string;
 }
@@ -13,8 +12,8 @@ export const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-    setAuth: (state, action: PayloadAction<string>) => {
-      state.accessToken = action.payload;
+    setAuth: (state, action: PayloadAction<{ accessToken: string }>) => {
+      state.accessToken = action.payload.accessToken;
     },
   },
   selectors: {

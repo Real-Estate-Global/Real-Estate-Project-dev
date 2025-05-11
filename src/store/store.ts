@@ -2,25 +2,27 @@ import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "./slices/auth";
 import { loadingSlice } from "./slices/loading";
 import { errorSlice } from "./slices/error";
-import { authApi } from "./api/auth";
+import { userApi } from "./api/user";
 import { privateOffersApi } from "./api/privateOffers";
 import { publicOffersApi } from "./api/publicOffers";
 import { searchDataApi } from "./api/searchData";
+import { profileSlice } from "./slices/profileSlice";
 
 export const makeStore = () => {
   const store = configureStore({
     reducer: {
+      [profileSlice.reducerPath]: profileSlice.reducer,
       [authSlice.reducerPath]: authSlice.reducer,
       [loadingSlice.reducerPath]: loadingSlice.reducer,
       [errorSlice.reducerPath]: errorSlice.reducer,
-      [authApi.reducerPath]: authApi.reducer,
+      [userApi.reducerPath]: userApi.reducer,
       [privateOffersApi.reducerPath]: privateOffersApi.reducer,
       [publicOffersApi.reducerPath]: publicOffersApi.reducer,
       [searchDataApi.reducerPath]: searchDataApi.reducer,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({ serializableCheck: false }).concat([
-        authApi.middleware,
+        userApi.middleware,
         privateOffersApi.middleware,
         publicOffersApi.middleware,
         searchDataApi.middleware,

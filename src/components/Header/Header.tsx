@@ -3,7 +3,7 @@ import { authSliceSelectors } from "../../store/slices/auth";
 import { useAppSelector } from "../../store/hooks";
 
 export const Header = () => {
-  const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
+  const isAuthenticated = useAppSelector(authSliceSelectors.accessToken);
 
   return (
     <>

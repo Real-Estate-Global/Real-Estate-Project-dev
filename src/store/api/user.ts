@@ -1,13 +1,12 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { getAuthorizationToken } from "../../utils/utils";
 import { LoginDataType } from "../../types/LoginDataType";
 import { ProfileDataType } from "../../types/ProfileDataType";
 import { authSliceSelectors } from "../slices/auth";
 import { RootState } from "../store";
 import { BASE_URL } from "./const";
 
-export const authApi = createApi({
-  reducerPath: "authApi",
+export const userApi = createApi({
+  reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
@@ -17,9 +16,6 @@ export const authApi = createApi({
         try {
           const response = await fetch(`${BASE_URL}/user/login`, {
             method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
             body: JSON.stringify(loginData),
           });
 
@@ -37,15 +33,11 @@ export const authApi = createApi({
       },
     });
 
-    // TODO: return type
     const signup = builder.mutation<any, ProfileDataType>({
       queryFn: async (signupData) => {
         try {
           const response = await fetch(`${BASE_URL}/user/register`, {
             method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-            },
             body: JSON.stringify(signupData),
           });
 
@@ -66,16 +58,8 @@ export const authApi = createApi({
     const logout = builder.mutation<void, void>({
       queryFn: async (_, { getState }) => {
         try {
-          const token: string = authSliceSelectors.accessToken(
-            getState() as RootState
-          );
-
           const response = await fetch(`${BASE_URL}/user/logout`, {
             method: "POST",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-              "X-Authorization": getAuthorizationToken(token),
-            },
           });
 
           if (!response.ok) {
@@ -83,10 +67,6 @@ export const authApi = createApi({
           }
 
           const data = await response.json();
-
-          if (response.status === 403) {
-            // TODO: handle
-          }
 
           return {
             data,
@@ -107,21 +87,11 @@ export const authApi = createApi({
         try {
           const response = await fetch(`${BASE_URL}/user/me`, {
             method: "GET",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-              "X-Authorization": getAuthorizationToken(token),
-            },
           });
 
           if (!response.ok) {
             throw await response.json();
           }
-
-          if (response.status === 403) {
-            // TODO: better message.
-            throw new Error("User not logged in!");
-          }
-
           const data = await response.json();
 
           return {
@@ -147,4 +117,4 @@ export const {
   useLogoutMutation,
   useSignupMutation,
   useGetProfileDataQuery,
-} = authApi;
+} = userApi;

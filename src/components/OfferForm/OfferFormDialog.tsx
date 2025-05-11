@@ -9,6 +9,9 @@ import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { useGetCitiesQuery } from "../../store/api/searchData";
+import { UploadMultipleImageForm } from "../UploadImage/UploadMultipleImageForm";
+import { ImageFileType } from "../../types/ImageFileType";
+import { propertyTypes } from "../../const";
 
 type Props = {
   show: boolean;
@@ -18,7 +21,7 @@ type Props = {
 };
 
 const defaultFormValues = {
-  [OfferFormDataEnum.PropertyType]: "Апартамент",
+  [OfferFormDataEnum.PropertyType]: propertyTypes[0],
   [OfferFormDataEnum.Location]: "София",
   [OfferFormDataEnum.Currency]: "€",
 };
@@ -37,7 +40,10 @@ export const OfferFormDialog: React.FC<Props> = ({
     onChange: onFormChange,
     onSubmit: onFormSubmit,
     setValues,
-  } = useForm(onSubmit, initialFormValues || defaultFormValues);
+  } = useForm(onSubmit, {
+    ...defaultFormValues,
+    ...initialFormValues
+  });
   const [touched, setTouched] = useState<Map<keyof OfferType, boolean>>(
     new Map([
       [OfferFormDataEnum.PropertyType, false],
@@ -50,6 +56,7 @@ export const OfferFormDialog: React.FC<Props> = ({
       [OfferFormDataEnum.Area, false],
       [OfferFormDataEnum.YearOfBuilding, false],
       [OfferFormDataEnum.Description, false],
+      [OfferFormDataEnum.Images, false],
     ])
   );
 
@@ -119,6 +126,13 @@ export const OfferFormDialog: React.FC<Props> = ({
     },
     [touched, setTouched, onFormChange]
   );
+  const onUploadImages = useCallback(
+    (images: ImageFileType[]) => {
+      onChange({
+        target: { value: images, name: OfferFormDataEnum.Images },
+      } as any);
+    },
+    [])
 
   const footerContent = (
     <div>
@@ -136,7 +150,7 @@ export const OfferFormDialog: React.FC<Props> = ({
       <Dialog
         header="Добави обява"
         visible={show}
-        style={{ width: "50vw" }}
+        style={{ width: "520px" }}
         onHide={onDialogClose}
         footer={footerContent}
       >
@@ -149,7 +163,7 @@ export const OfferFormDialog: React.FC<Props> = ({
               value={values[OfferFormDataEnum.PropertyType]}
               name={OfferFormDataEnum.PropertyType}
               onChange={onChange}
-              options={["Апартамент", "Къща", "Парцел"]}
+              options={propertyTypes}
               placeholder="Избери тип на имота"
               checkmark={true}
               highlightOnSelect={false}
@@ -272,6 +286,10 @@ export const OfferFormDialog: React.FC<Props> = ({
               required
               invalid={getHasFormError(OfferFormDataEnum.Description)}
             />
+          </div>
+          <div className="flex flex-column gap-1">
+            <label htmlFor={OfferFormDataEnum.Description}>Снимки:</label>
+            <UploadMultipleImageForm initialImages={values[OfferFormDataEnum.Images]} onUpload={onUploadImages} />
           </div>
         </div>
       </Dialog>

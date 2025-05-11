@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Path } from "../paths";
-import { useLogoutMutation } from "../store/api/auth";
+import { useLogoutMutation } from "../store/api/user";
 import { useAppDispatch } from "../store/hooks";
 import { authSliceActions, authSliceSelectors } from "../store/slices/auth";
 import { useSelector } from "react-redux";

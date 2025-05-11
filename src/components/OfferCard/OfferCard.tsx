@@ -7,6 +7,8 @@ import { OfferType } from "../../types/OfferType";
 // TODO: use routes from path
 import { Path } from "../../paths";
 import "./OfferCard.module.css";
+import { ImageFileType } from "../../types/ImageFileType";
+import { Carousel } from "primereact/carousel";
 
 const roomsToName: { [key: string]: string } = {
   1: "Едностаен",
@@ -40,11 +42,10 @@ export const OfferCard: React.FC<Props> = ({
     yearOfBuilding,
     description,
     _id,
-    img,
+    images,
     rooms
   } = offer;
 
-  console.log("test", price.toLocaleString())
   // const separetedPrice = price.toLocaleString()
   let euro = Intl.NumberFormat('en-DE', {
     style: 'currency',
@@ -53,106 +54,31 @@ export const OfferCard: React.FC<Props> = ({
     maximumFractionDigits: 0
   });
 
+  const productTemplate = (image: ImageFileType) => {
+    return (
+      <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+        <div className="mb-3">
+          <Image src={image.url} />
+        </div>
+      </div>
+    );
+  };
+  const firstImage: ImageFileType = images && images[0]
   return (
-    // <div className="offer-card md:col-4 p-2">
-    //   <Card
-    //     title={<div className="flex justify-content-between mt-3 mb-2">
-    //       <span className="text-900">
-    //         {euro.format(price)}
-    //       </span>
-    //       <span className="text-900 text-xl ml-3"><Tag severity="success" value="Продажба"></Tag></span>
-    //     </div>}
-    //     className="border-1 surface-border surface-card border-round p-0"
-    //     header={
-    //       <Image
-    //         src={
-    //           "https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg"
-    //         }
-    //         alt={"image"}
-    //       ></Image>
-    //     }
-    //   >
-    //     <div className="flex justify-content-between mt-3 mb-2">
-    //       <span className="text-900 font-medium text-xl">
-    //         {`${roomsToName[String(rooms)] ? roomsToName[String(rooms)] : "Многостаен"} ${propertyType}`}
-    //       </span>
-    //     </div>
-    //     <div className="flex justify-content-between mt-3 mb-2">
-    //       <span className="text-900 font-medium text-xl">
-    //         <img className="offer-location-icon" src="../../public/location-icon.png" />{location}, {district}
-    //       </span>
-    //       {/* <span className="text-900 text-xl ml-3">{currency + price}</span> */}
-    //     </div>
-    //     <div className="flex justify-content-between mt-3 mb-2">
-    //       <span className="text-600"> <img className="offer-ruler-icon" src="../../public/ruler-icon.png" />{area} кв.м.</span>
-    //       <span className="text-600">
-    //         {/* {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')}г.`} */}
-    //         <img className="offer-location-icon" src="../../public/build-icon.png" />
-    //         {`2000 г.`}
-    //       </span>
-    //       <Button
-    //         label="Виж повече"
-    //         className="p-0"
-    //         text
-    //         link
-    //         onClick={() => {
-    //           navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
-    //         }}
-    //       />
-    //     </div>
-    //     <div className="flex justify-content-between mt-3 mb-2">
-    //       {/* <Button
-    //         label="Виж повече"
-    //         className="p-0"
-    //         text
-    //         link
-    //         onClick={() => {
-    //           navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
-    //         }}
-    //       /> */}
-    //       <div className="flex justify-content-between mt-3 mb-2">
-    //         {editEnabled && (
-    //           <Button
-    //             raised
-    //             icon="pi pi-pencil"
-    //             onClick={() => {
-    //               onEditClick && onEditClick(_id, offer);
-    //             }}
-    //           />
-    //         )}
-    //         {editEnabled && (
-    //           <Button
-    //             severity="danger"
-    //             raised
-    //             icon="pi pi-trash"
-    //             onClick={() => {
-    //               onDeleteClick && onDeleteClick(_id);
-    //             }}
-    //           />
-    //         )}
-    //       </div>
-    //     </div>
-    //   </Card>
-    // </div>
     <div className="offer-card md:col-4 p-2">
       <Card
         title={<div className="flex justify-content-between mt-3 mb-2">
           <span className="text-900">
             {euro.format(price)}
           </span>
-          <span className="text-900 text-xl ml-3"><Tag severity="success" value="Продажба" rounded style={{padding: "3px 9px"}}></Tag></span>
+          <span className="text-900 text-xl ml-3"><Tag severity="success" value="Продажба" rounded style={{ padding: "3px 9px" }}></Tag></span>
         </div>}
         className=" border-1 surface-border surface-card border-round p-0"
         header={
           <div className="header-image-wrapper">
-            <Image
-              src={
-                "https://cdn.freecodecamp.org/curriculum/cat-photo-app/relaxing-cat.jpg"
-              }
-              alt={"image"}
-              height="180"
-
-            ></Image>
+            <div className="card flex justify-content-center">
+              <Carousel value={images || []} numVisible={1} numScroll={1} orientation="horizontal" verticalViewPortHeight="120px" itemTemplate={productTemplate} />
+            </div>
           </div>
         }
       >
@@ -172,7 +98,7 @@ export const OfferCard: React.FC<Props> = ({
           <span className="text-600">
             {/* {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')}г.`} */}
             <img className="offer-location-icon" src="./build-icon.png" />
-            {`2000 г.`}
+            {`${new Date(yearOfBuilding).toISOString().split('T')[0]}`}
           </span>
           <Button
             label="Виж повече"

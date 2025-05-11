@@ -1,10 +1,10 @@
 import styles from "./Profile.module.css";
 import { ProfileDataInfoCard } from "../ProfileDataInfoCard/ProfileDataInfoCard";
-import { useGetProfileDataQuery } from "../../store/api/auth";
+import { profileSliceSelectors } from "../../store/slices/profileSlice";
+import { useAppSelector } from "../../store/hooks";
 
 export const Profile = () => {
-  const profileDataQuery = useGetProfileDataQuery();
-  const profileData = profileDataQuery.data;
+  const profileData = useAppSelector(profileSliceSelectors.profileData);
 
   // TODO: loader
   if (!profileData) {

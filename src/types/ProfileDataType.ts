@@ -1,9 +1,12 @@
+import { ImageFileType } from "./ImageFileType";
+
 export type ProfileDataType = {
   name: string;
   email: string;
   password: string;
   profileType: string;
   phoneNumber: string;
+  watermark?: ImageFileType | string;
   agencyName?: string,
   agencyEik?: number,
   role?: string
