@@ -4,7 +4,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 export const useForm = (
   submitHandler: (values: any) => void,
   initialValues: any,
-  updatedFormValues: any
+  updatedFormValues?: any
 ) => {
   const [values, setValues] = useState<any>(initialValues);
 
