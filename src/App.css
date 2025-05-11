@@ -415,3 +415,32 @@ header {
   grid-column: span 1;
   grid-row: span 1;
 }
+
+@media (max-width: 600px) {
+  .heading-image {
+    /* width: 45vw;
+    margin-top: 65%;
+    z-index: 1;
+    opacity: 75%; */
+    width: 38vw;
+    margin-top: 95%;
+    margin-right: 10%;
+    z-index: 1;
+    opacity: 75%;
+  }
+
+  .heading-titles h1 {
+    font-size: 50px;
+    width: 100%;
+  }
+
+  .heading-titles h3 {
+    font-size: 30px;
+    width: 80%;
+  }
+
+  .heading-titles {
+    z-index: 3;
+    position: relative;
+  }
+}

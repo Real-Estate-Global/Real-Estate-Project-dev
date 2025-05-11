@@ -1,0 +1,42 @@
+.login-input {
+    width: 100%;
+    /* margin-bottom: 50px; */
+}
+
+.login-input .p-icon-field.p-icon-field-right {
+    width: 100%;
+}
+
+.login-input .p-icon-field.p-icon-field-right .p-password-input{
+    width: 100%;
+}
+
+.login-input-wrapper {
+    margin-bottom: 30px;
+}
+
+.login-div {
+    background-color: pink;
+}
+
+._login-div_dtx7s_1{
+    /* background-color: #162350; */
+}
+
+.login-button {
+    background-color: #162350;
+}
+
+/* .login-link {
+    color: #162350;
+} */
+
+.register-link-login-form {
+    color: #162350;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}

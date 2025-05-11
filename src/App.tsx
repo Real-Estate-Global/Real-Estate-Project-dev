@@ -22,6 +22,7 @@ import { loginSubmitHandler } from "./utils/login";
 import Cookies from "js-cookie";
 import { buildExtendedFetch } from './utils/fetch'
 import { profileSliceActions } from "./store/slices/profileSlice";
+import { Footer } from "./components/Footer/Footer";
 
 function App() {
   const [login, { isLoading, isError }] = useLoginMutation();
@@ -89,6 +90,7 @@ function App() {
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
         <Route path={Path.Profile} element={<Profile />}></Route>
       </Routes>
+      <Footer />
     </>
   );
 }

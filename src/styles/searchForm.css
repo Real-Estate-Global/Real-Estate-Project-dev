@@ -43,7 +43,7 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 10px;
-    width: 42%;
+    width: 32%;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -97,4 +97,45 @@
     color: white;
     border: 1px solid rgb(179, 179, 179);
 
+}
+
+.search-input-homepage {
+    width: 32%;
+    display: inline-block;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-input-homepage-wrapper {
+    display: flex;
+    width: 95%;
+    margin: auto;
+    margin-top: 15px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+@media (max-width: 600px) {
+
+    /* .search-input-homepage-wrapper {background-color: pink !important;} */
+    .search-wrapper {
+        width: 80vw;
+    }
+
+    .search-input-homepage {
+        width: 48%;
+    }
+
+    .price-input-container {
+        margin-top: 15px;
+        width: 100%;
+    }
+
+    .toolbar-homepage {
+        background-color: transparent;
+        border: none;
+    }
+
+    .filters-wrapper {
+        background-color: white;
+      }
 }
