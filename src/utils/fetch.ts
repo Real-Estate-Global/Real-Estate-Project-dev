@@ -7,7 +7,6 @@ export const buildExtendedFetch = (navigate?: NavigateFunction) => {
         url: string,
         options: RequestInit = {}
     ): Promise<Response> => {
-        console.log('fetch start')
         try {
             const defaultHeaders = {
                 "Content-type": "application/json; charset=UTF-8",
