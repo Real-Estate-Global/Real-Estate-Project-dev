@@ -28,14 +28,12 @@ export const SearchForm: React.FC<Props> = ({
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
   const cities = getCitiesQuery.data;
-  console.log('updatedFormValues 1', updatedFormValues);
   const {
     values,
     onChange: onFormChange,
     onSubmit: onFormSubmit,
     setValues,
   } = useForm(onSearch, defaultFormValues, updatedFormValues);
-  console.log("values", values);
   const [touched, setTouched] = useState<Map<keyof FiltersType, boolean>>(
     new Map([
       [FiltersTypeEnum.PropertyType, false],

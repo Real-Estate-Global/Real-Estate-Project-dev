@@ -89,21 +89,18 @@ export const UploadMultipleImageForm: React.FC<Props> = ({
             resizedFiles.push(newFile)
             _totalSize += resizedFile.size || 0;
 
-
-            
-
             const watermark2 = await addWatermark({ image: file })
             // @ts-ignore
-            console.log('wt.src', wt.src)
-            console.log('watermark2', watermark2)
-            console.log('file', file)
+           // console.log('wt.src', wt.src)
+           // console.log('watermark2', watermark2)
+           // console.log('file', file)
             const resizedFile2 = await resizeImage(watermark2?.previewUrl);
             const newFile2: ImageFileType = {
                 ...resizedFile2,
                 name: file.name,
                 lastModified: file.lastModified,
             } as any;
-            resizedFiles.push(newFile2)
+            //resizedFiles.push(newFile2)
         }
 
         setUploadedFiles(resizedFiles as ImageFileType[]);

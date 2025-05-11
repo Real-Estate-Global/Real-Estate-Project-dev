@@ -117,7 +117,6 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
     name: value,
     value: key,
   }));
-console.log(profileTypesOptions);
 
   return (
     <div className={"signup-form-wrapper"}>

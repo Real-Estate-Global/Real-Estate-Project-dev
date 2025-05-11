@@ -3,7 +3,6 @@ import Watermark from "@be-tech/watermarkjs";
 export const addWatermark = async (options: { image: File }) => {
     try {
         const { image } = options
-        console.log('image', image)
         const params = {
             init(img: any) {
                 img.crossOrigin = 'anonymous'
@@ -24,7 +23,6 @@ export const addWatermark = async (options: { image: File }) => {
 
         // get the image with all watermark added
         const watermarked = watermark.result;
-        console.log('watermarked', watermarked);
         return watermarked
     } catch (error) {
         console.error(error);

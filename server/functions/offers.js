@@ -52,7 +52,6 @@ const createOffer = async (req, res) => {
             _id: uuidv4(),
             visited: 0
         })
-        // console.log('addWatermarkToImage', addWatermarkToImage(req.body.images[0], 'watermark'));
         res.status(200).json(newProperty);
     } catch (error) {
         res.status(500).json({ error: 'Something went wrong while creating the property' });
