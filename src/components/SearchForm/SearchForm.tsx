@@ -6,15 +6,15 @@ import { onlyUnique } from "../../utils";
 import { useGetCitiesQuery } from "../../store/api/searchData";
 import { InputNumberRangeSlider } from "./InputNumberRangeSlider";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
+import { propertyTypes } from "../../const";
 
 type Props = {
-  initialFormValues?: Partial<FiltersType>;
   updatedFormValues?: Partial<FiltersType>;
   onSearch: (values: FiltersType) => void;
 };
 
 const defaultFormValues = {
-  [FiltersTypeEnum.PropertyType]: "Апартамент",
+  [FiltersTypeEnum.PropertyType]: propertyTypes[0],
   [FiltersTypeEnum.City]: "София",
   [FiltersTypeEnum.RoomsLowest]: 1,
   [FiltersTypeEnum.RoomsHighest]: 4,
@@ -23,19 +23,19 @@ const defaultFormValues = {
 };
 
 export const SearchForm: React.FC<Props> = ({
-  initialFormValues,
   updatedFormValues,
   onSearch,
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
   const cities = getCitiesQuery.data;
-
+  console.log('updatedFormValues 1', updatedFormValues);
   const {
     values,
     onChange: onFormChange,
     onSubmit: onFormSubmit,
     setValues,
-  } = useForm(onSearch, { ...defaultFormValues, ...initialFormValues }, updatedFormValues);
+  } = useForm(onSearch, defaultFormValues, updatedFormValues);
+  console.log("values", values);
   const [touched, setTouched] = useState<Map<keyof FiltersType, boolean>>(
     new Map([
       [FiltersTypeEnum.PropertyType, false],
@@ -134,7 +134,7 @@ export const SearchForm: React.FC<Props> = ({
             value={values[FiltersTypeEnum.PropertyType]}
             name={FiltersTypeEnum.PropertyType}
             onChange={onChange}
-            options={["Апартамент", "Къща", "Парцел"]}
+            options={propertyTypes}
             placeholder="Избери тип на имота"
             checkmark={true}
             highlightOnSelect={false}

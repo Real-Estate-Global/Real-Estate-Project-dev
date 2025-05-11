@@ -10,7 +10,7 @@ import { loadingSliceActions } from "../../store/slices/loading";
 import { errorSliceActions } from "../../store/slices/error";
 import { ErrorType } from "../../types/ErrorType";
 import { ProfileDataType, SignupFormDataEnum } from "../../types/ProfileDataType";
-import { useSignupMutation } from "../../store/api/auth";
+import { useSignupMutation } from "../../store/api/user";
 
 // TODO:
 // User::

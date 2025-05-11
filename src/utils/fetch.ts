@@ -7,29 +7,29 @@ export const buildExtendedFetch = (navigate?: NavigateFunction) => {
         url: string,
         options: RequestInit = {}
     ): Promise<Response> => {
-        const defaultHeaders = {
-            "Content-type": "application/json; charset=UTF-8",
-            Accept: 'application/json',
-        } as any;
-
-        const token = Cookies.get('auth');
-
-        if (token) {
-            defaultHeaders['X-Authorization'] = `Bearer ${token}`;
-        }
-        const extendedOptions: RequestInit = {
-            ...options || {},
-            headers: {
-                ...defaultHeaders,
-                ...(options.headers || {}),
-            },
-        };
-
+        console.log('fetch start')
         try {
+            const defaultHeaders = {
+                "Content-type": "application/json; charset=UTF-8",
+                Accept: 'application/json',
+            } as any;
+    
+            const token = Cookies.get('auth');
+    
+            if (token) {
+                defaultHeaders['X-Authorization'] = `Bearer ${token}`;
+            }
+            const extendedOptions: RequestInit = {
+                ...options || {},
+                headers: {
+                    ...defaultHeaders,
+                    ...(options.headers || {}),
+                },
+            };
+
             const response = await nativeFetch(url, extendedOptions);
 
             if (!response.ok) {
-                console.log('Response not ok', response.status, response.statusText);
                 if (response.status === 401) {
                     Cookies.remove('auth');
                     if (navigate) {

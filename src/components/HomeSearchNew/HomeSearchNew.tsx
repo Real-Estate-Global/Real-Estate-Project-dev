@@ -25,6 +25,7 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
 import { useGetSelectedFitlersMutation } from "../../store/api/searchData";
 import { FiltersType } from "../../types/FiltersType";
+import { propertyTypes } from "../../const";
 
 type Props = {};
 
@@ -95,51 +96,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
         </div>
     );
 
-    // const centerContent = (
-    //     <>
-    //         <IconField>
-    //             <InputIcon
-    //                 className="pi pi-filter p-overlay-badge"
-    //                 onClick={(e) => overlayPanelRef?.current?.toggle(e)}
-    //                 style={{ cursor: "pointer", marginLeft: "12px" }}
-    //             >
-    //                 {selectedFilters && (
-    //                     <Badge
-    //                         value={Object.keys(selectedFilters).length}
-    //                         style={{
-    //                             fontSize: "0.5rem",
-    //                             minWidth: "15px",
-    //                             minHeight: "15px",
-    //                             height: "5px",
-    //                             lineHeight: "15px",
-    //                         }}
-    //                     ></Badge>
-    //                 )}
-    //             </InputIcon>
-
-    //             <InputText
-    //                 placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
-    //                 style={{
-    //                     width: "600px",
-    //                     display: "inline-block",
-    //                     paddingLeft: "40px",
-    //                 }}
-    //                 onChange={onSearchChange}
-    //             />
-    //             <InputIcon
-    //                 className="pi pi-search"
-    //                 style={{ cursor: "pointer", marginLeft: "12px" }}
-    //                 onClick={onSearchClick}
-    //             />
-    //             <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-    //                 <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
-    //             </OverlayPanel>
-    //         </IconField>
-    //     </>
-    // );
-
     const centerContent = (
-
         <div className="search-wrapper">
             <div className="buttons-wrapper">
                 {/* <button>Buy</button>
@@ -198,11 +155,8 @@ export const HomeSearchNew: React.FC<Props> = () => {
                     </OverlayPanel>
                 </IconField>
                 <div style={{ display: "flex", width: "95%", margin: "auto", marginTop: "15px", gap: "12px" }}>
-                    {/* <div>test</div>
-                    <div>test</div>
-                    <div>test</div> */}
                     <InputText
-                        placeholder="Апартамент"
+                        placeholder={propertyTypes[0]}
                         style={{
                             // width: "100%",
                             display: "inline-block",
@@ -221,16 +175,6 @@ export const HomeSearchNew: React.FC<Props> = () => {
                         }}
                         onChange={onSearchChange}
                     />
-                    {/* <InputText
-                        
-                        placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
-                        style={{
-                            width: "100%",
-                            display: "inline-block",
-                            paddingLeft: "40px",
-                        }}
-                        onChange={onSearchChange}
-                    /> */}
                     <div className="price-input-container">
                         <div className="icon">€</div>
                         <input type="text" placeholder="100,000" />
@@ -238,8 +182,6 @@ export const HomeSearchNew: React.FC<Props> = () => {
                         <div className="icon">€</div>
                         <input type="text" placeholder="100,000" />
                     </div>
-
-
                 </div>
             </div>
         </div>
@@ -251,7 +193,6 @@ export const HomeSearchNew: React.FC<Props> = () => {
 
     return (
         <div className="searchFformDiv-wrapper">
-            {/* <div className="searchFormDiv-wrapper"> */}
             <div className="heading-titles">
                 <h1>Discover your perfect home</h1>
                 <h3>Discover the perfect home through our best search system</h3>

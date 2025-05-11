@@ -7,6 +7,8 @@ import { useEffect, useRef, useState } from "react";
 import { blobToURL, fromURL } from 'image-resize-compress';
 import { ImageFileType } from "../../types/ImageFileType";
 import watermarkImage from 'watermarkjs';
+import { addWatermark } from "./utils";
+
 
 type Props = {
     initialImages?: ImageFileType[];
@@ -29,7 +31,7 @@ const resizeImage = async (imageBlob: string) => {
     };
 };
 
-export const UploadImageForm: React.FC<Props> = ({
+export const UploadMultipleImageForm: React.FC<Props> = ({
     initialImages = [],
     onUpload,
     watermark
@@ -83,11 +85,25 @@ export const UploadImageForm: React.FC<Props> = ({
                 ...resizedFile,
                 name: file.name,
                 lastModified: file.lastModified,
-                url: wt.src,
-
             } as any;
             resizedFiles.push(newFile)
             _totalSize += resizedFile.size || 0;
+
+
+            
+
+            const watermark2 = await addWatermark({ image: file })
+            // @ts-ignore
+            console.log('wt.src', wt.src)
+            console.log('watermark2', watermark2)
+            console.log('file', file)
+            const resizedFile2 = await resizeImage(watermark2?.previewUrl);
+            const newFile2: ImageFileType = {
+                ...resizedFile2,
+                name: file.name,
+                lastModified: file.lastModified,
+            } as any;
+            resizedFiles.push(newFile2)
         }
 
         setUploadedFiles(resizedFiles as ImageFileType[]);

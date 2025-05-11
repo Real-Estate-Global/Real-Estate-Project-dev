@@ -4,10 +4,9 @@ import { ProfileDataType } from "../../types/ProfileDataType";
 import { authSliceSelectors } from "../slices/auth";
 import { RootState } from "../store";
 import { BASE_URL } from "./const";
-import { log } from "console";
 
-export const authApi = createApi({
-  reducerPath: "authApi",
+export const userApi = createApi({
+  reducerPath: "userApi",
   baseQuery: fetchBaseQuery({
     baseUrl: BASE_URL,
   }),
@@ -88,10 +87,6 @@ export const authApi = createApi({
         try {
           const response = await fetch(`${BASE_URL}/user/me`, {
             method: "GET",
-            headers: {
-              "Content-type": "application/json; charset=UTF-8",
-              
-            },
           });
 
           if (!response.ok) {
@@ -122,4 +117,4 @@ export const {
   useLogoutMutation,
   useSignupMutation,
   useGetProfileDataQuery,
-} = authApi;
+} = userApi;

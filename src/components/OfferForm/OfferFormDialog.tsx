@@ -9,8 +9,9 @@ import { InputNumber } from "primereact/inputnumber";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { useGetCitiesQuery } from "../../store/api/searchData";
-import { UploadImageForm } from "./UploadImageForm";
+import { UploadMultipleImageForm } from "../UploadImage/UploadMultipleImageForm";
 import { ImageFileType } from "../../types/ImageFileType";
+import { propertyTypes } from "../../const";
 
 type Props = {
   show: boolean;
@@ -20,7 +21,7 @@ type Props = {
 };
 
 const defaultFormValues = {
-  [OfferFormDataEnum.PropertyType]: "Апартамент",
+  [OfferFormDataEnum.PropertyType]: propertyTypes[0],
   [OfferFormDataEnum.Location]: "София",
   [OfferFormDataEnum.Currency]: "€",
 };
@@ -61,7 +62,6 @@ export const OfferFormDialog: React.FC<Props> = ({
 
   const getisInvalid = useCallback(
     (field: keyof OfferType) => {
-      return false
       return (
         values[field] === undefined ||
         values[field] === "" ||
@@ -163,7 +163,7 @@ export const OfferFormDialog: React.FC<Props> = ({
               value={values[OfferFormDataEnum.PropertyType]}
               name={OfferFormDataEnum.PropertyType}
               onChange={onChange}
-              options={["Апартамент", "Къща", "Парцел"]}
+              options={propertyTypes}
               placeholder="Избери тип на имота"
               checkmark={true}
               highlightOnSelect={false}
@@ -289,7 +289,7 @@ export const OfferFormDialog: React.FC<Props> = ({
           </div>
           <div className="flex flex-column gap-1">
             <label htmlFor={OfferFormDataEnum.Description}>Снимки:</label>
-            <UploadImageForm initialImages={values[OfferFormDataEnum.Images]} onUpload={onUploadImages} />
+            <UploadMultipleImageForm initialImages={values[OfferFormDataEnum.Images]} onUpload={onUploadImages} />
           </div>
         </div>
       </Dialog>

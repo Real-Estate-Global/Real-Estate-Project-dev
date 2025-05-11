@@ -6,7 +6,6 @@ import { FiltersType } from "../types/FiltersType";
 import { useGetPublicOffersMutation } from "../store/api/publicOffers";
 import { OfferType } from "../types/OfferType";
 import { Loader } from "./Loader";
-import { HomeSearchToolbar } from "./HomeSearchToolbar/HomeSearchToolbar";
 import { HomeSearchNew } from "./HomeSearchNew/HomeSearchNew";
 
 export const HomePage = () => {
@@ -19,18 +18,7 @@ export const HomePage = () => {
         setOffers(result.data);
       }
     });
-  }, [getPublicOffers, setOffers]);
-
-  const getHomeOfferList = useCallback(
-    async (filters: FiltersType) => {
-      getPublicOffers(filters).then((result) => {
-        if (result.data) {
-          setOffers(result.data);
-        }
-      });
-    },
-    [getPublicOffers, setOffers]
-  );
+  }, []);
 
   return (
     <>

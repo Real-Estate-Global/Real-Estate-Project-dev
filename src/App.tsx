@@ -16,16 +16,25 @@ import { Profile } from "./components/Profile/Profile";
 import { Loader } from "./components/Loader";
 import { useAppDispatch } from "./store/hooks";
 import { authSliceActions } from "./store/slices/auth";
-import { useLoginMutation } from "./store/api/auth";
+import { useGetProfileDataQuery, useLoginMutation } from "./store/api/user";
 import { LoginDataType } from "./types/LoginDataType";
 import { loginSubmitHandler } from "./utils/login";
 import Cookies from "js-cookie";
 import { buildExtendedFetch } from './utils/fetch'
+import { profileSliceActions } from "./store/slices/profileSlice";
 
 function App() {
   const [login, { isLoading, isError }] = useLoginMutation();
   const navigate = useNavigate();
-
+  const profileDataQuery = useGetProfileDataQuery();
+  const profileData = profileDataQuery.data;
+  
+  useEffect(() => {
+    if (profileData) {
+      dispatch(profileSliceActions.setProfileData(profileData));
+    }
+}, [profileData])
+  
   useEffect(() => {
     buildExtendedFetch(navigate);
   }, [navigate])
