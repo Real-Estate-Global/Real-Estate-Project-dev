@@ -4,6 +4,9 @@ export type ProfileDataType = {
   password: string;
   profileType: string;
   phoneNumber: string;
+  agencyName?: string,
+  agencyEik?: number,
+  role?: string
 };
 
 export enum SignupFormDataEnum {
@@ -13,4 +16,7 @@ export enum SignupFormDataEnum {
   ProfileType = "profileType",
   Password = "password",
   ConfirmedPassword = "confirmedPassword",
+  AgencyName = "agencyName",
+  AgencyEik = "agencyEik",
+  Role = "Role"
 };

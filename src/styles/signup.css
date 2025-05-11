@@ -4,7 +4,7 @@
   width: 100%;
   flex-wrap: wrap;
   justify-content: center;
-  height: 600px;
+  /* height: 600px; */
   position: relative;
   min-height: 91.9vh;
 }
@@ -52,3 +52,17 @@
   width: 253.7px;
 }
 
+.signup-input-wrapper{
+    /* width: 100%; */
+    margin-bottom: 30px;
+    --shared-width: 250px;
+    width: var(--shared-width);
+}
+
+.signup-input-wrapper.dropdown-wrapper{
+    width: var(--shared-width);
+}
+
+.signup-input-wrapper.dropdown-wrapper .p-float-label{
+    width: 100%;
+}

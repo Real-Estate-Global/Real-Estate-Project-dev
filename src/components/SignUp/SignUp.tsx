@@ -1,8 +1,8 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "../../hooks/useForm";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import styles from "./SignUp.module.css";
+// import styles from "./SignUp.module.css";
 import { Link } from "react-router-dom";
 import { LoginDataType } from "../../types/LoginDataType";
 import { useAppDispatch } from "../../store/hooks";
@@ -11,9 +11,12 @@ import { errorSliceActions } from "../../store/slices/error";
 import { ErrorType } from "../../types/ErrorType";
 import { ProfileDataType, SignupFormDataEnum } from "../../types/ProfileDataType";
 import { useSignupMutation } from "../../store/api/auth";
+import { FloatLabel } from "primereact/floatlabel";
+import { InputText } from "primereact/inputtext";
+import { Dropdown, DropdownProps } from 'primereact/dropdown'
 
 // TODO:
-// User::
+// User:::
 // :userId*
 // :email*
 // :fullName*
@@ -29,7 +32,6 @@ type Props = {
 };
 
 export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
-  // TODO: add local form error
   const dispatch = useAppDispatch();
   const [signup] = useSignupMutation();
   const setLoading = useCallback(
@@ -57,6 +59,10 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
             password: values.password,
             profileType: values.profileType,
             phoneNumber: values.phoneNumber,
+            agencyName: values.agencyName,
+            // agencyName: values.agencyName, // само ако е избрана агенция
+            // agencyEik: values.agencyEik, // само ако е избрана агенция
+            // role: values.role, // само ако е брокер
           });
           await loginSubmitHandler({
             password: values.password,
@@ -83,104 +89,205 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
     [SignupFormDataEnum.Password]: "",
     [SignupFormDataEnum.ConfirmedPassword]: "",
     [SignupFormDataEnum.ProfileType]: "",
+    [SignupFormDataEnum.PhoneNumber]: "",
+    [SignupFormDataEnum.AgencyName]: "",
+    [SignupFormDataEnum.AgencyEik]: "",
+    [SignupFormDataEnum.Role]: "",
   });
 
+  // Състояние за управление на показваните полета в зависимост от типа потребител
+  const [profileType, setProfileType] = useState("");
+
+  const handleProfileTypeChange = (e: DropdownProps) => {
+    setProfileType(e.value);
+  };
+
+  const profileTypes = [
+    { name: "Частно лице", value: "individual" },
+    { name: "Агенция", value: "agency" },
+    { name: "Брокер", value: "broker" },
+  ];
+
+  const profileTypeToName = {
+    individual: "Частно лице",
+    agency: "Агенция",
+    broker: "Брокер",
+  };
+  const profileTypesOptions = Object.entries(profileTypeToName).map(([key, value]) => ({
+    name: value,
+    value: key,
+  }));
+console.log(profileTypesOptions);
+
   return (
-    <>
-      <div className={styles["signup-form-wrapper"]}>
-        <Card className={styles["signup-form-card"]}>
-          <h1 className={styles["signup-title"]}>Регистрация</h1>
-          <form
-            className={styles["signup-form"]}
-            action="url"
-            onSubmit={onSubmit}
+    <div className={"signup-form-wrapper"}>
+      <Card className={"signup-form-card"}>
+        <h1 className={"signup-title"}>Регистрация</h1>
+        <form className={"signup-form"} onSubmit={onSubmit}>
+          {/* Име на потребителя */}
+          <div className="signup-input-wrapper">
+            <FloatLabel>
+              <InputText
+                className="login-input"
+                id="username"
+                value={values[SignupFormDataEnum.Name]}
+                onChange={onChange}
+                name={SignupFormDataEnum.Name}
+              />
+              <label htmlFor="username">Username</label>
+            </FloatLabel>
+          </div>
+
+          {/* Имейл */}
+          <div className="signup-input-wrapper">
+            <FloatLabel>
+              <InputText
+                type="email"
+                className="login-input"
+                id="email"
+                value={values[SignupFormDataEnum.Email]}
+                onChange={onChange}
+                name={SignupFormDataEnum.Email}
+              />
+              <label htmlFor="username">Email</label>
+            </FloatLabel>
+          </div>
+
+          {/* Телефонен номер */}
+          <div className="signup-input-wrapper">
+            <FloatLabel>
+              <InputText
+                type="tel"
+                className="login-input"
+                id="phoneNumber"
+                value={values[SignupFormDataEnum.PhoneNumber]}
+                onChange={onChange}
+                name={SignupFormDataEnum.PhoneNumber}
+              />
+              <label htmlFor="phoneNumber">Телефонен номер</label>
+            </FloatLabel>
+          </div>
+
+          {/* Избор на тип потребител */}
+          {/* <label htmlFor="profileType"></label>
+          <select
+            required
+            id="profileType"
+            name="profileType"
+            onChange={handleProfileTypeChange}
+            className={"registration-input"}
           >
-            <label htmlFor="name"></label>
-            <input
-              required
-              type="text"
-              id="name"
-              name="name"
-              onChange={onChange}
-              value={values[SignupFormDataEnum.Name]}
-              placeholder="Име"
-              className={styles["registration-input"]}
-            />
-            <label htmlFor="email"></label>
-            <input
-              placeholder="E-mail"
-              required
-              type="email"
-              id="email"
-              name="email"
-              onChange={onChange}
-              value={values[SignupFormDataEnum.Email]}
-              className={styles["registration-input"]}
-            />
-            <label htmlFor="phoneNumber"></label>
-            <input
-              placeholder="Телефонен номер"
-              required
-              type="tel"
-              id="phoneNumber"
-              name="phoneNumber"
-              onChange={onChange}
-              value={values[SignupFormDataEnum.PhoneNumber]}
-              className={styles["registration-input"]}
-            />
-            <label htmlFor="profileType"></label>
-            <select
-              required
-              id="profileTypr"
-              name="profileType"
-              onChange={onChange as any}
-              className={styles["registration-input"]}
-            >
-              <option value="" disabled selected hidden>
-                Тип профил
-              </option>
-              <option value="individual">Частно лице</option>
-              <option value="agency">Агенция</option>
-            </select>
-            <label htmlFor="password"></label>
-            <input
-              placeholder="Парола"
-              required
-              type="password"
-              id="password"
-              name="password"
-              onChange={onChange}
-              value={values[SignupFormDataEnum.Password]}
-              className={styles["registration-input"]}
-            />
-            <label htmlFor="confirmedPassword"></label>
-            <input
-              placeholder="Повторете паролата"
-              required
-              type="password"
-              id="confirmedPassword"
-              name="confirmedPassword"
-              onChange={onChange}
-              value={values[SignupFormDataEnum.ConfirmedPassword]}
-              className={styles["registration-input"]}
-            />
+            <option value="" disabled selected hidden>
+              Тип профил
+            </option>
+            <option value="individual">Частно лице</option>
+            <option value="agency">Агенция</option>
+            <option value="broker">Брокер</option>
+          </select> */}
 
-            <Button
-              className={styles["signup-button"]}
-              type="submit"
-              value="Регистрирай"
-            >
-              Регистрирай
-            </Button>
+          <div className="signup-input-wrapper dropdown-wrapper">
+            <FloatLabel>
+              <Dropdown
+                className="login-input w-full dropdown-type-selection"
+                inputId="profileType"
+                value={profileType}
+                onChange={handleProfileTypeChange}
+                options={profileTypesOptions}
+                optionLabel="name"
+              />
+              <label htmlFor="profileType">Изберете тип профил</label>
+            </FloatLabel>
+          </div>
+          {/* Полета за агенция */}
+          {profileType === "agency" && (
+            <>
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    className="login-input"
+                    id="agencyName"
+                    value={values[SignupFormDataEnum.AgencyName]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.AgencyName}
+                  />
+                  <label htmlFor="agencyName">Име на агенцията</label>
+                </FloatLabel>
+              </div>
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    className="login-input"
+                    id="agencyEik"
+                    value={values[SignupFormDataEnum.AgencyEik]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.AgencyEik}
+                  />
+                  <label htmlFor="agencyEik">ЕИК на агенцията</label>
+                </FloatLabel>
+              </div>
+            </>
+          )}
 
-            <div>
-              <p>
-                Вече имате профил? <Link to="/login">Влезте в профила си</Link>
-              </p>
+          {/* Полета за брокер */}
+          {profileType === "broker" && (
+            <div className="signup-input-wrapper">
+              <FloatLabel>
+                <InputText
+                  className="login-input"
+                  id="role"
+                  value={values[SignupFormDataEnum.Role]}
+                  onChange={onChange}
+                  name={SignupFormDataEnum.Role}
+                />
+                <label htmlFor="role">Роля в агенцията</label>
+              </FloatLabel>
             </div>
-          </form>
-        </Card>
-      </div>
-    </>
+          )}
+
+          {/* Парола */}
+          <div className="signup-input-wrapper">
+            <FloatLabel>
+              <InputText
+                type="password"
+                className="login-input"
+                id="password"
+                value={values[SignupFormDataEnum.Password]}
+                onChange={onChange}
+                name={SignupFormDataEnum.Password}
+              />
+              <label htmlFor="password">Парола</label>
+            </FloatLabel>
+          </div>
+
+          {/* Потвърдете паролата */}
+          <div className="signup-input-wrapper">
+            <FloatLabel>
+              <InputText
+                type="password"
+                className="login-input"
+                id="confirmedPassword"
+                value={values[SignupFormDataEnum.ConfirmedPassword]}
+                onChange={onChange}
+                name={SignupFormDataEnum.ConfirmedPassword}
+              />
+              <label htmlFor="confirmedPassword">Повторете паролата</label>
+            </FloatLabel>
+          </div>
+
+          <Button
+            className={"signup-button"}
+            type="submit"
+          >
+            Регистрирай
+          </Button>
+
+          <div>
+            <p>
+              Вече имате профил? <Link to="/login">Влезте в профила си</Link>
+            </p>
+          </div>
+        </form>
+      </Card>
+    </div>
   );
 };
