@@ -10,7 +10,9 @@ body {
 .navigation {
   backdrop-filter: blur(4px);
   background-color: #efefef;
-  height: 40px;
+  background-color: #162350bf;
+  background-color: #162350;
+  height: 56px;
   border-radius: 28px;
   margin-bottom: 20px;
   display: flex;
@@ -20,11 +22,12 @@ body {
   z-index: 10;
   position: sticky;
   justify-content: space-between;
+  align-items: center;
 }
 
 .nav-link {
   text-decoration: none;
-  color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
 }
 
 header {
@@ -32,7 +35,7 @@ header {
   position: sticky;
   top: 0px;
   z-index: 10;
-  width: 84%;
+  width: 96%;
   margin: auto;
 }
 
@@ -71,11 +74,14 @@ header {
   margin: auto;
   margin-top: 60px;
   margin-bottom: 60px;
+  font-family: Comfortaa;
 }
 
 .heading-titles h1 {
-  font-size: 80px;
+  font-size: 70px;
+  font-size: 4rem;
   width: 60%;
+  color: #162350;
 }
 
 .heading-titles h3 {
@@ -91,7 +97,10 @@ header {
 }
 
 .heading-button.heading-search-button {
-  background-color: black;
+  /* background-color: black; */
+  background-color: #162350;
+  border-color: #162350;
+  border: solid 1px #162350;
   color: white;
   margin-right: 10px;
 }
@@ -221,9 +230,12 @@ header {
 
 .profile-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   position: relative;
   min-height: 91.9vh;
+  width: 80%;
+  margin: auto;
 }
 
 .loader-wrapper {

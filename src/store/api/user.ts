@@ -80,10 +80,6 @@ export const userApi = createApi({
     // TODO: move profile data to another api
     const getProfileData = builder.query<ProfileDataType, void>({
       queryFn: async (_, { getState }) => {
-        const token: string = authSliceSelectors.accessToken(
-          getState() as RootState
-        );
-
         try {
           const response = await fetch(`${BASE_URL}/user/me`, {
             method: "GET",

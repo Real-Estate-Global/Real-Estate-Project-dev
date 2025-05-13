@@ -66,3 +66,11 @@
 .signup-input-wrapper.dropdown-wrapper .p-float-label{
     width: 100%;
 }
+
+.signup-form .p-card-content{
+  display: flex;
+}
+
+.signup-form .p-card-body {
+  width: 100%;
+}

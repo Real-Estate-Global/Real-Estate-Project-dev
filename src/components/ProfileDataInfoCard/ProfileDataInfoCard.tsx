@@ -1,4 +1,3 @@
-import styles from "./ProfileDataInfoCard.module.css";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { ProfileDataType } from "../../types/ProfileDataType";
@@ -10,8 +9,8 @@ type Props = {
 export const ProfileDataInfoCard: React.FC<Props> = ({ profileData }) => {
   return (
     <>
-      <Card className={styles["profile-data-card"]}>
-        <form className={styles["profile-data-form"]}>
+      <Card className={"profile-data-card"}>
+        <form className={"profile-data-form"}>
           <label>Имейл:</label>
           <input type="text" defaultValue={profileData.email}></input>
           <label>Смяна на паролата:</label>
@@ -31,7 +30,7 @@ export const ProfileDataInfoCard: React.FC<Props> = ({ profileData }) => {
           <input type="text" defaultValue={profileData.phoneNumber} />
 
           <Button
-            className={styles["edit-profile-button"]}
+            className={"edit-profile-button"}
             type="submit"
             value="Редактирай"
           >

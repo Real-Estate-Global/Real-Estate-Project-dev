@@ -1,52 +1,80 @@
 import Cookies from 'js-cookie';
 import { NavigateFunction } from "react-router-dom";
 
-export const buildExtendedFetch = (navigate?: NavigateFunction) => {
-    const nativeFetch = window.fetch;
-    const extendedFetch = async (
-        url: string,
-        options: RequestInit = {}
-    ): Promise<Response> => {
-        try {
-            const defaultHeaders = {
-                "Content-type": "application/json; charset=UTF-8",
-                Accept: 'application/json',
-            } as any;
-    
-            const token = Cookies.get('auth');
-    
-            if (token) {
-                defaultHeaders['X-Authorization'] = `Bearer ${token}`;
-            }
-            const extendedOptions: RequestInit = {
-                ...options || {},
-                headers: {
-                    ...defaultHeaders,
-                    ...(options.headers || {}),
-                },
-            };
+const nativeFetch = window.fetch;
 
-            const response = await nativeFetch(url, extendedOptions);
+export const delay = (ms: number): Promise<void> => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+};
 
-            if (!response.ok) {
-                if (response.status === 401) {
-                    Cookies.remove('auth');
-                    if (navigate) {
-                        navigate('/login');
-                    } else {
-                        console.error('Navigate function is not provided');
-                    }
-                }
-                // throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+export class ExtendedFetch {
+    public static instance: ExtendedFetch;
+    private navigate?: NavigateFunction;
+    public static fetch: (url: string, options?: RequestInit) => Promise<Response>;
 
-            return response;
-        } catch (error) {
-            console.error('Fetch error:', error);
-            throw error;
+    private constructor(navigate: NavigateFunction) {
+        this.navigate = navigate;
+        this.overrideGlobalFetch();
+    }
+
+    public static buildInstance(navigate: NavigateFunction) {
+        if (!ExtendedFetch.instance) {
+            ExtendedFetch.instance = new ExtendedFetch(navigate);
         }
     }
 
-    // @ts-ignore Override the global fetch function with the extended version
-    window.fetch = extendedFetch;
+    private overrideGlobalFetch() {   
+        const extendedFetch = async (
+            url: string,
+            options: RequestInit = {}
+        ): Promise<Response> => {
+            try {
+                const defaultHeaders = {
+                    "Content-type": "application/json; charset=UTF-8",
+                    Accept: 'application/json',
+                } as any;
+
+                const token = Cookies.get('auth');
+
+                if (token) {
+                    defaultHeaders['X-Authorization'] = `Bearer ${token}`;
+                }
+                const extendedOptions: RequestInit = {
+                    ...options || {},
+                    headers: {
+                        ...defaultHeaders,
+                        ...(options.headers || {}),
+                    },
+                };
+
+                const response = await nativeFetch(url, extendedOptions);
+
+                if (!response.ok) {
+                    if (response.status === 401) {
+                        Cookies.remove('auth');
+                        if (this.navigate) {
+                            this.navigate('/login');
+                        } else {
+                            console.error('Navigate function is not provided');
+                        }
+                    }
+                }
+
+                return response;
+            } catch (error) {
+                console.error('Fetch error:', error);
+                throw error;
+            }
+        };
+
+        ExtendedFetch.fetch = extendedFetch
+    }
+}
+
+//@ts-ignore
+window.fetch = async (url: string, options?: RequestInit) => {
+    while (!ExtendedFetch.instance) {
+        await delay(100)
+    }
+    return await ExtendedFetch.fetch(url, options);
 }
