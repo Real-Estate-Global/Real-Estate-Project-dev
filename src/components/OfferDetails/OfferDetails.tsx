@@ -25,7 +25,7 @@ export const OfferDetails: React.FC<Props> = ({offerDetails}) => {
   );
 
   return (
-    <div className="offer-details-page p-4">
+    <div className="offer-details-page p-4" style={{alignItems: "stretch"}}>
       {/* Title Section */}
       <div className="mb-4">
         <h1 className="text-2xl font-bold">{offerDetails.propertyType} в {offerDetails.district}</h1>
