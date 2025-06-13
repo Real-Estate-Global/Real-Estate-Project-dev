@@ -3,6 +3,7 @@ const MongoDB = require("./db");
 
 const authenticateUser = (req, res, next) => {
     try {
+        // TODO: defence on split
         const token = req.headers['x-authorization'].split(' ')[1];
 
         const secretKey = process.env.JWT_SECRET || 'default_secret_key';

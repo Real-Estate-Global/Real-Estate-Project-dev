@@ -12,6 +12,7 @@ import { useGetCitiesQuery } from "../../store/api/searchData";
 import { UploadMultipleImageForm } from "../UploadImage/UploadMultipleImageForm";
 import { ImageFileType } from "../../types/ImageFileType";
 import { propertyTypes } from "../../const";
+import { UploadImage } from "../UploadImage/UploadImage";
 
 type Props = {
   show: boolean;
@@ -145,6 +146,7 @@ export const OfferFormDialog: React.FC<Props> = ({
     </div>
   );
 
+  const [watermark, setWatermark] = useState<ImageFileType | null>(null)
   return (
     <div className="card flex justify-content-center">
       <Dialog
@@ -288,8 +290,14 @@ export const OfferFormDialog: React.FC<Props> = ({
             />
           </div>
           <div className="flex flex-column gap-1">
+            <label htmlFor={OfferFormDataEnum.Currency}>Воден Знак:</label>
+            <UploadImage onUpload={(file) => {
+              setWatermark(file)
+            }} />
+          </div>
+          <div className="flex flex-column gap-1">
             <label htmlFor={OfferFormDataEnum.Description}>Снимки:</label>
-            <UploadMultipleImageForm initialImages={values[OfferFormDataEnum.Images]} onUpload={onUploadImages} />
+            <UploadMultipleImageForm watermark={watermark} initialImages={values[OfferFormDataEnum.Images]} onUpload={onUploadImages} />
           </div>
         </div>
       </Dialog>
