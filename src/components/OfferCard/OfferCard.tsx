@@ -56,7 +56,7 @@ export const OfferCard: React.FC<Props> = ({
 
   const productTemplate = (image: ImageFileType) => {
     return (
-      <div className="border-1 surface-border border-round m-2 text-center py-5 px-3">
+      <div className="surface-border border-round m-2 text-center py-5 px-3">
         <div className="mb-3">
           <Image src={image.url} />
         </div>
@@ -68,16 +68,16 @@ export const OfferCard: React.FC<Props> = ({
     <div className="offer-card md:col-4 p-2">
       <Card
         title={<div className="flex justify-content-between mt-3 mb-2">
-          <span className="text-900">
+          <span className="text-900 offer-card-price">
             {euro.format(price)}
           </span>
           <span className="text-900 text-xl ml-3"><Tag severity="success" value="Продажба" rounded style={{ padding: "3px 9px" }}></Tag></span>
         </div>}
-        className=" border-1 surface-border surface-card border-round p-0"
+        className="surface-border surface-card border-round p-0"
         header={
           <div className="header-image-wrapper">
             <div className="card flex justify-content-center">
-              <Carousel value={images || []} numVisible={1} numScroll={1} orientation="horizontal" verticalViewPortHeight="120px" itemTemplate={productTemplate} />
+              <Carousel className="offer-card-carousel" value={images || []} numVisible={1} numScroll={1} orientation="horizontal" verticalViewPortHeight="120px" itemTemplate={productTemplate} />
             </div>
           </div>
         }

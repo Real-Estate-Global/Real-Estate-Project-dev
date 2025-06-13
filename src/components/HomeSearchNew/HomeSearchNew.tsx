@@ -144,7 +144,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
                         <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
                     </OverlayPanel>
                 </IconField>
-                <div className="search-input-homepage">
+                <div className="search-input-homepage-wrapper">
                     <InputText
                         placeholder={propertyTypes[0]}
                         onChange={onSearchChange}
@@ -173,7 +173,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
     return (
         <div className="searchFformDiv-wrapper">
             <div className="heading-titles">
-                <h1>Discover your perfect home</h1>
+                <h1>Умно търсене. Реални резултати.</h1>
                 <h3>Discover the perfect home through our best search system</h3>
                 <div>
                     <button className="heading-button heading-search-button">Search</button>

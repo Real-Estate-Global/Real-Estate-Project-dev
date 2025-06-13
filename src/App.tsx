@@ -20,7 +20,7 @@ import { useGetProfileDataQuery, useLoginMutation } from "./store/api/user";
 import { LoginDataType } from "./types/LoginDataType";
 import { loginSubmitHandler } from "./utils/login";
 import Cookies from "js-cookie";
-import { buildExtendedFetch } from './utils/fetch'
+import { ExtendedFetch } from './utils/fetch'
 import { profileSliceActions } from "./store/slices/profileSlice";
 import { Footer } from "./components/Footer/Footer";
 
@@ -29,7 +29,7 @@ function App() {
   const navigate = useNavigate();
   const profileDataQuery = useGetProfileDataQuery();
   const profileData = profileDataQuery.data;
-  
+  console.log('profileData', profileData)
   useEffect(() => {
     if (profileData) {
       dispatch(profileSliceActions.setProfileData(profileData));
@@ -37,7 +37,7 @@ function App() {
 }, [profileData])
   
   useEffect(() => {
-    buildExtendedFetch(navigate);
+    ExtendedFetch.buildInstance(navigate);
   }, [navigate])
   const dispatch = useAppDispatch();
   const setAuth = useCallback(
@@ -88,7 +88,7 @@ function App() {
         <Route path={Path.Logout} element={<Logout />}></Route>
         <Route path={Path.MyOffers} element={<MyOffers />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
-        <Route path={Path.Profile} element={<Profile />}></Route>
+        <Route path={Path.MyProfile} element={<Profile />}></Route>
       </Routes>
       <Footer />
     </>

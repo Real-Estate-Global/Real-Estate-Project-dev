@@ -63,3 +63,93 @@
     transform: scale(1.1);
     /* Slightly zoom the image on hover */
 }
+
+.offer-card-carousel .p-carousel-prev {
+    position: absolute;
+    z-index: 10;
+}
+
+.offer-card-carousel .p-carousel-next {
+    position: absolute;
+    right: 0;
+    z-index: 10;
+}
+
+.p-carousel-container {
+    position: relative;
+}
+
+
+.p-carousel-container .p-image.p-component {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.p-carousel-container .p-image.p-component img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}
+
+/* .p-carousel-item.p-carousel-item-active {
+    display: block;
+} */
+
+.p-carousel-content {
+    position: relative
+}
+
+.offer-card-carousel .mb-3 {
+    width: -webkit-fill-available;
+    height: 139px;
+    object-fit: inherit;
+}
+
+.offer-card-carousel .p-image.p-component {
+    width: -webkit-fill-available;
+}
+
+.p-carousel-container .p-image.p-component img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+.p-carousel-container .surface-border.border-round.m-2.text-center.py-5.px-3 {
+    margin: 0 !important;
+    padding: 0 !important
+}
+
+.p-carousel .p-carousel-indicators {
+    padding: 1rem;
+    position: absolute;
+    bottom: 0px;
+    /* margin: auto; */
+    width: 100%;
+}
+
+.p-carousel .p-carousel-indicator button {
+    height: 5px;
+    opacity: 0.2;
+}
+
+.offer-card-carousel.p-carousel.p-component.p-carousel-horizontal {
+    width: 100%;
+}
+
+/* .p-card-header {
+    width: --var(--shared-header-card-width);
+}
+
+.offer-card-carousel .p-carousel-items-content{
+    width: --var(--shared-header-card-width) !important;
+} */
+
+.offer-card span{
+    font-size: 15px !important;
+}
+
+.offer-card span.offer-card-price {
+    font-size: 20px !important;
+}
