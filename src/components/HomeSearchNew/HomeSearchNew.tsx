@@ -16,20 +16,21 @@ import { SearchForm } from "../SearchForm/SearchForm";
 import { useGetSelectedFitlersMutation } from "../../store/api/searchData";
 import { FiltersType } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
+import { filtersSliceActions, filtersSliceSelectors } from "../../store/slices/filters";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
 
 type Props = {};
 
 export const HomeSearchNew: React.FC<Props> = () => {
+    const dispatch = useAppDispatch();
+    const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
     const [searchString, setSearchString] = useState("");
-    const [selectedFilters, setSelectedFilters] =
-        useState<Partial<FiltersType>>();
     const [getSelectedFiltres, { isLoading, isError }] =
         useGetSelectedFitlersMutation();
     const overlayPanelRef: any = useRef(null);
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
 
-    useEffect(() => { }, [selectedFilters]);
-    const onSearchChange: ChangeEventHandler<HTMLInputElement> = useCallback(
+    const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
         (e) => {
             setSearchString(e.target.value);
         },
@@ -61,10 +62,10 @@ export const HomeSearchNew: React.FC<Props> = () => {
                     }, null);
 
                 if (newSelectedFilters) {
-                    setSelectedFilters(newSelectedFilters);
+                    dispatch(filtersSliceActions.setSelectedFilters(newSelectedFilters));
                 }
             } else {
-                setSelectedFilters(undefined);
+                dispatch(filtersSliceActions.setSelectedFilters(null));
             }
         } catch (e: any) {
             console.log("Error::onSearchCLick", e);
@@ -85,12 +86,24 @@ export const HomeSearchNew: React.FC<Props> = () => {
             />
         </div>
     );
+    const onSearchKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLInputElement>) => {
+            if (e.key === "Enter") {
+                onSearchClick();
+            }
+        },
+        [onSearchClick]
+    );
+    const onFiltersChange = useCallback((params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => {
+        dispatch(filtersSliceActions.setSelectedFilters({
+            ...selectedFilters,
+            [params.key]: params.value,
+        }));
+    }, [selectedFilters]);
 
     const centerContent = (
         <div className="search-wrapper">
             <div className="buttons-wrapper">
-                {/* <button>Buy</button>
-                <button>Rent</button> */}
                 <button
                     className={activeButton === "buy" ? "active" : "unactive"}
                     onClick={() => setActiveButton("buy")}
@@ -104,7 +117,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
                     Rent
                 </button>
             </div>
-            <div className="filters-wrapper">
+            <div className="filters-wrapper" onKeyDown={onSearchKeyDown}>
                 <IconField style={{ margin: "auto", width: "95%" }}>
                     <InputIcon
                         className="pi pi-filter p-overlay-badge"
@@ -124,7 +137,6 @@ export const HomeSearchNew: React.FC<Props> = () => {
                             ></Badge>
                         )}
                     </InputIcon>
-
                     <InputText
                         placeholder="Бързо търсене (напр. Двустаен апартамент в София)"
                         style={{
@@ -133,7 +145,7 @@ export const HomeSearchNew: React.FC<Props> = () => {
                             paddingLeft: "40px",
                             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
                         }}
-                        onChange={onSearchChange}
+                        onChange={onSearchInputChange}
                     />
                     <InputIcon
                         className="pi pi-search"
@@ -141,18 +153,18 @@ export const HomeSearchNew: React.FC<Props> = () => {
                         onClick={onSearchClick}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                        <SearchForm updatedFormValues={selectedFilters} onSearch={() => { }} />
+                        <SearchForm updatedFormValues={selectedFilters} onFiltersChange={onFiltersChange} />
                     </OverlayPanel>
                 </IconField>
                 <div className="search-input-homepage-wrapper">
                     <InputText
                         placeholder={propertyTypes[0]}
-                        onChange={onSearchChange}
+                        onChange={() => { }}
                     />
                     <InputText
                         className="search-input-homepage"
                         placeholder="гр. София"
-                        onChange={onSearchChange}
+                        onChange={() => { }}
                     />
                     <div className="price-input-container">
                         <div className="icon">€</div>

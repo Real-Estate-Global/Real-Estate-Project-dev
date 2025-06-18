@@ -9,8 +9,8 @@ import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
 
 type Props = {
-  updatedFormValues?: Partial<FiltersType>;
-  onSearch: (values: FiltersType) => void;
+  updatedFormValues?: Partial<FiltersType> | null;
+  onFiltersChange?: (params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => void;
 };
 
 const defaultFormValues = {
@@ -18,109 +18,39 @@ const defaultFormValues = {
   [FiltersTypeEnum.City]: "София",
   [FiltersTypeEnum.RoomsLowest]: 1,
   [FiltersTypeEnum.RoomsHighest]: 4,
+  [FiltersTypeEnum.FloorLowest]: 1,
+  [FiltersTypeEnum.FloorHighest]: 12,
   [FiltersTypeEnum.AreatLowest]: 20,
   [FiltersTypeEnum.AreatHighest]: 100,
 };
 
 export const SearchForm: React.FC<Props> = ({
   updatedFormValues,
-  onSearch,
+  onFiltersChange,
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
   const cities = getCitiesQuery.data;
   const {
     values,
     onChange: onFormChange,
-    onSubmit: onFormSubmit,
-    setValues,
-  } = useForm(onSearch, defaultFormValues, updatedFormValues);
-  const [touched, setTouched] = useState<Map<keyof FiltersType, boolean>>(
-    new Map([
-      [FiltersTypeEnum.PropertyType, false],
-      [FiltersTypeEnum.City, false],
-      [FiltersTypeEnum.District, false],
-      [FiltersTypeEnum.BudgetLowest, false],
-      [FiltersTypeEnum.BudgetHighest, false],
-      [FiltersTypeEnum.AreatLowest, false],
-      [FiltersTypeEnum.AreatHighest, false],
-      [FiltersTypeEnum.FloorLowest, false],
-      [FiltersTypeEnum.FloorHighest, false],
-      [FiltersTypeEnum.RoomsLowest, false],
-      [FiltersTypeEnum.RoomsHighest, false],
-    ])
-  );
+  } = useForm(() => { }, defaultFormValues, updatedFormValues);
 
-  const getisInvalid = useCallback(
-    (field: keyof FiltersType) => {
-      return (
-        values[field] === undefined ||
-        values[field] === "" ||
-        values[field] === null
-      );
-    },
-    [values]
-  );
-
-  const getHasFormError = useCallback(
-    (field: keyof FiltersType) => {
-      return touched.get(field) && getisInvalid(field);
-    },
-    [touched, getisInvalid]
-  );
-
-  const onSubmitButtonClick = useCallback(() => {
-    // TODO: other validation?
-    if (
-      Object.keys(values).some((key) => {
-        return getisInvalid(key as keyof FiltersType);
-      })
-    ) {
-      setTouched(
-        new Map([
-          [FiltersTypeEnum.PropertyType, true],
-          [FiltersTypeEnum.City, true],
-          [FiltersTypeEnum.District, true],
-          [FiltersTypeEnum.BudgetLowest, true],
-          [FiltersTypeEnum.BudgetHighest, true],
-          [FiltersTypeEnum.AreatLowest, true],
-          [FiltersTypeEnum.AreatHighest, true],
-          [FiltersTypeEnum.FloorLowest, true],
-          [FiltersTypeEnum.FloorHighest, true],
-          [FiltersTypeEnum.RoomsLowest, true],
-          [FiltersTypeEnum.RoomsHighest, true],
-        ])
-      );
-    } else {
-      onFormSubmit();
-    }
-  }, [touched, values, onFormSubmit, setTouched]);
   const onChange = useCallback(
     (
       e:
         | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
         | DropdownChangeEvent
     ) => {
-      // @ts-ignore
-      if (e.target && e.target.value !== null) {
-        setTouched(
-          new Map(touched.set(e.target.name as keyof FiltersType, true))
-        );
-      }
 
       onFormChange(e);
+      if (e.target && e.target.value !== null) {
+        onFiltersChange && onFiltersChange({
+          key: e.target.name as keyof FiltersType,
+          value: e.target.value as FiltersType[keyof FiltersType]
+        });
+      }
     },
-    [touched, setTouched, onFormChange]
-  );
-
-  const footerContent = (
-    <div>
-      <Button
-        label="Submit"
-        icon="pi pi-check"
-        onClick={onSubmitButtonClick}
-        autoFocus
-      />
-    </div>
+    []
   );
 
   return (
@@ -136,7 +66,6 @@ export const SearchForm: React.FC<Props> = ({
             placeholder="Избери тип на имота"
             checkmark={true}
             highlightOnSelect={false}
-            invalid={getHasFormError(FiltersTypeEnum.PropertyType)}
           />
         </div>
         <div className="flex flex-column gap-1">
@@ -149,7 +78,6 @@ export const SearchForm: React.FC<Props> = ({
             placeholder="Избери град"
             checkmark={true}
             highlightOnSelect={false}
-            invalid={getHasFormError(FiltersTypeEnum.City)}
           />
         </div>
         <div className="flex flex-column gap-1">
@@ -165,7 +93,6 @@ export const SearchForm: React.FC<Props> = ({
             placeholder="Избери квартал"
             checkmark={true}
             highlightOnSelect={false}
-            invalid={getHasFormError(FiltersTypeEnum.District)}
           />
         </div>
         <div className="flex flex-column gap-1">
@@ -178,6 +105,18 @@ export const SearchForm: React.FC<Props> = ({
             onChange={onChange}
             min={1}
             max={10}
+          />
+        </div>
+        <div className="flex flex-column gap-1">
+          <label>Етаж:</label>
+          <InputNumberRangeSlider
+            nameFrom={FiltersTypeEnum.FloorLowest}
+            initalValueFrom={values[FiltersTypeEnum.FloorLowest]}
+            nameTo={FiltersTypeEnum.FloorHighest}
+            initialValueTo={values[FiltersTypeEnum.FloorHighest]}
+            onChange={onChange}
+            min={1}
+            max={100}
           />
         </div>
         <div className="flex flex-column gap-1">
