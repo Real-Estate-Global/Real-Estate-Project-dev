@@ -4,7 +4,7 @@ import { ProgressBar } from "primereact/progressbar";
 import { Tooltip } from "primereact/tooltip"
 import { useEffect, useRef, useState } from "react";
 
-import { ImageFileType } from "../../types/ImageFileType";
+import { ImageFileType, WatermarkType } from "../../types/ImageFileType";
 
 import { addWatermark } from "./utils";
 import { Loader } from "../Loader";
@@ -13,7 +13,7 @@ import { Loader } from "../Loader";
 type Props = {
     initialImages?: ImageFileType[];
     onUpload: (files: ImageFileType[]) => void;
-    watermark: ImageFileType | null;
+    watermark: WatermarkType;
 }
 
 export const UploadMultipleImageForm: React.FC<Props> = ({
@@ -66,7 +66,16 @@ export const UploadMultipleImageForm: React.FC<Props> = ({
         const resizedFiles: ImageFileType[] = []
 
         for (let file of files) {
-            const newFile = await addWatermark({ image: file, watermarkUrl: watermark?.url })
+            const params: { image: File, watermarkUrl?: string, watermarkText?: string } = {
+                image: file
+            }
+            if (typeof watermark === 'string') {
+                params.watermarkText = watermark;
+            }
+            if (typeof watermark === 'object' && watermark?.url) {
+                params.watermarkUrl = watermark.url;
+            }
+            const newFile = await addWatermark(params)
 
             if (newFile) {
                 resizedFiles.push(newFile)

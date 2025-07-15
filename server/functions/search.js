@@ -213,7 +213,7 @@ const getSelectedFitlersByKSearchString = (searchString) => {
       propertyType: getFiltersKeyWords({ searchString, matches: propertyTypes }),
       budgetLowest: null,
       budgetHighest: null,
-      areatLowest: null,
+      areaLowest: null,
       areatHighest: null,
       ...parseRoomsFromSearchString(searchString),
       ...parseFloorFromSearchString(searchString),

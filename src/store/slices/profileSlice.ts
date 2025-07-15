@@ -19,7 +19,7 @@ const initialState: ProfileDataType = {
   password: "",
   profileType: "",
   phoneNumber: "",
-  watermark: undefined,
+  watermark: null,
 };
 
 export const profileSlice = createSlice({

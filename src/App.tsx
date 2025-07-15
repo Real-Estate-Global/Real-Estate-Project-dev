@@ -16,7 +16,7 @@ import { Profile } from "./components/Profile/Profile";
 import { Loader } from "./components/Loader";
 import { useAppDispatch } from "./store/hooks";
 import { authSliceActions } from "./store/slices/auth";
-import { useGetProfileDataQuery, useLoginMutation } from "./store/api/user";
+import { useGetProfileDataMutation, useLoginMutation } from "./store/api/user";
 import { LoginDataType } from "./types/LoginDataType";
 import { loginSubmitHandler } from "./utils/login";
 import Cookies from "js-cookie";
@@ -25,21 +25,25 @@ import { profileSliceActions } from "./store/slices/profileSlice";
 import { Footer } from "./components/Footer/Footer";
 
 function App() {
-  const [login, { isLoading, isError }] = useLoginMutation();
+  const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
   const navigate = useNavigate();
-  const profileDataQuery = useGetProfileDataQuery();
-  const profileData = profileDataQuery.data;
-  console.log('profileData', profileData)
-  useEffect(() => {
-    if (profileData) {
-      dispatch(profileSliceActions.setProfileData(profileData));
+  const dispatch = useAppDispatch();
+  const [getProfileData, { isLoading: isGetProfileDataLoading, isError: getProfileDataError }] = useGetProfileDataMutation();
+
+  const onGetProfileData = async () => {
+    try {
+      const result = await getProfileData();
+      if (result.data) {
+        dispatch(profileSliceActions.setProfileData(result.data));
+      }
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
     }
-}, [profileData])
-  
+  };
   useEffect(() => {
     ExtendedFetch.buildInstance(navigate);
   }, [navigate])
-  const dispatch = useAppDispatch();
+
   const setAuth = useCallback(
     (accessToken: string) => {
       dispatch(authSliceActions.setAuth({ accessToken }));
@@ -57,7 +61,9 @@ function App() {
   }, []);
 
   const onLoginSuccess = useCallback(
-    (accessToken: string) => {
+    async (accessToken: string) => {
+      onGetProfileData();
+
       setAuth(accessToken);
       navigate(Path.Home);
     }, [])
@@ -73,7 +79,7 @@ function App() {
   return (
     <>
       <Header />
-      <Loader show={isLoading} />
+      <Loader show={isLoginLoading || isGetProfileDataLoading} />
       <Routes>
         <Route path="/" element={<HomePage />}></Route>
         <Route
@@ -86,9 +92,9 @@ function App() {
         ></Route>
         <Route path="/properties/:offerId" element={<PublicOfferPage />}></Route>
         <Route path={Path.Logout} element={<Logout />}></Route>
-        <Route path={Path.MyOffers} element={<MyOffers />}></Route>
+        <Route path={Path.MyOffers} element={<MyOffers onGetProfileData={onGetProfileData} />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
-        <Route path={Path.MyProfile} element={<Profile />}></Route>
+        <Route path={Path.MyProfile} element={<Profile onGetProfileData={onGetProfileData}/>}></Route>
       </Routes>
       <Footer />
     </>

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useCallback, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { Button } from "primereact/button";
 import { Dropdown, DropdownChangeEvent } from "primereact/dropdown";
 import { useForm } from "../../hooks/useForm";
@@ -7,9 +7,10 @@ import { useGetCitiesQuery } from "../../store/api/searchData";
 import { InputNumberRangeSlider } from "./InputNumberRangeSlider";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
+import isEqual from "lodash/isEqual"
 
 type Props = {
-  updatedFormValues?: Partial<FiltersType> | null;
+  updatedFormValuesExternal?: Partial<FiltersType> | null;
   onFiltersChange?: (params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => void;
 };
 
@@ -20,12 +21,14 @@ const defaultFormValues = {
   [FiltersTypeEnum.RoomsHighest]: 4,
   [FiltersTypeEnum.FloorLowest]: 1,
   [FiltersTypeEnum.FloorHighest]: 12,
-  [FiltersTypeEnum.AreatLowest]: 20,
-  [FiltersTypeEnum.AreatHighest]: 100,
+  [FiltersTypeEnum.AreaLowest]: 20,
+  [FiltersTypeEnum.AreaHighest]: 100,
+  [FiltersTypeEnum.BudgetLowest]: 10000,
+  [FiltersTypeEnum.BudgetHighest]: 100000,
 };
 
 export const SearchForm: React.FC<Props> = ({
-  updatedFormValues,
+  updatedFormValuesExternal,
   onFiltersChange,
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
@@ -33,7 +36,8 @@ export const SearchForm: React.FC<Props> = ({
   const {
     values,
     onChange: onFormChange,
-  } = useForm(() => { }, defaultFormValues, updatedFormValues);
+    setValues
+  } = useForm(() => { }, defaultFormValues);
 
   const onChange = useCallback(
     (
@@ -50,8 +54,27 @@ export const SearchForm: React.FC<Props> = ({
         });
       }
     },
-    []
+    [onFiltersChange]
   );
+
+  useEffect(() => {
+    const filteredValues = updatedFormValuesExternal
+      ? Object.keys(updatedFormValuesExternal).reduce((acc, key) => {
+        if (key in values) {
+          acc[key as keyof FiltersType] = values[key as keyof FiltersType];
+        }
+        return acc;
+      }, {} as Partial<FiltersType>)
+      : {};
+
+    if (updatedFormValuesExternal && !isEqual(updatedFormValuesExternal, filteredValues)) {
+      setValues((currentValues: any) => ({
+        ...currentValues,
+        ...updatedFormValuesExternal
+      }))
+      return
+    }
+  }, [updatedFormValuesExternal, values])
 
   return (
     <div className="card flex justify-content-center">
@@ -103,8 +126,8 @@ export const SearchForm: React.FC<Props> = ({
             nameTo={FiltersTypeEnum.RoomsHighest}
             initialValueTo={values[FiltersTypeEnum.RoomsHighest]}
             onChange={onChange}
-            min={1}
-            max={10}
+            min={Math.min(1, values[FiltersTypeEnum.RoomsLowest])}
+            max={Math.max(10, values[FiltersTypeEnum.RoomsHighest])}
           />
         </div>
         <div className="flex flex-column gap-1">
@@ -115,20 +138,32 @@ export const SearchForm: React.FC<Props> = ({
             nameTo={FiltersTypeEnum.FloorHighest}
             initialValueTo={values[FiltersTypeEnum.FloorHighest]}
             onChange={onChange}
-            min={1}
-            max={100}
+            min={Math.min(0, values[FiltersTypeEnum.FloorLowest])}
+            max={Math.max(100, values[FiltersTypeEnum.FloorHighest])}
           />
         </div>
         <div className="flex flex-column gap-1">
           <label>Площ кв.м:</label>
           <InputNumberRangeSlider
-            nameFrom={FiltersTypeEnum.AreatLowest}
-            initalValueFrom={values[FiltersTypeEnum.AreatLowest]}
-            nameTo={FiltersTypeEnum.AreatHighest}
-            initialValueTo={values[FiltersTypeEnum.AreatHighest]}
+            nameFrom={FiltersTypeEnum.AreaLowest}
+            initalValueFrom={values[FiltersTypeEnum.AreaLowest]}
+            nameTo={FiltersTypeEnum.AreaHighest}
+            initialValueTo={values[FiltersTypeEnum.AreaHighest]}
             onChange={onChange}
-            min={1}
-            max={2000}
+            min={Math.min(1, values[FiltersTypeEnum.AreaLowest])}
+            max={Math.max(2000, values[FiltersTypeEnum.AreaHighest])}
+          />
+        </div>
+        <div className="flex flex-column gap-1">
+          <label>Цена:</label>
+          <InputNumberRangeSlider
+            nameFrom={FiltersTypeEnum.BudgetLowest}
+            initalValueFrom={values[FiltersTypeEnum.BudgetLowest]}
+            nameTo={FiltersTypeEnum.BudgetHighest}
+            initialValueTo={values[FiltersTypeEnum.BudgetHighest]}
+            onChange={onChange}
+            min={Math.min(0, values[FiltersTypeEnum.BudgetLowest])}
+            max={Math.max(100000, values[FiltersTypeEnum.BudgetHighest])}
           />
         </div>
       </div>

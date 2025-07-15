@@ -1,8 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { LoginDataType } from "../../types/LoginDataType";
 import { ProfileDataType } from "../../types/ProfileDataType";
-import { authSliceSelectors } from "../slices/auth";
-import { RootState } from "../store";
 import { BASE_URL } from "./const";
 
 export const userApi = createApi({
@@ -55,6 +53,28 @@ export const userApi = createApi({
       },
     });
 
+    const editProfile = builder.mutation<any, Partial<ProfileDataType>>({
+      queryFn: async (signupData) => {
+        try {
+          const response = await fetch(`${BASE_URL}/user/me`, {
+            method: "PUT",
+            body: JSON.stringify(signupData),
+          });
+
+          if (!response.ok) {
+            throw await response.json();
+          }
+
+          const data = await response.json();
+          return {
+            data,
+          };
+        } catch (error: any) {
+          return { error };
+        }
+      },
+    });
+
     const logout = builder.mutation<void, void>({
       queryFn: async (_, { getState }) => {
         try {
@@ -77,8 +97,7 @@ export const userApi = createApi({
       },
     });
 
-    // TODO: move profile data to another api
-    const getProfileData = builder.query<ProfileDataType, void>({
+    const getProfileData = builder.mutation<ProfileDataType, void>({
       queryFn: async (_, { getState }) => {
         try {
           const response = await fetch(`${BASE_URL}/user/me`, {
@@ -104,6 +123,7 @@ export const userApi = createApi({
       signup,
       logout,
       getProfileData,
+      editProfile,
     };
   },
 });
@@ -112,5 +132,6 @@ export const {
   useLoginMutation,
   useLogoutMutation,
   useSignupMutation,
-  useGetProfileDataQuery,
+  useGetProfileDataMutation,
+  useEditProfileMutation,
 } = userApi;

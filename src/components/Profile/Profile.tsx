@@ -1,22 +1,51 @@
-import { useAppSelector } from "../../store/hooks";
-import { profileSliceSelectors } from "../../store/slices/profileSlice";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { profileSliceActions, profileSliceSelectors } from "../../store/slices/profileSlice";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
-import { Checkbox } from "primereact/checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { UploadImage } from "../UploadImage/UploadImage";
+import { WatermarkType } from "../../types/ImageFileType";
+import { InputSwitch } from "primereact/inputswitch";
+import { useEditProfileMutation, useGetProfileDataMutation } from "../../store/api/user";
+import { Loader } from "../Loader";
+import { ProfileDataType } from "../../types/ProfileDataType";
 
-export const Profile = () => {
+type ProfileProps = {
+  onGetProfileData: () => void;
+}
+export const Profile = ({ onGetProfileData }: ProfileProps) => {
+  const dispatch = useAppDispatch();
   const profileData = useAppSelector(profileSliceSelectors.profileData);
-  const [notifications, setNotifications] = useState(false);
+  const [watermark, setWatermark] = useState<WatermarkType>(null)
+  const [watermarkTypeChecked, setWatermarkTypeChecked] = useState(false);
 
+  const [submitEditProfile, { isLoading: isEditProfileDataLoading, isError: editProfileDataError }] = useEditProfileMutation();
+
+  const onSubmitEditProfile = async (params: Partial<ProfileDataType>) => {
+    try {
+      await submitEditProfile(params);
+
+      setTimeout(() => {
+        onGetProfileData(); // Refresh profile data after edit
+      }, 1000);
+    } catch (error) {
+      console.error("Error submitting profile edit:", error);
+    }
+  };
+  useEffect(() => {
+    onGetProfileData();
+  }, [])
   if (!profileData) {
     return null;
   }
 
+  const isLoading = isEditProfileDataLoading;
+
   return (
     <div className="profile-wrapper p-4">
+      <Loader show={isLoading} />
       {/* Hero Section */}
       <div className="hero-section flex align-items-center gap-4 mb-4">
         <div className="avatar bg-primary text-white flex align-items-center justify-content-center border-circle" style={{ width: "80px", height: "80px", fontSize: "24px" }}>
@@ -29,7 +58,7 @@ export const Profile = () => {
         <Button icon="pi pi-pencil" label="Редактирай профил" className="ml-auto" />
       </div>
 
-      {/* Personal Information Section */}
+      {/* Personal Information Section. TODO: Editable */}
       <Card title="Лична информация" className="mb-4">
         <div className="grid">
           <div className="col-12 md:col-6">
@@ -48,7 +77,41 @@ export const Profile = () => {
             <label className="text-muted text-sm">Вид на профила</label>
             <p className="text-lg">{profileData.profileType === "individual" ? "Частно лице" : "Агенция"}</p>
           </div>
+          <div className="col-12 md:col-6">
+            <label className="text-muted text-sm">Воден Знак</label>
+            {typeof profileData.watermark === 'string' && (
+              <p className="text-lg">{profileData.watermark}</p>)
+            }
+            {typeof profileData.watermark === 'object' && profileData.watermark?.url && (
+              <img src={profileData.watermark.url} alt="Watermark" className="w-20rem h-20rem" />)
+            }
+          </div>
         </div>
+      </Card>
+
+      {/* Personal Information Section. TODO: view mode only */}
+      <Card title="Воден знак" className="mb-4">
+        <div className="flex justify-content-between align-items-center mb-3">
+          <div className="flex flex-column gap-1">
+            <div className="flex justify-content-center align-items-center gap-2">
+              <div className="text-muted text-sm">Лого</div>
+              <InputSwitch checked={watermarkTypeChecked} onChange={(e) => setWatermarkTypeChecked(e.value)} />
+              <div className="text-muted text-sm">Текст</div>
+            </div>
+            {!watermarkTypeChecked && <UploadImage onUpload={(file) => {
+              setWatermark(file)
+            }} />}
+            {watermarkTypeChecked && <InputText id="watermark-text" placeholder="Search" onChange={(e) => {
+              setWatermark(e.target.value);
+            }} />}
+          </div>
+        </div>
+        <Button onClick={() => {
+          onSubmitEditProfile({
+            watermark,
+            email: profileData.email,
+          });
+        }} icon="pi pi-save" label="Запази" className="ml-auto" />
       </Card>
 
       {/* Security Section */}

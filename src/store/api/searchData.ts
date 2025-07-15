@@ -35,7 +35,7 @@ export const searchDataApi = createApi({
       queryFn: async (searchString) => {
         try {
           const response = await fetch(
-            `${BASE_URL}/data/search/getSelectedFitlers?searchString=${searchString}`,
+            `${BASE_URL}/data/search/getSelectedFitlersAI?searchString=${searchString}`,
             {
               method: "GET",
             }

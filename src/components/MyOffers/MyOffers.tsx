@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Button } from "primereact/button";
 import styles from "./MyOffers.module.css";
 import { ConfirmDialog } from "primereact/confirmdialog";
@@ -16,8 +16,9 @@ import { Loader } from "../Loader";
 import { OfferFormDialog } from "../OfferForm/OfferFormDialog";
 
 type Props = {
+  onGetProfileData: () => void;
 }
-export const MyOffers = () => {
+export const MyOffers = ({ onGetProfileData }: Props) => {
   const [deleteDialogState, setDeleteDialogState] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -47,6 +48,9 @@ export const MyOffers = () => {
 
   const isLoading = isGetMyOffersLoading || isAddNewOfferLoading || isDeleteOfferLoading || isEditOfferLoading
 
+  useEffect(() => {
+    onGetProfileData();
+  }, [])
   const onCreateOfferClick = useCallback(() => {
     setCreateDialogOpen(true);
   }, [setCreateDialogOpen]);

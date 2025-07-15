@@ -1,24 +1,12 @@
+
 import { DropdownChangeEvent } from "primereact/dropdown";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 export const useForm = (
   submitHandler: (values: any) => void,
   initialValues: any,
-  updatedFormValues?: any
 ) => {
   const [values, setValues] = useState<any>(initialValues);
-
-  useEffect(() => {
-    if (updatedFormValues) {
-      for (const value in updatedFormValues) {
-        setValues((currentValues: any) => ({
-          ...currentValues,
-          [value]: updatedFormValues[value]
-        }))
-      }
-    }
-  }, [updatedFormValues])
-
   const onChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | DropdownChangeEvent
   ) => {

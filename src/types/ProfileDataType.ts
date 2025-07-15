@@ -1,4 +1,4 @@
-import { ImageFileType } from "./ImageFileType";
+import { WatermarkType } from "./ImageFileType";
 
 export type ProfileDataType = {
   name: string;
@@ -6,7 +6,7 @@ export type ProfileDataType = {
   password: string;
   profileType: string;
   phoneNumber: string;
-  watermark?: ImageFileType | string;
+  watermark?: WatermarkType;
   agencyName?: string,
   agencyEik?: number,
   role?: string
