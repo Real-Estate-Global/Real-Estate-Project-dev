@@ -9,8 +9,8 @@ import { ChangeEvent, useCallback, useEffect, useState } from "react";
 type Props = {
   nameFrom: string;
   nameTo: string;
-  initalValueFrom: number;
-  initialValueTo: number;
+  initalValueFrom?: number | null;
+  initialValueTo?: number | null;
   min: number;
   max: number;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
@@ -25,14 +25,14 @@ export const InputNumberRangeSlider: React.FC<Props> = ({
   min,
   max,
 }) => {
-  const [valueFrom, setValueFrom] = useState<number>(initalValueFrom);
-  const [valueTo, setValueTo] = useState<number>(initialValueTo);
-  useEffect(() => {
-    setValueTo(initialValueTo);
-  }, [initialValueTo]);
-  useEffect(() => {
-    setValueFrom(initalValueFrom);
-  }, [initalValueFrom]);
+  const [valueFrom, setValueFrom] = useState<number>(initalValueFrom || min);
+  const [valueTo, setValueTo] = useState<number>(initialValueTo || max);
+  // useEffect(() => {
+  //   // initialValueTo !== undefined && setValueTo(initialValueTo);
+  // }, [initialValueTo]);
+  // useEffect(() => {
+  //   // initalValueFrom !== undefined && setValueFrom(initalValueFrom);
+  // }, [initalValueFrom]);
   const onInputChangeBuilder = (type: "from" | "to" | "range") =>
     useCallback(
       (e: InputNumberValueChangeEvent | SliderChangeEvent) => {
@@ -54,18 +54,26 @@ export const InputNumberRangeSlider: React.FC<Props> = ({
           const value = (e as SliderChangeEvent).value as [number, number];
           if (value != null) {
             const [sliderValueFrom, sliderValueTo] = value;
-            if (sliderValueFrom <= valueTo) {
-              setValueFrom(sliderValueFrom);
-              onChange({
-                target: { name: nameFrom, value: sliderValueFrom },
-              } as any);
+            setValueFrom(sliderValueFrom);
+            setValueTo(sliderValueTo);
+            let debounceTimeout: NodeJS.Timeout | undefined;
+
+            if (debounceTimeout) {
+              clearTimeout(debounceTimeout);
             }
-            if (sliderValueTo >= valueFrom) {
-              setValueTo(sliderValueTo);
-              onChange({
-                target: { name: nameTo, value: sliderValueTo },
-              } as any);
-            }
+
+            debounceTimeout = setTimeout(() => {
+              if (sliderValueFrom < valueTo) {
+                onChange({
+                  target: { name: nameFrom, value: sliderValueFrom },
+                } as any);
+              }
+              if (sliderValueTo > valueFrom) {
+                onChange({
+                  target: { name: nameTo, value: sliderValueTo },
+                } as any);
+              }
+            }, 50);
           }
         }
       },

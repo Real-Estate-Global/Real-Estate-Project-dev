@@ -5,6 +5,7 @@ import { useGetPublicOffersMutation } from "../store/api/publicOffers";
 import { OfferType } from "../types/OfferType";
 import { HomeSearchNew } from "./HomeSearchNew/HomeSearchNew";
 import { useFilterOffers } from "../hooks/useFilterOffers";
+import { Loader } from "./Loader";
 
 export const HomePage = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -26,9 +27,10 @@ export const HomePage = () => {
 
   return (
     <>
+      <Loader show={isLoading} />
       <HeadingImage />
-      <HomeSearchNew setIsLoading={setIsLoading} isLoading={isLoading} />
-      <OfferList isLoading={isLoading} offers={filteredOffers} />
+      <HomeSearchNew setIsLoading={setIsLoading} />
+      <OfferList offers={filteredOffers} />
     </>
   );
 };

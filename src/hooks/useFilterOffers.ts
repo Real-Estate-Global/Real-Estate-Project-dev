@@ -5,7 +5,7 @@ import { FiltersTypeEnum } from "../types/FiltersType";
 
 export const useFilterOffers = (offers: OfferType[]) => {
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
-    console.log('selectedFilters', selectedFilters);
+
     const filteredOffers = selectedFilters
         ? offers.filter((offer) => {
             if (selectedFilters[FiltersTypeEnum.PropertyType]) {
@@ -24,7 +24,6 @@ export const useFilterOffers = (offers: OfferType[]) => {
                 }
             }
             if (selectedFilters[FiltersTypeEnum.RoomsLowest]) {
-                console.log('offer.rooms', offer.rooms, 'selectedFilters[FiltersTypeEnum.RoomsLowest]', selectedFilters[FiltersTypeEnum.RoomsLowest])
                 if (offer.rooms < selectedFilters[FiltersTypeEnum.RoomsLowest]) {
                     return false
                 }

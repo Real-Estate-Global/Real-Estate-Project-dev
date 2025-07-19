@@ -14,8 +14,10 @@ export const filtersSlice = createSlice({
   initialState,
   reducers: {
     setSelectedFilters: (state, action: PayloadAction<Partial<FiltersType> | null>) => {
-      console.log('set selected filters', action.payload);
-      state.selectedFilters = action.payload;
+      state.selectedFilters = {
+        ...state.selectedFilters,
+        ...action.payload,
+      };
     },
     clearSelectedFilters: (state) => {
       state.selectedFilters = null;

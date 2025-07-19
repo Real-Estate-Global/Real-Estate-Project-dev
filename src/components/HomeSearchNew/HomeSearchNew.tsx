@@ -13,21 +13,24 @@ import {
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
-import { useGetSelectedFitlersMutation } from "../../store/api/searchData";
-import { FiltersType } from "../../types/FiltersType";
+import { useGetCitiesQuery, useGetSelectedFitlersMutation } from "../../store/api/searchData";
+import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
 import { filtersSliceActions, filtersSliceSelectors } from "../../store/slices/filters";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
-import { Loader } from "../Loader";
 import debounce from "lodash/debounce";
+import { on } from "events";
+import { Dropdown } from "primereact/dropdown";
+import { onlyUnique } from "../../utils";
 
 type Props = {
     setIsLoading: (isLoading: boolean) => void;
-    isLoading: boolean;
 };
 
-export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
+export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
     const dispatch = useAppDispatch();
+    const getCitiesQuery = useGetCitiesQuery();
+    const cities = getCitiesQuery.data;
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
     const [searchString, setSearchString] = useState("");
     const [getSelectedFiltres, { isLoading: isGetSelectedFiltersLoading, isError }] =
@@ -37,10 +40,11 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
 
     useEffect(() => {
-        if (setIsLoading) {
-            setIsLoading(isGetSelectedFiltersLoading);
-        }
+        setIsLoading && setIsLoading(isGetSelectedFiltersLoading);
     }, [isGetSelectedFiltersLoading, setIsLoading]);
+    useEffect(() => {
+        dispatch(filtersSliceActions.setSelectedFilters(selectedFiltersExternal));
+    }, [selectedFiltersExternal]);
 
     const onSearchClick = async () => {
         try {
@@ -74,13 +78,14 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
                 setSelectedFiltersExternal(null);
             }
         } catch (e: any) {
-            console.log("Error::onSearchCLick", e);
+            console.error("Error::onSearchCLick", e);
         }
     };
     const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
         (e) => {
             setSearchString(e.target.value);
             const debouncedSearch = useRef(debounce(onSearchClick, 1000)).current;
+            // TODO: fix this
             debouncedSearch();
         },
         [setSearchString, onSearchClick]
@@ -109,7 +114,7 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
             [params.key]: params.value,
         }));
     }, [selectedFilters]);
-    
+
     const centerContent = (
         <div className="search-wrapper">
             <div className="buttons-wrapper">
@@ -162,18 +167,41 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
                         onClick={onSearchClick}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                        <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} />
+                        <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
                     </OverlayPanel>
                 </IconField>
                 <div className="search-input-homepage-wrapper">
-                    <InputText
-                        placeholder={propertyTypes[0]}
-                        onChange={() => { }}
+                    <Dropdown
+                        style={{ width: "240px" }}
+                        value={
+                            selectedFilters && selectedFilters[FiltersTypeEnum.PropertyType]
+                                ? selectedFilters[FiltersTypeEnum.PropertyType]
+                                : propertyTypes[0]
+                        }
+                        name={FiltersTypeEnum.PropertyType}
+                        onChange={(e) => {
+                            onFiltersChange({ key: FiltersTypeEnum.PropertyType, value: e.value });
+                        }}
+                        options={propertyTypes}
+                        placeholder="Избери тип на имота"
+                        checkmark={true}
+                        highlightOnSelect={false}
                     />
-                    <InputText
-                        className="search-input-homepage"
+                    <Dropdown
+                        style={{ width: "240px" }}
+                        value={
+                            selectedFilters && selectedFilters[FiltersTypeEnum.City]
+                                ? selectedFilters[FiltersTypeEnum.City]
+                                : "София"
+                        }
+                        name={FiltersTypeEnum.PropertyType}
+                        onChange={(e) => {
+                            onFiltersChange({ key: FiltersTypeEnum.City, value: e.value });
+                        }}
+                        options={cities?.map((city) => city.City).filter(onlyUnique)}
                         placeholder="гр. София"
-                        onChange={() => { }}
+                        checkmark={true}
+                        highlightOnSelect={false}
                     />
                     <div className="price-input-container">
                         <div className="icon">€</div>
@@ -193,7 +221,6 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading, isLoading }) => {
 
     return (
         <div>
-            <Loader show={isLoading} />
             <div className="searchFformDiv-wrapper">
 
                 <div className="heading-titles">

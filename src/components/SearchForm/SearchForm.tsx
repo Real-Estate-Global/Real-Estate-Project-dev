@@ -12,6 +12,7 @@ import isEqual from "lodash/isEqual"
 type Props = {
   updatedFormValuesExternal?: Partial<FiltersType> | null;
   onFiltersChange?: (params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => void;
+  cities: { City: string; District?: string }[];
 };
 
 const defaultFormValues = {
@@ -30,9 +31,8 @@ const defaultFormValues = {
 export const SearchForm: React.FC<Props> = ({
   updatedFormValuesExternal,
   onFiltersChange,
+  cities
 }) => {
-  const getCitiesQuery = useGetCitiesQuery();
-  const cities = getCitiesQuery.data;
   const {
     values,
     onChange: onFormChange,
@@ -76,6 +76,13 @@ export const SearchForm: React.FC<Props> = ({
     }
   }, [updatedFormValuesExternal, values])
 
+  const uniqueCities = cities?.map((city) => city.City).filter(onlyUnique);
+  // TODO: use reduce for performance improvement
+  const uniqueDistricts = cities?.filter((city) => city.City === values[FiltersTypeEnum.City])
+    .map((location) => location.District)
+    .filter(onlyUnique)
+    .filter(value => value !== undefined);
+
   return (
     <div className="card flex justify-content-center">
       <div className="flex flex-column gap-2">
@@ -97,34 +104,38 @@ export const SearchForm: React.FC<Props> = ({
             value={values[FiltersTypeEnum.City]}
             name={FiltersTypeEnum.City}
             onChange={onChange}
-            options={cities?.map((city) => city.City).filter(onlyUnique)}
+            options={uniqueCities}
             placeholder="Избери град"
             checkmark={true}
             highlightOnSelect={false}
           />
         </div>
-        <div className="flex flex-column gap-1">
-          <label htmlFor={FiltersTypeEnum.District}>Квартал:</label>
-          <Dropdown
-            value={values[FiltersTypeEnum.District]}
-            name={FiltersTypeEnum.District}
-            onChange={onChange}
-            disabled={!values[FiltersTypeEnum.City]}
-            options={cities
-              ?.filter((city) => city.City === values[FiltersTypeEnum.City])
-              .map((location) => location.District)}
-            placeholder="Избери квартал"
-            checkmark={true}
-            highlightOnSelect={false}
-          />
-        </div>
+        {
+          // @ts-ignore ? removes undefined.
+          uniqueDistricts?.length > 0 && (
+            <div className="flex flex-column gap-1">
+              <label htmlFor={FiltersTypeEnum.District}>Квартал:</label>
+              <Dropdown
+                value={values[FiltersTypeEnum.District]}
+                name={FiltersTypeEnum.District}
+                onChange={onChange}
+                disabled={!values[FiltersTypeEnum.City]}
+                options={uniqueDistricts}
+                placeholder="Избери квартал"
+                checkmark={true}
+                highlightOnSelect={false}
+              />
+            </div>
+          )
+        }
+
         <div className="flex flex-column gap-1">
           <label>Стаи:</label>
           <InputNumberRangeSlider
             nameFrom={FiltersTypeEnum.RoomsLowest}
-            initalValueFrom={values[FiltersTypeEnum.RoomsLowest]}
+            initalValueFrom={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.RoomsLowest]}
             nameTo={FiltersTypeEnum.RoomsHighest}
-            initialValueTo={values[FiltersTypeEnum.RoomsHighest]}
+            initialValueTo={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.RoomsHighest]}
             onChange={onChange}
             min={Math.min(1, values[FiltersTypeEnum.RoomsLowest])}
             max={Math.max(10, values[FiltersTypeEnum.RoomsHighest])}
@@ -134,9 +145,9 @@ export const SearchForm: React.FC<Props> = ({
           <label>Етаж:</label>
           <InputNumberRangeSlider
             nameFrom={FiltersTypeEnum.FloorLowest}
-            initalValueFrom={values[FiltersTypeEnum.FloorLowest]}
+            initalValueFrom={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.FloorLowest]}
             nameTo={FiltersTypeEnum.FloorHighest}
-            initialValueTo={values[FiltersTypeEnum.FloorHighest]}
+            initialValueTo={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.FloorHighest]}
             onChange={onChange}
             min={Math.min(0, values[FiltersTypeEnum.FloorLowest])}
             max={Math.max(100, values[FiltersTypeEnum.FloorHighest])}
@@ -146,9 +157,9 @@ export const SearchForm: React.FC<Props> = ({
           <label>Площ кв.м:</label>
           <InputNumberRangeSlider
             nameFrom={FiltersTypeEnum.AreaLowest}
-            initalValueFrom={values[FiltersTypeEnum.AreaLowest]}
+            initalValueFrom={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.AreaLowest]}
             nameTo={FiltersTypeEnum.AreaHighest}
-            initialValueTo={values[FiltersTypeEnum.AreaHighest]}
+            initialValueTo={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.AreaHighest]}
             onChange={onChange}
             min={Math.min(1, values[FiltersTypeEnum.AreaLowest])}
             max={Math.max(2000, values[FiltersTypeEnum.AreaHighest])}
@@ -158,9 +169,9 @@ export const SearchForm: React.FC<Props> = ({
           <label>Цена:</label>
           <InputNumberRangeSlider
             nameFrom={FiltersTypeEnum.BudgetLowest}
-            initalValueFrom={values[FiltersTypeEnum.BudgetLowest]}
+            initalValueFrom={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.BudgetLowest]}
             nameTo={FiltersTypeEnum.BudgetHighest}
-            initialValueTo={values[FiltersTypeEnum.BudgetHighest]}
+            initialValueTo={updatedFormValuesExternal && updatedFormValuesExternal[FiltersTypeEnum.BudgetHighest]}
             onChange={onChange}
             min={Math.min(0, values[FiltersTypeEnum.BudgetLowest])}
             max={Math.max(100000, values[FiltersTypeEnum.BudgetHighest])}
