@@ -12,7 +12,7 @@ import isEqual from "lodash/isEqual"
 type Props = {
   updatedFormValuesExternal?: Partial<FiltersType> | null;
   onFiltersChange?: (params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => void;
-  cities: { City: string; District?: string }[];
+  cities?: { City: string; District?: string }[];
 };
 
 const defaultFormValues = {

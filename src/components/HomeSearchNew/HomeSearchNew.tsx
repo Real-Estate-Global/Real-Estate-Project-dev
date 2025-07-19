@@ -213,8 +213,6 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
                 </div>
             </div>
         </div>
-
-
     );
 
     const endContent = <></>;
