@@ -6,7 +6,7 @@ import { Image } from 'primereact/image';
 
 type Props = {
     name?: string;
-    initialImage?: ImageFileType;
+    initialImage?: ImageFileType | null;
     onUpload: (file: ImageFileType) => void;
 }
 export const UploadImage = (props: Props) => {
@@ -18,6 +18,11 @@ export const UploadImage = (props: Props) => {
             onUpload(uploadedFile);
         }
     }, [uploadedFile, onUpload]);
+    useEffect(() => {
+        if (initialImage) {
+            setUploadedFile(initialImage);
+        }
+    }, [initialImage]);
 
     const customBase64Uploader = async (event: FileUploadHandlerEvent) => {
         const file = event.files[0];
@@ -46,7 +51,7 @@ export const UploadImage = (props: Props) => {
 
     // TODO: improve X styles
     return (
-        <div className="card flex justify-content-center">
+        <div className="card flex">
             {uploadedFile ? (
                 <div style={{ position: 'relative', display: 'inline-block' }}>
                     <Image

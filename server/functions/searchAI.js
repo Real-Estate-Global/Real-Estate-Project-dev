@@ -1,4 +1,4 @@
-const { GoogleGenAI, Type } = require('@google/genai');
+const { GoogleGenAI } = require('@google/genai');
 
 const genAI = new GoogleGenAI({ apiKey: 'AIzaSyBNEYUjJfFSu1SINmeRjX4PxrW50ar2EDQ' }); // Replace with your API key
 
