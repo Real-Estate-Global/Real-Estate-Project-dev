@@ -40,11 +40,11 @@ const userRegister = async (req, res) => {
 }
 const editUserProfile = async (req, res) => {
     try {
-        const { email, name, phoneNumber, profileType, watermark, avatar } = req.body;
+        const { _id, email, name, phoneNumber, profileType, watermark, avatar } = req.body;
 
         // Check if the email is already registered
         const usersCollection = MongoDB.collection('users');
-        const query = { email };
+        const query = { _id };
         const existingUser = await usersCollection.findOne(query);
 
         if (!existingUser) {
@@ -58,6 +58,7 @@ const editUserProfile = async (req, res) => {
         if (profileType !== undefined && profileType !== '') updateFields.profileType = profileType;
         if (watermark !== undefined && watermark !== '') updateFields.watermark = watermark;
         if (avatar !== undefined && avatar !== '') updateFields.avatar = avatar;
+        if (email !== undefined && email !== '') updateFields.email = email;
 
         if (Object.keys(updateFields).length === 0) {
             return res.status(400).json({ error: 'No valid fields to update' });

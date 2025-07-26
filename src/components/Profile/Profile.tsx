@@ -125,6 +125,7 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
             onSubmit={e => {
               e.preventDefault();
               onSubmitEditProfile({
+                _id: profileData._id,
                 name: editName,
                 email: editEmail,
                 phoneNumber: editPhone,

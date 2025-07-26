@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ProfileDataType } from "../../types/ProfileDataType";
+import { ProfileDataType, ProfileTypeEnum } from "../../types/ProfileDataType";
 
 // TODO:
 // User::
@@ -14,10 +14,11 @@ import { ProfileDataType } from "../../types/ProfileDataType";
 // :instagram/facebook(optional)
 
 const initialState: ProfileDataType = {
+  _id: "1",
   name: "",
   email: "",
   password: "",
-  profileType: "",
+  profileType: ProfileTypeEnum.Individual,
   phoneNumber: "",
   watermark: null,
 };

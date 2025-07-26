@@ -56,7 +56,6 @@ function App() {
 
     if (authFromCookies) {
       setAuth(authFromCookies);
-      // dispatch(authSliceActions.setAuth({ accessToken: authFromCookies }));
     }
   }, []);
 

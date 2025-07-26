@@ -7,6 +7,7 @@ export const enum ProfileTypeEnum {
 }
 
 export type ProfileDataType = {
+  _id: string;
   name: string;
   email: string;
   password: string;
