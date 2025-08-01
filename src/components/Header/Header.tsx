@@ -11,7 +11,7 @@ export const Header = () => {
         <nav className="navigation">
           <Link className="home-link nav-link" to="/" style={{fontFamily: "Comfortaa"}}>
             {/* Начало */}
-            <img style={{width: "140px"}} src="./tursiimoti-header-example.png"/>
+            <img style={{width: "140px"}} src="./tursiimoti-header-example-2.png"/>
           </Link>
           {isAuthenticated && (
             <div id="user-navigation">

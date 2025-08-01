@@ -119,56 +119,59 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
   }));
 
   return (
-    <div className={"signup-form-wrapper"}>
-      <Card className={"signup-form-card"}>
-        <h1 className={"signup-title"}>Регистрация</h1>
-        <form className={"signup-form"} onSubmit={onSubmit}>
-          {/* Име на потребителя */}
-          <div className="signup-input-wrapper">
-            <FloatLabel>
-              <InputText
-                className="login-input"
-                id="username"
-                value={values[SignupFormDataEnum.Name]}
-                onChange={onChange}
-                name={SignupFormDataEnum.Name}
-              />
-              <label htmlFor="username">Username</label>
-            </FloatLabel>
-          </div>
+    <div className="signup-form-wrapper-new">
+      <div className="login-div">
+        <Card className="" style={{ width: "90%", height: "fit-content",  maxHeight: "1000px", margin: "auto", backgroundColor: "white", display: "flex", flexDirection: "row", justifyContent: "space-between", position: "relative" }}>
+          <div style={{ width: "50%", display: "flex", justifyContent: "center", alignItems: "center", }}>
 
-          {/* Имейл */}
-          <div className="signup-input-wrapper">
-            <FloatLabel>
-              <InputText
-                type="email"
-                className="login-input"
-                id="email"
-                value={values[SignupFormDataEnum.Email]}
-                onChange={onChange}
-                name={SignupFormDataEnum.Email}
-              />
-              <label htmlFor="username">Email</label>
-            </FloatLabel>
-          </div>
+            <form className={"signup-form"} style={{marginTop: "30px", marginBottom: "30px"}} onSubmit={onSubmit}>
+              <h1 className={"signup-title"}>Регистрация</h1>
+              {/* Име на потребителя */}
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    className="login-input"
+                    id="username"
+                    value={values[SignupFormDataEnum.Name]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.Name}
+                  />
+                  <label htmlFor="username">Username</label>
+                </FloatLabel>
+              </div>
 
-          {/* Телефонен номер */}
-          <div className="signup-input-wrapper">
-            <FloatLabel>
-              <InputText
-                type="tel"
-                className="login-input"
-                id="phoneNumber"
-                value={values[SignupFormDataEnum.PhoneNumber]}
-                onChange={onChange}
-                name={SignupFormDataEnum.PhoneNumber}
-              />
-              <label htmlFor="phoneNumber">Телефонен номер</label>
-            </FloatLabel>
-          </div>
+              {/* Имейл */}
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    type="email"
+                    className="login-input"
+                    id="email"
+                    value={values[SignupFormDataEnum.Email]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.Email}
+                  />
+                  <label htmlFor="username">Email</label>
+                </FloatLabel>
+              </div>
 
-          {/* Избор на тип потребител */}
-          {/* <label htmlFor="profileType"></label>
+              {/* Телефонен номер */}
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    type="tel"
+                    className="login-input"
+                    id="phoneNumber"
+                    value={values[SignupFormDataEnum.PhoneNumber]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.PhoneNumber}
+                  />
+                  <label htmlFor="phoneNumber">Телефонен номер</label>
+                </FloatLabel>
+              </div>
+
+              {/* Избор на тип потребител */}
+              {/* <label htmlFor="profileType"></label>
           <select
             required
             id="profileType"
@@ -184,109 +187,124 @@ export const SignUp: React.FC<Props> = ({ loginSubmitHandler }) => {
             <option value="broker">Брокер</option>
           </select> */}
 
-          <div className="signup-input-wrapper dropdown-wrapper">
-            <FloatLabel>
-              <Dropdown
-                className="login-input w-full dropdown-type-selection"
-                inputId="profileType"
-                value={profileType}
-                onChange={handleProfileTypeChange}
-                options={profileTypesOptions}
-                optionLabel="name"
-              />
-              <label htmlFor="profileType">Изберете тип профил</label>
-            </FloatLabel>
-          </div>
-          {/* Полета за агенция */}
-          {profileType === "agency" && (
-            <>
-              <div className="signup-input-wrapper">
+              <div className="signup-input-wrapper dropdown-wrapper">
                 <FloatLabel>
-                  <InputText
-                    className="login-input"
-                    id="agencyName"
-                    value={values[SignupFormDataEnum.AgencyName]}
-                    onChange={onChange}
-                    name={SignupFormDataEnum.AgencyName}
+                  <Dropdown
+                    className="login-input w-full dropdown-type-selection"
+                    inputId="profileType"
+                    value={profileType}
+                    onChange={handleProfileTypeChange}
+                    options={profileTypesOptions}
+                    optionLabel="name"
                   />
-                  <label htmlFor="agencyName">Име на агенцията</label>
+                  <label htmlFor="profileType">Изберете тип профил</label>
                 </FloatLabel>
               </div>
-              <div className="signup-input-wrapper">
-                <FloatLabel>
-                  <InputText
-                    className="login-input"
-                    id="agencyEik"
-                    value={values[SignupFormDataEnum.AgencyEik]}
-                    onChange={onChange}
-                    name={SignupFormDataEnum.AgencyEik}
-                  />
-                  <label htmlFor="agencyEik">ЕИК на агенцията</label>
-                </FloatLabel>
-              </div>
-            </>
-          )}
+              {/* Полета за агенция */}
+              {profileType === "agency" && (
+                <>
+                  <div className="signup-input-wrapper">
+                    <FloatLabel>
+                      <InputText
+                        className="login-input"
+                        id="agencyName"
+                        value={values[SignupFormDataEnum.AgencyName]}
+                        onChange={onChange}
+                        name={SignupFormDataEnum.AgencyName}
+                      />
+                      <label htmlFor="agencyName">Име на агенцията</label>
+                    </FloatLabel>
+                  </div>
+                  <div className="signup-input-wrapper">
+                    <FloatLabel>
+                      <InputText
+                        className="login-input"
+                        id="agencyEik"
+                        value={values[SignupFormDataEnum.AgencyEik]}
+                        onChange={onChange}
+                        name={SignupFormDataEnum.AgencyEik}
+                      />
+                      <label htmlFor="agencyEik">ЕИК на агенцията</label>
+                    </FloatLabel>
+                  </div>
+                </>
+              )}
 
-          {/* Полета за брокер */}
-          {profileType === "broker" && (
-            <div className="signup-input-wrapper">
-              <FloatLabel>
-                <InputText
-                  className="login-input"
-                  id="role"
-                  value={values[SignupFormDataEnum.Role]}
-                  onChange={onChange}
-                  name={SignupFormDataEnum.Role}
-                />
-                <label htmlFor="role">Роля в агенцията</label>
-              </FloatLabel>
+              {/* Полета за брокер */}
+              {profileType === "broker" && (
+                <div className="signup-input-wrapper">
+                  <FloatLabel>
+                    <InputText
+                      className="login-input"
+                      id="role"
+                      value={values[SignupFormDataEnum.Role]}
+                      onChange={onChange}
+                      name={SignupFormDataEnum.Role}
+                    />
+                    <label htmlFor="role">Роля в агенцията</label>
+                  </FloatLabel>
+                </div>
+              )}
+
+              {/* Парола */}
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    type="password"
+                    className="login-input"
+                    id="password"
+                    value={values[SignupFormDataEnum.Password]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.Password}
+                  />
+                  <label htmlFor="password">Парола</label>
+                </FloatLabel>
+              </div>
+
+              {/* Потвърдете паролата */}
+              <div className="signup-input-wrapper">
+                <FloatLabel>
+                  <InputText
+                    type="password"
+                    className="login-input"
+                    id="confirmedPassword"
+                    value={values[SignupFormDataEnum.ConfirmedPassword]}
+                    onChange={onChange}
+                    name={SignupFormDataEnum.ConfirmedPassword}
+                  />
+                  <label htmlFor="confirmedPassword">Повторете паролата</label>
+                </FloatLabel>
+              </div>
+
+              <Button
+                // className="signup-button"
+                className="login-button"
+                style={{width: "80%",
+                margin: "auto"}}
+                type= "submit"
+              >
+                Регистрирай
+              </Button>
+
+              <div style={{margin: "auto"}}>
+                <p>
+                  Вече имате профил? <Link to="/login">Влезте в профила си</Link>
+                </p>
+              </div>
+            </form>
+          </div>
+          {/* <div> */}
+            <div className="login-image-wrapper" style={{ position: "absolute", right: "0px", width: "50%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "pink", borderRadius: "6px" }}>
+              <img
+                className="login-image"
+                src="./login-side-photo.png"
+                style={{ objectFit: "cover", borderRadius: "6px" }}
+                alt="Login"
+              />
             </div>
-          )}
-
-          {/* Парола */}
-          <div className="signup-input-wrapper">
-            <FloatLabel>
-              <InputText
-                type="password"
-                className="login-input"
-                id="password"
-                value={values[SignupFormDataEnum.Password]}
-                onChange={onChange}
-                name={SignupFormDataEnum.Password}
-              />
-              <label htmlFor="password">Парола</label>
-            </FloatLabel>
-          </div>
-
-          {/* Потвърдете паролата */}
-          <div className="signup-input-wrapper">
-            <FloatLabel>
-              <InputText
-                type="password"
-                className="login-input"
-                id="confirmedPassword"
-                value={values[SignupFormDataEnum.ConfirmedPassword]}
-                onChange={onChange}
-                name={SignupFormDataEnum.ConfirmedPassword}
-              />
-              <label htmlFor="confirmedPassword">Повторете паролата</label>
-            </FloatLabel>
-          </div>
-
-          <Button
-            className={"signup-button"}
-            type="submit"
-          >
-            Регистрирай
-          </Button>
-
-          <div>
-            <p>
-              Вече имате профил? <Link to="/login">Влезте в профила си</Link>
-            </p>
-          </div>
-        </form>
-      </Card>
+          {/* </div> */}
+        </Card>
+      </div>
     </div>
   );
 };

@@ -15,6 +15,7 @@ export type OfferType = {
   price: number;
   visited: boolean;
   images: ImageFileType[];
+  constructionType: string
 };
 
 export enum OfferFormDataEnum {

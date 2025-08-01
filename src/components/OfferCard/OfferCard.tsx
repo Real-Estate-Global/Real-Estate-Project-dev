@@ -9,6 +9,10 @@ import { Path } from "../../paths";
 import "./OfferCard.module.css";
 import { ImageFileType } from "../../types/ImageFileType";
 import { Carousel } from "primereact/carousel";
+// import { ReactComponent as AreaIcon } from '../../assets/icons/area-icon.svg';
+import AreaIcon from '../../assets/icons/area-icon-final.svg?react';
+import BuildingTypeIcon from '../../assets/icons/date-build-icon.svg?react'
+import LocationIcon from '../../assets/icons/location-icon.svg?react'
 
 const roomsToName: { [key: string]: string } = {
   1: "Едностаен",
@@ -89,16 +93,38 @@ export const OfferCard: React.FC<Props> = ({
         </div>
         <div className="flex justify-content-between mt-3 mb-2">
           <span className="text-900 font-medium text-xl">
-            <img className="offer-location-icon" src="./location-icon.png" />{location}, {district}
+            {/* <img className="offer-location-icon" src="./location-icon.png" />{location}, {district} */}
+            <div className="offer-card-icon-wrapper">
+            <LocationIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }}/>{location}, {district}
+            </div>
           </span>
           {/* <span className="text-900 text-xl ml-3">{currency + price}</span> */}
         </div>
         <div className="flex justify-content-between mt-3 mb-2">
-          <span className="text-600"> <img className="offer-ruler-icon" src="./ruler-icon.png" />{area} кв.м.</span>
+          {/* <span className="text-600"> <img className="offer-ruler-icon" style={{color: "pink"}} src="./area-icon.svg" />{area} кв.м.</span> */}
+          <span className="text-600">
+            {/* <img className="offer-ruler-icon" style={{ color: "pink" }} src="./area-icon.svg" />{area} кв.м. */}
+            {/* <svg
+              className="area-icon"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+            >
+              <path d="./area-icon.svg" />
+            </svg> */}
+            <div className="offer-card-icon-wrapper">
+              <AreaIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }} />
+              {area} кв.м.
+            </div>
+          </span>
           <span className="text-600">
             {/* {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')}г.`} */}
-            <img className="offer-location-icon" src="./build-icon.png" />
-            {`${new Date(yearOfBuilding).toISOString().split('T')[0]}`}
+            {/* <img className="offer-location-icon" src="./build-icon.png" /> */}
+            <div className="offer-card-icon-wrapper">
+              <BuildingTypeIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }} />
+              {`${new Date(yearOfBuilding).toISOString().split('T')[0]}`}
+            </div>
           </span>
           <Button
             label="Виж повече"

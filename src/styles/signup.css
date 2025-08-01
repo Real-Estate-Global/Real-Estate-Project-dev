@@ -19,8 +19,22 @@
   flex-wrap: wrap;
 }
 
+
 .signup-form {
-  align-items: center;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 500px;
+  height: 420px;
+  margin: auto;
+  column-gap: 60px;
+  flex-direction: column;
+  margin-top: 45px;
+}
+
+.signup-form {
+  /* align-items: center;
   display: flex;
   justify-content: center;
   align-content: center;
@@ -30,7 +44,18 @@
   margin: auto;
   column-gap: 60px;
   flex-direction: column;
-  margin-top: 90px;
+  margin-top: 90px; */
+  padding: 20px !important;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  width: 500px;
+  height: auto !important;
+  margin: auto;
+  column-gap: 60px;
+  flex-direction: column;
+  margin-top: 0 !important;
 }
 
 .registration-input {
@@ -39,11 +64,23 @@
 }
 
 .signup-title {
-  position: absolute;
-  top: 15px;
-  margin-top: 10px;
+  /* position: absolute; */
+  /* top: 15px; */
+  /* margin-top: 0px;
+  margin-bottom: 56px;
   text-align: center;
-  width: 500px;
+  width: 500px; */
+  /* color: ; */
+      position: relative !important;
+    top: 0px !important;
+    margin-top: 0px !important;
+    margin-bottom: 58px;
+    text-align: center;
+    color: #162350;
+    /* width: auto !important; */
+    font-family: 'Comfortaa';
+    font-weight: 500;
+    width: 80% !important
 }
 
 .signup-button {
@@ -52,22 +89,23 @@
   width: 253.7px;
 }
 
-.signup-input-wrapper{
-    /* width: 100%; */
-    margin-bottom: 30px;
-    --shared-width: 250px;
-    width: var(--shared-width);
+.signup-input-wrapper {
+  /* width: 100%; */
+  /* margin: auto; */
+  margin-bottom: 30px;
+  /* --shared-width: 80%; */
+  /* width: var(--shared-width); */
 }
 
-.signup-input-wrapper.dropdown-wrapper{
-    width: var(--shared-width);
+.signup-input-wrapper.dropdown-wrapper {
+  width: var(--shared-width);
 }
 
-.signup-input-wrapper.dropdown-wrapper .p-float-label{
-    width: 100%;
+.signup-input-wrapper.dropdown-wrapper .p-float-label {
+  width: 100%;
 }
 
-.signup-form .p-card-content{
+.signup-form .p-card-content {
   display: flex;
 }
 

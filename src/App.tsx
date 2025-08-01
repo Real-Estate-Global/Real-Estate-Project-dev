@@ -23,6 +23,7 @@ import Cookies from "js-cookie";
 import { ExtendedFetch } from './utils/fetch'
 import { profileSliceActions } from "./store/slices/profileSlice";
 import { Footer } from "./components/Footer/Footer";
+import { CreateOfferPage } from "./components/OfferPage/CreateOfferPage";
 
 function App() {
   const [login, { isLoading, isError }] = useLoginMutation();
@@ -85,6 +86,8 @@ function App() {
           element={<SignUp loginSubmitHandler={onLoginSubmit} />}
         ></Route>
         <Route path="/properties/:offerId" element={<PublicOfferPage />}></Route>
+        {/* <Route path="/properties/edit/:offerId" element={<PublicOfferPage />}></Route> */}
+        <Route path="/properties/create-new-offer" element={<CreateOfferPage />}></Route>
         <Route path={Path.Logout} element={<Logout />}></Route>
         <Route path={Path.MyOffers} element={<MyOffers />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>

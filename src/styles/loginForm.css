@@ -74,9 +74,10 @@
     margin-bottom: 58px;
     text-align: center;
     color: #162350;
-    width: auto !important;
+    /* width: auto !important; */
     font-family: 'Comfortaa';
     font-weight: 500;
+    width: 80% !important
 }
 
 ._login-form_dtx7s_39 {

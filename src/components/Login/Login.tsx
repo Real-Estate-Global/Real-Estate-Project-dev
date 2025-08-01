@@ -114,7 +114,7 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
                   Вход
                 </Button>
                 <div>
-                  <p>
+                  <p style={{textAlign: "center"}}>
                     Нямате профил?{" "}
                     <Link className="register-link-login-form" to="/signup">
                       Регистрирайте се
@@ -123,7 +123,7 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
                 </div>
                 <div className="social-login">
                   <div className="divider">
-                    <span>or</span>
+                    <span>или</span>
                   </div>
                   <div className="social-buttons">
                     <button className="social-btn google">

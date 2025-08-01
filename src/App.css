@@ -428,6 +428,15 @@ header {
   grid-row: span 1;
 }
 
+.offer-carousel-wrapper {
+  width: 80% !important;
+}
+
+.offer-details-page .offer-details-card{
+   margin: 20px;
+   padding: 20px;
+}
+
 @media (max-width: 600px) {
   .heading-image {
     /* width: 45vw;

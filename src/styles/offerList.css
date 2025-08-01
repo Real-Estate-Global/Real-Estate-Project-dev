@@ -153,3 +153,12 @@
 .offer-card span.offer-card-price {
     font-size: 20px !important;
 }
+
+.area-icon {
+    color: pink;
+}
+
+.offer-card-icon-wrapper {
+    display: flex;
+    align-items: center;
+}
