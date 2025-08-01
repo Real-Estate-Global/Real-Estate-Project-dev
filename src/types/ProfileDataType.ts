@@ -1,15 +1,23 @@
-import { ImageFileType } from "./ImageFileType";
+import { ImageFileType, WatermarkType } from "./ImageFileType";
+
+export const enum ProfileTypeEnum {
+  Individual = "Частно лице",
+  Agency = "Агенция",
+  Admin = "Админ",
+}
 
 export type ProfileDataType = {
+  _id: string;
   name: string;
   email: string;
   password: string;
-  profileType: string;
+  profileType: ProfileTypeEnum;
   phoneNumber: string;
-  watermark?: ImageFileType | string;
-  agencyName?: string,
-  agencyEik?: number,
-  role?: string
+  watermark?: WatermarkType;
+  avatar?: ImageFileType | null;
+  agencyName?: string;
+  agencyEik?: number;
+  role?: string;
 };
 
 export enum SignupFormDataEnum {

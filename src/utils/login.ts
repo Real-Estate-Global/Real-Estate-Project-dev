@@ -15,6 +15,6 @@ export const loginSubmitHandler =
                 successCb && successCb(result.data);
             }
         } catch (e: any) {
-            console.log("Error::loginSubmitHandler", e)
+            console.error("Error::loginSubmitHandler", e)
         }
     }

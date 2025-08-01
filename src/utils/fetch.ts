@@ -29,6 +29,7 @@ export class ExtendedFetch {
             options: RequestInit = {}
         ): Promise<Response> => {
             try {
+                console.log('Extended fetch called with URL:', url, 'and options:', options);
                 const defaultHeaders = {
                     "Content-type": "application/json; charset=UTF-8",
                     Accept: 'application/json',
@@ -51,6 +52,7 @@ export class ExtendedFetch {
 
                 if (!response.ok) {
                     if (response.status === 401) {
+                        console.log('Unauthorized access - redirecting to login');
                         Cookies.remove('auth');
                         if (this.navigate) {
                             this.navigate('/login');

@@ -10,9 +10,10 @@ import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { useGetCitiesQuery } from "../../store/api/searchData";
 import { UploadMultipleImageForm } from "../UploadImage/UploadMultipleImageForm";
-import { ImageFileType } from "../../types/ImageFileType";
+import { ImageFileType, WatermarkType } from "../../types/ImageFileType";
 import { propertyTypes } from "../../const";
-import { UploadImage } from "../UploadImage/UploadImage";
+import { useAppSelector } from "../../store/hooks";
+import { profileSliceSelectors } from "../../store/slices/profileSlice";
 
 type Props = {
   show: boolean;
@@ -35,6 +36,7 @@ export const OfferFormDialog: React.FC<Props> = ({
 }) => {
   const getCitiesQuery = useGetCitiesQuery();
   const cities = getCitiesQuery.data;
+  const watermark = useAppSelector(profileSliceSelectors.watermark)
 
   const {
     values,
@@ -146,7 +148,7 @@ export const OfferFormDialog: React.FC<Props> = ({
     </div>
   );
 
-  const [watermark, setWatermark] = useState<ImageFileType | null>(null)
+  
   return (
     <div className="card flex justify-content-center">
       <Dialog
@@ -288,12 +290,6 @@ export const OfferFormDialog: React.FC<Props> = ({
               required
               invalid={getHasFormError(OfferFormDataEnum.Description)}
             />
-          </div>
-          <div className="flex flex-column gap-1">
-            <label htmlFor={OfferFormDataEnum.Currency}>Воден Знак:</label>
-            <UploadImage onUpload={(file) => {
-              setWatermark(file)
-            }} />
           </div>
           <div className="flex flex-column gap-1">
             <label htmlFor={OfferFormDataEnum.Description}>Снимки:</label>

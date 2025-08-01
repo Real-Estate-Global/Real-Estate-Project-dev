@@ -6,4 +6,4 @@ export type ImageFileType = {
     lastModified: number;
 };
 
-export type WatermarkType = string | ImageFileType
+export type WatermarkType = string | ImageFileType | null | undefined;

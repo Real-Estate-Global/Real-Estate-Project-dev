@@ -4,8 +4,8 @@ export type FiltersType = {
   propertyType: string;
   budgetLowest: number;
   budgetHighest: number;
-  areatLowest: number;
-  areatHighest: number;
+  areaLowest: number;
+  areaHighest: number;
   floorLowest: number;
   floorHighest: number;
   roomsLowest: number;
@@ -20,8 +20,8 @@ export enum FiltersTypeEnum {
   District = "district",
   BudgetLowest = "budgetLowest",
   BudgetHighest = "budgetHighest",
-  AreatLowest = "areatLowest",
-  AreatHighest = "areatHighest",
+  AreaLowest = "areaLowest",
+  AreaHighest = "areaHighest",
   FloorLowest = "floorLowest",
   FloorHighest = "floorHighest",
   RoomsLowest = "roomsLowest",

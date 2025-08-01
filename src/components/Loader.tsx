@@ -9,7 +9,7 @@ export const Loader = ({ show }: { show?: boolean }) => {
     return null;
   }
   return (
-    <div className={`loader-wrapper ${loading || show ? "show-loader" : ""}`}>
+    <div className={`loader-wrapper ${loading || show ? "show-loader" : ""}`  }>
       <ProgressSpinner
         color="cyan"
         aria-label="Loader"

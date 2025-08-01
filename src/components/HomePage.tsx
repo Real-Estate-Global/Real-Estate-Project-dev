@@ -1,16 +1,16 @@
 import { OfferList } from "./OfferList/OfferList";
 import { HeadingImage } from "./HeadingImage";
-// import { SearchForm } from "./SearchFormLegacy";
-import { useState, useCallback, useEffect } from "react";
-import { FiltersType } from "../types/FiltersType";
+import { useState, useEffect } from "react";
 import { useGetPublicOffersMutation } from "../store/api/publicOffers";
 import { OfferType } from "../types/OfferType";
-import { Loader } from "./Loader";
 import { HomeSearchNew } from "./HomeSearchNew/HomeSearchNew";
+import { useFilterOffers } from "../hooks/useFilterOffers";
+import { Loader } from "./Loader";
 
 export const HomePage = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const [offers, setOffers] = useState<OfferType[]>([]);
-  const [getPublicOffers, { isLoading, isError }] = useGetPublicOffersMutation();
+  const [getPublicOffers, { isLoading: isGetPublicOffersLoading }] = useGetPublicOffersMutation();
 
   useEffect(() => {
     getPublicOffers(null).then((result) => {
@@ -20,12 +20,17 @@ export const HomePage = () => {
     });
   }, []);
 
+  useEffect(() => {
+    setIsLoading(isGetPublicOffersLoading)
+  }, [isGetPublicOffersLoading])
+  const { filteredOffers } = useFilterOffers(offers);
+
   return (
     <>
       <Loader show={isLoading} />
       <HeadingImage />
-      <HomeSearchNew />
-      <OfferList offers={offers} />
+      <HomeSearchNew setIsLoading={setIsLoading} />
+      <OfferList offers={filteredOffers} />
     </>
   );
 };

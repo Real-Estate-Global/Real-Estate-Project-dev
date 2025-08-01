@@ -20,6 +20,7 @@ export const OfferList: React.FC<Props> = ({
   onEditClick,
   onDeleteClick,
 }) => {
+
   const [layout, setLayout] =
     useState<DataViewLayoutOptionsProps["layout"]>("grid");
   const header = () => {
@@ -57,12 +58,14 @@ export const OfferList: React.FC<Props> = ({
   }
 
   return (
-    <DataView
-      value={offers}
-      listTemplate={listTemplate}
-      layout={"grid"}
-      header={header()}
-      className="offer-list"
-    />
+    <>
+      <DataView
+        value={offers}
+        listTemplate={listTemplate}
+        layout={"grid"}
+        header={header()}
+        className="offer-list"
+      />
+    </>
   );
 };
