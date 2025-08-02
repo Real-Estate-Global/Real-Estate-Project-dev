@@ -175,6 +175,7 @@ export const MyOffers = ({ onGetProfileData }: Props) => {
         editEnabled={isAuthenticated}
         onEditClick={onEditOfferClick}
         onDeleteClick={onDeleteClick}
+        onGetProfileData={onGetProfileData}
       />
     </div>
   );

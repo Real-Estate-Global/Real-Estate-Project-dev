@@ -7,7 +7,10 @@ import { HomeSearchNew } from "./HomeSearchNew/HomeSearchNew";
 import { useFilterOffers } from "../hooks/useFilterOffers";
 import { Loader } from "./Loader";
 
-export const HomePage = () => {
+type Props = {
+  onGetProfileData: () => void;
+}
+export const HomePage = ({ onGetProfileData } : Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [offers, setOffers] = useState<OfferType[]>([]);
   const [getPublicOffers, { isLoading: isGetPublicOffersLoading }] = useGetPublicOffersMutation();
@@ -30,7 +33,7 @@ export const HomePage = () => {
       <Loader show={isLoading} />
       <HeadingImage />
       <HomeSearchNew setIsLoading={setIsLoading} />
-      <OfferList offers={filteredOffers} />
+      <OfferList offers={filteredOffers} onGetProfileData={onGetProfileData} />
     </>
   );
 };

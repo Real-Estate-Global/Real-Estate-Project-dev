@@ -30,6 +30,7 @@ function App() {
   const dispatch = useAppDispatch();
   const [getProfileData, { isLoading: isGetProfileDataLoading, isError: getProfileDataError }] = useGetProfileDataMutation();
 
+
   const onGetProfileData = async () => {
     try {
       const result = await getProfileData();
@@ -40,6 +41,9 @@ function App() {
       console.error("Error fetching profile data:", error);
     }
   };
+  useEffect(() => {
+    onGetProfileData();
+  }, [])
   useEffect(() => {
     ExtendedFetch.buildInstance(navigate);
   }, [navigate])
@@ -80,7 +84,7 @@ function App() {
       <Header />
       <Loader show={isLoginLoading || isGetProfileDataLoading} />
       <Routes>
-        <Route path="/" element={<HomePage />}></Route>
+        <Route path="/" element={<HomePage onGetProfileData={onGetProfileData} />}></Route>
         <Route
           path="/login"
           element={<Login loginSubmitHandler={onLoginSubmit} />}
@@ -93,7 +97,7 @@ function App() {
         <Route path={Path.Logout} element={<Logout />}></Route>
         <Route path={Path.MyOffers} element={<MyOffers onGetProfileData={onGetProfileData} />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
-        <Route path={Path.MyProfile} element={<Profile onGetProfileData={onGetProfileData}/>}></Route>
+        <Route path={Path.MyProfile} element={<Profile onGetProfileData={onGetProfileData} />}></Route>
       </Routes>
       <Footer />
     </>

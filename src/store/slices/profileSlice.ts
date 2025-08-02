@@ -21,6 +21,12 @@ const initialState: ProfileDataType = {
   profileType: ProfileTypeEnum.Individual,
   phoneNumber: "",
   watermark: null,
+  favorites: [],
+  avatar: null,
+  agencyName: "",
+  agencyEik: undefined,
+  role: "",
+  createdAt: undefined,
 };
 
 export const profileSlice = createSlice({
