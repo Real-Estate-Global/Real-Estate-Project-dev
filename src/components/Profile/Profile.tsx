@@ -14,6 +14,8 @@ import { ProfileDataType, ProfileTypeEnum } from "../../types/ProfileDataType";
 import { OfferList } from "../OfferList/OfferList";
 import { Avatar } from "primereact/avatar";
 import { Dropdown } from "primereact/dropdown";
+import { OfferType } from "../../types/OfferType";
+import { useGetPublicOffersMutation } from "../../store/api/publicOffers";
 
 type ProfileProps = {
   onGetProfileData: () => void;
@@ -30,8 +32,25 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
   const [editPhone, setEditPhone] = useState("");
   const [editProfileType, setEditProfileType] = useState(ProfileTypeEnum.Individual);
   const [editAvatar, setEditAvatar] = useState(profileData?.avatar || null);
+  const [offers, setOffers] = useState<OfferType[]>([]);
+  const [favoriteOffers, setFavoriteOffers] = useState<OfferType[]>([]);
 
   const [submitEditProfile, { isLoading: isEditProfileDataLoading, isError: editProfileDataError }] = useEditProfileMutation();
+  const [getPublicOffers, { isLoading: isGetPublicOffersLoading }] = useGetPublicOffersMutation();
+
+  useEffect(() => {
+    getPublicOffers(null).then((result) => {
+      if (result.data) {
+        setOffers(result.data);
+      }
+    });
+  }, []);
+  useEffect(() => {
+    if (profileData.favorites && profileData.favorites.length > 0) {
+      const favoriteOffers = offers.filter(offer => profileData.favorites?.includes(offer._id));
+      setFavoriteOffers(favoriteOffers);
+    }
+  }, [profileData.favorites, offers]);
 
   useEffect(() => {
     onGetProfileData();
@@ -68,7 +87,7 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
     return null;
   }
 
-  const showLoader = isEditProfileDataLoading || isLoading;
+  const showLoader = isEditProfileDataLoading || isLoading || isGetPublicOffersLoading;
 
   return (
     <div className="profile-wrapper p-4">
@@ -138,7 +157,7 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
             <div className="grid">
               <div className="col-12 md:col-6 flex flex-column">
                 <label className="text-muted text-sm mb-1">Профилна снимка:</label>
-              <UploadImage initialImage={editAvatar} onUpload={file => setEditAvatar(file)} />
+                <UploadImage initialImage={editAvatar} onUpload={file => setEditAvatar(file)} />
               </div>
               <div className="col-12 md:col-6">
                 <label className="text-muted text-sm">Име:</label>
@@ -236,7 +255,7 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
 
       {/* Favorites Section */}
       <Card title="Любими имоти" className="mb-4">
-        <OfferList offers={[]} />
+        <OfferList offers={favoriteOffers} onGetProfileData={onGetProfileData} />
       </Card>
 
       {/* Settings Section */}

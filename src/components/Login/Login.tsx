@@ -141,7 +141,7 @@ export const Login: React.FC<Props> = ({ loginSubmitHandler }) => {
             <div className="login-image-wrapper" style={{ width: "50%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", backgroundColor: "pink", borderRadius: "6px" }}>
               <img
                 className="login-image"
-                src="./login-side-photo.png"
+                src="https://tursi-imoti-public.s3.eu-central-1.amazonaws.com/login-side-photo.png"
                 style={{ objectFit: "cover", borderRadius: "6px" }}
                 alt="Login"
               />

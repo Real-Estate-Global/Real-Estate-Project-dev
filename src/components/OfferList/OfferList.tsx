@@ -12,6 +12,7 @@ type Props = {
   editEnabled?: boolean;
   onDeleteClick?: (id: string) => void;
   onEditClick?: (id: string, values: OfferType) => void;
+  onGetProfileData: () => void;
 };
 
 export const OfferList: React.FC<Props> = ({
@@ -19,6 +20,7 @@ export const OfferList: React.FC<Props> = ({
   editEnabled = false,
   onEditClick,
   onDeleteClick,
+  onGetProfileData,
 }) => {
 
   const [layout, setLayout] =
@@ -47,6 +49,7 @@ export const OfferList: React.FC<Props> = ({
             editEnabled={editEnabled}
             onEditClick={onEditClick}
             onDeleteClick={onDeleteClick}
+            onGetProfileData={onGetProfileData}
           />
         ))}
       </div>

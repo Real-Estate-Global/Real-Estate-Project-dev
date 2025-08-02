@@ -18,6 +18,8 @@ export type ProfileDataType = {
   agencyName?: string;
   agencyEik?: number;
   role?: string;
+  favorites?: string[]; // Array of property IDs
+  createdAt?: Date;
 };
 
 export enum SignupFormDataEnum {

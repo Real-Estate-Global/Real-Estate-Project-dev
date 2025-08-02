@@ -4,11 +4,13 @@ import { Button } from "primereact/button";
 import { Image } from "primereact/image";
 import { Tag } from 'primereact/tag';
 import { OfferType } from "../../types/OfferType";
-// TODO: use routes from path
-import { Path } from "../../paths";
 import "./OfferCard.module.css";
 import { ImageFileType } from "../../types/ImageFileType";
 import { Carousel } from "primereact/carousel";
+import { useEffect, useState } from "react";
+import { useAppSelector } from "../../store/hooks";
+import { profileSliceSelectors } from "../../store/slices/profileSlice";
+import { useEditProfileMutation } from "../../store/api/user";
 
 const roomsToName: { [key: string]: string } = {
   1: "Едностаен",
@@ -22,6 +24,7 @@ type Props = {
   editEnabled?: boolean;
   onEditClick?: (id: string, values: OfferType) => void;
   onDeleteClick?: (id: string) => void;
+  onGetProfileData: () => void;
 };
 
 export const OfferCard: React.FC<Props> = ({
@@ -29,7 +32,50 @@ export const OfferCard: React.FC<Props> = ({
   editEnabled = false,
   onEditClick,
   onDeleteClick,
+  onGetProfileData,
 }) => {
+  const profileData = useAppSelector(profileSliceSelectors.profileData);
+  const [submitEditProfile, { isLoading: isEditProfileDataLoading, isError: editProfileDataError }] = useEditProfileMutation();
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (profileData.favorites?.includes(offer._id)) {
+      setIsFavorite(true);
+    } else {
+      setIsFavorite(false);
+    }
+  }, [profileData.favorites, offer._id]);
+  const onFavouriteClick = async () => {
+    try {
+      setIsLoading(true);
+      if (isFavorite) {
+        setIsFavorite(false);
+        // Logic to remove from favorites
+        await submitEditProfile({
+          ...profileData,
+          favorites: profileData.favorites?.filter(fav => fav !== offer._id) || [],
+        });
+        setTimeout(() => {
+          onGetProfileData();
+          setIsLoading(false);
+        }, 50);
+      } else {
+        setIsFavorite(true);
+        // Logic to add to favorites
+        await submitEditProfile({
+          ...profileData,
+          favorites: profileData.favorites?.concat(offer._id) || [offer._id],
+        });
+        setTimeout(() => {
+          onGetProfileData();
+          setIsLoading(false);
+        }, 50);
+      }
+    } catch (error) {
+      console.error("Error toggling favourite status:", error);
+    }
+  }
   const navigate = useNavigate();
   const {
     visited,
@@ -110,7 +156,7 @@ export const OfferCard: React.FC<Props> = ({
             }}
           />
         </div>
-        {editEnabled && <div className="flex justify-content-between mt-3 mb-2">
+        <div className="flex justify-content-between mt-3 mb-2">
           {/* <Button
             label="Виж повече"
             className="p-0"
@@ -120,24 +166,33 @@ export const OfferCard: React.FC<Props> = ({
               navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
             }}
           /> */}
-          <div className={`flex justify-content-between mt-3 mb-2`}>
+          <div className={`flex justify-content-between mt-3 mb-2 gap-2`}>
+            {editEnabled && (
+              <><Button
+                raised
+                icon="pi pi-pencil"
+                onClick={() => {
+                  onEditClick && onEditClick(_id, offer);
+                }}
+              />
+                <Button
+                  severity="danger"
+                  raised
+                  icon="pi pi-trash"
+                  onClick={() => {
+                    onDeleteClick && onDeleteClick(_id);
+                  }}
+                /></>
+            )}
             <Button
+              severity="help"
               raised
-              icon="pi pi-pencil"
-              onClick={() => {
-                onEditClick && onEditClick(_id, offer);
-              }}
-            />
-            <Button
-              severity="danger"
-              raised
-              icon="pi pi-trash"
-              onClick={() => {
-                onDeleteClick && onDeleteClick(_id);
-              }}
+              icon={`pi ${isFavorite ? "pi-heart-fill" : "pi-heart"}`}
+              onClick={onFavouriteClick}
+              disabled={isLoading || isEditProfileDataLoading}
             />
           </div>
-        </div>}
+        </div>
       </Card>
     </div>
   );

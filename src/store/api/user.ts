@@ -54,11 +54,11 @@ export const userApi = createApi({
     });
 
     const editProfile = builder.mutation<any, Partial<ProfileDataType>>({
-      queryFn: async (signupData) => {
+      queryFn: async (userProfileData) => {
         try {
           const response = await fetch(`${BASE_URL}/user/me`, {
             method: "PUT",
-            body: JSON.stringify(signupData),
+            body: JSON.stringify(userProfileData),
           });
 
           if (!response.ok) {
