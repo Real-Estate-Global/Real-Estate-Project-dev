@@ -1,6 +1,8 @@
-require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const MongoDB = require("./db");
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const authenticateUser = (req, res, next) => {
     try {

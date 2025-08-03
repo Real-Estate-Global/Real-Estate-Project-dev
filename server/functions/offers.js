@@ -10,7 +10,7 @@ const getPublicOffers = async (req, res) => {
 
         const propertiesWithUrls = await Promise.all(properties.map(async (property) => {
             const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
-                console.log("Processing image:", image);
+                console.log("Processing image:", image.name);
                 if (image.key) {
                     console.log("Image key found:", image.key);
                     const url = await getFromS3(image.key);
@@ -24,7 +24,7 @@ const getPublicOffers = async (req, res) => {
 
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
     }
 }
 const getPublicOfferById = async (req, res) => {
@@ -44,7 +44,7 @@ const getPublicOfferById = async (req, res) => {
             visited: propertyById.visited + 1
         });
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
     }
 }
 const getOffersForUser = async (req, res) => {
@@ -55,7 +55,7 @@ const getOffersForUser = async (req, res) => {
 
         const propertiesWithUrls = await Promise.all(properties.map(async (property) => {
             const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
-                console.log("Processing image:", image);
+                console.log("Processing image:", image.name);
                 if (image.key) {
                     console.log("Image key found:", image.key);
                     const url = await getFromS3(image.key);
@@ -68,7 +68,7 @@ const getOffersForUser = async (req, res) => {
         }));
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while fetching the properties' });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
     }
 }
 const createOffer = async (req, res) => {
@@ -124,7 +124,7 @@ const editOfferById = async (req, res) => {
 
         res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while editing the property' });
+        res.status(500).json({ error: error.message || 'Something went wrong while editing the property' });
     }
 }
 const deleteOfferById = async (req, res) => {
@@ -135,7 +135,7 @@ const deleteOfferById = async (req, res) => {
 
         res.status(200).json({ message: 'Successfully deleted' });
     } catch (error) {
-        res.status(500).json({ error: 'Something went wrong while deleting the property' });
+        res.status(500).json({ error: error.message || 'Something went wrong while deleting the property' });
     }
 }
 

@@ -1,9 +1,11 @@
-require("dotenv").config();
 const MongoDB = require("./db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
 const { checkSchema } = require("express-validator");
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const checkUserRegister = checkSchema({
     email: { isEmail: true },

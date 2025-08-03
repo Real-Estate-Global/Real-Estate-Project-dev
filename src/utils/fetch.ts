@@ -10,20 +10,22 @@ export const delay = (ms: number): Promise<void> => {
 export class ExtendedFetch {
     public static instance: ExtendedFetch;
     private navigate?: NavigateFunction;
+    private setAuth?: (accessToken: string) => void;
     public static fetch: (url: string, options?: RequestInit) => Promise<Response>;
 
-    private constructor(navigate: NavigateFunction) {
+    private constructor(navigate: NavigateFunction, setAuth?: (accessToken: string) => void) {
         this.navigate = navigate;
+        this.setAuth = setAuth;
         this.overrideGlobalFetch();
     }
 
-    public static buildInstance(navigate: NavigateFunction) {
+    public static buildInstance(params: { navigate: NavigateFunction, setAuth: (accessToken: string) => void }) {
         if (!ExtendedFetch.instance) {
-            ExtendedFetch.instance = new ExtendedFetch(navigate);
+            ExtendedFetch.instance = new ExtendedFetch(params.navigate, params.setAuth);
         }
     }
 
-    private overrideGlobalFetch() {   
+    private overrideGlobalFetch() {
         const extendedFetch = async (
             url: string,
             options: RequestInit = {}
@@ -54,6 +56,12 @@ export class ExtendedFetch {
                     if (response.status === 401) {
                         console.log('Unauthorized access - redirecting to login');
                         Cookies.remove('auth');
+
+                        if (this.setAuth) {
+                            this.setAuth('');
+                        } else {
+                            console.error('SetAuth function is not provided');
+                        }
                         if (this.navigate) {
                             this.navigate('/login');
                         } else {

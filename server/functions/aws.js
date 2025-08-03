@@ -1,7 +1,9 @@
 const { GetObjectCommand, PutObjectCommand, DeleteObjectCommand, S3Client } = require('@aws-sdk/client-s3');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const { v4: uuidv4 } = require('uuid');
-require('dotenv').config();
+const dotenv = require('dotenv');
+const path = require('path');
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const s3 = new S3Client({
     region: process.env.MY_AWS_REGION,
@@ -16,7 +18,7 @@ const uploadToS3 = async (file) => {
     const base64Data = file.url.split(",")[1];
     const fileBuffer = Buffer.from(base64Data, "base64");
     const params = {
-        Bucket: process.env.S3_BUCKET,
+        Bucket: process.env.MY_S3_BUCKET,
         Key: key,
         Body: fileBuffer,
         ContentType: file.type,
@@ -30,7 +32,7 @@ const uploadToS3 = async (file) => {
 
 const deleteFromS3 = async (key) => {
     const params = {
-        Bucket: process.env.S3_BUCKET,
+        Bucket: process.env.MY_S3_BUCKET,
         Key: key,
     };
 
@@ -39,7 +41,7 @@ const deleteFromS3 = async (key) => {
 
 const getFromS3 = async (key) => {
     const command = new GetObjectCommand({
-        Bucket: process.env.S3_BUCKET,
+        Bucket: process.env.MY_S3_BUCKET,
         Key: key,
     });
 
