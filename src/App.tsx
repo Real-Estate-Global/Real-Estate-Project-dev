@@ -14,8 +14,8 @@ import { MyOffers } from "./components/MyOffers/MyOffers";
 import { MyOfferPage } from "./components/OfferPage/MyOfferPage";
 import { Profile } from "./components/Profile/Profile";
 import { Loader } from "./components/Loader";
-import { useAppDispatch } from "./store/hooks";
-import { authSliceActions } from "./store/slices/auth";
+import { useAppDispatch, useAppSelector } from "./store/hooks";
+import { authSliceActions, authSliceSelectors } from "./store/slices/auth";
 import { useGetProfileDataMutation, useLoginMutation } from "./store/api/user";
 import { LoginDataType } from "./types/LoginDataType";
 import { loginSubmitHandler } from "./utils/login";
@@ -29,7 +29,7 @@ function App() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [getProfileData, { isLoading: isGetProfileDataLoading, isError: getProfileDataError }] = useGetProfileDataMutation();
-
+  const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
 
   const onGetProfileData = async () => {
     try {
@@ -41,13 +41,6 @@ function App() {
       console.error("Error fetching profile data:", error);
     }
   };
-  useEffect(() => {
-    onGetProfileData();
-  }, [])
-  useEffect(() => {
-    ExtendedFetch.buildInstance(navigate);
-  }, [navigate])
-
   const setAuth = useCallback(
     (accessToken: string) => {
       dispatch(authSliceActions.setAuth({ accessToken }));
@@ -55,6 +48,14 @@ function App() {
     [dispatch]
   );
 
+  useEffect(() => {
+    if (isAuthenticated) {
+      onGetProfileData();
+    }
+  }, [isAuthenticated])
+  useEffect(() => {
+    ExtendedFetch.buildInstance({ navigate, setAuth });
+  }, [navigate])
   useEffect(() => {
     const authFromCookies = Cookies.get("auth");
 
