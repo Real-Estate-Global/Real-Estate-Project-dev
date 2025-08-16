@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useAppSelector } from "../../store/hooks";
 import { profileSliceSelectors } from "../../store/slices/profileSlice";
 import { useEditProfileMutation } from "../../store/api/user";
+import { NotificationManager } from "../Notifications";
 
 const roomsToName: { [key: string]: string } = {
   1: "Едностаен",
@@ -74,6 +75,7 @@ export const OfferCard: React.FC<Props> = ({
       }
     } catch (error) {
       console.error("Error toggling favourite status:", error);
+      NotificationManager.showError({ message: "Неуспешно добавяне в любими." });
     }
   }
   const navigate = useNavigate();
