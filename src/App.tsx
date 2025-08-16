@@ -1,5 +1,5 @@
 import { Routes, Route, useNavigate } from "react-router-dom";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import "./App.css";
 import "./styles/index.css";
 
@@ -22,7 +22,9 @@ import { loginSubmitHandler } from "./utils/login";
 import Cookies from "js-cookie";
 import { ExtendedFetch } from './utils/fetch'
 import { profileSliceActions } from "./store/slices/profileSlice";
-import { Footer } from "./components/Footer/Footer";
+import { Footer } from "./components/Footer/Footer"
+import { NotificationsContainer, NotificationManager } from "./components/Notifications";
+import { Button } from "primereact/button";
 
 function App() {
   const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
@@ -39,6 +41,7 @@ function App() {
       }
     } catch (error) {
       console.error("Error fetching profile data:", error);
+      NotificationManager.showError({ message: "Неуспешно взимане на данни за профила." });
     }
   };
   const setAuth = useCallback(
@@ -55,7 +58,7 @@ function App() {
   }, [isAuthenticated])
   useEffect(() => {
     ExtendedFetch.buildInstance({ navigate, setAuth });
-  }, [navigate])
+  }, [navigate, setAuth])
   useEffect(() => {
     const authFromCookies = Cookies.get("auth");
 
@@ -70,6 +73,10 @@ function App() {
 
       setAuth(accessToken);
       navigate(Path.Home);
+
+      NotificationManager.showSuccess({
+        message: "Успено влязхте в профила си!",
+      });
     }, [])
   const onLoginSubmit =
     async (values: LoginDataType) => {
@@ -84,6 +91,7 @@ function App() {
     <>
       <Header />
       <Loader show={isLoginLoading || isGetProfileDataLoading} />
+      <NotificationsContainer />
       <Routes>
         <Route path="/" element={<HomePage onGetProfileData={onGetProfileData} />}></Route>
         <Route

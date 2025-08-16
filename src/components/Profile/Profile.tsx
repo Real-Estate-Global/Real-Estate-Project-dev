@@ -16,6 +16,7 @@ import { Avatar } from "primereact/avatar";
 import { Dropdown } from "primereact/dropdown";
 import { OfferType } from "../../types/OfferType";
 import { useGetPublicOffersMutation } from "../../store/api/publicOffers";
+import { NotificationManager } from "../Notifications";
 
 type ProfileProps = {
   onGetProfileData: () => void;
@@ -80,6 +81,7 @@ export const Profile = ({ onGetProfileData }: ProfileProps) => {
       }, 500);
     } catch (error) {
       console.error("Error submitting profile edit:", error);
+      NotificationManager.showError({ message: "Неуспешно редактиране на профил." });
     }
   };
 

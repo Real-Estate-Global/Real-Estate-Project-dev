@@ -1,5 +1,6 @@
 import Cookies from 'js-cookie';
 import { NavigateFunction } from "react-router-dom";
+import { NotificationManager } from '../components/Notifications';
 
 const nativeFetch = window.fetch;
 

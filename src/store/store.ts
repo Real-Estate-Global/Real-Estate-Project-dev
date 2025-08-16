@@ -8,6 +8,7 @@ import { publicOffersApi } from "./api/publicOffers";
 import { searchDataApi } from "./api/searchData";
 import { profileSlice } from "./slices/profileSlice";
 import { filtersSlice } from "./slices/filters";
+import { notificationSlice } from "./slices/notificationSliceSelectors";
 
 export const makeStore = () => {
   const store = configureStore({
@@ -21,6 +22,7 @@ export const makeStore = () => {
       [publicOffersApi.reducerPath]: publicOffersApi.reducer,
       [searchDataApi.reducerPath]: searchDataApi.reducer,
       [filtersSlice.reducerPath]: filtersSlice.reducer,
+      [notificationSlice.reducerPath]: notificationSlice.reducer,
     },
     middleware: (getDefaultMiddleware) => {
       return getDefaultMiddleware({ serializableCheck: false }).concat([
