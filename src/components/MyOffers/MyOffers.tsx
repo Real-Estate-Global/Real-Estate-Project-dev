@@ -14,6 +14,7 @@ import { OfferFormDataEnum, OfferType } from "../../types/OfferType";
 import { OfferList } from "../OfferList/OfferList";
 import { Loader } from "../Loader";
 import { OfferFormDialog } from "../OfferForm/OfferFormDialog";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   onGetProfileData: () => void;
@@ -136,6 +137,8 @@ export const MyOffers = ({ onGetProfileData }: Props) => {
     return <div>Login please</div>;
   }
 
+  const navigate = useNavigate(); 
+
   return (
     <div>
       <Loader show={isLoading} />
@@ -168,7 +171,8 @@ export const MyOffers = ({ onGetProfileData }: Props) => {
 
       <div className={styles["my-offers-list-wrapper"]}>
         <h1 className={styles["my-offers-title"]}>Моите обяви</h1>
-        <Button label="Добави Обява" onClick={onCreateOfferClick} />
+        {/* <Button label="Добави Обява" onClick={onCreateOfferClick} /> */}
+        <Button label="Добави Обява" onClick={() => navigate("/properties/create-new-offer")} />
       </div>
       <OfferList
         offers={myOffers}

@@ -223,7 +223,7 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
 
                 <div className="heading-titles">
                     <h1>Умно търсене. Реални резултати.</h1>
-                    <h3>Discover the perfect home through our best search system</h3>
+                    <h3>Пробвай сега и се убеди</h3>
                     <div>
                         <button className="heading-button heading-search-button">Search</button>
                         <button className="heading-button heading-why-us-button">Why us?</button>
@@ -241,6 +241,8 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
                             marginRight: "18px",
                             marginTop: "42px",
                             marginBottom: "8px",
+                            position: "relative",
+                            zIndex: "5"
                         }}
                     />
                 </div>

@@ -69,13 +69,28 @@ export const OfferCard: React.FC<Props> = ({
   };
   const firstImage: ImageFileType = images && images[0]
   return (
-    <div className="offer-card md:col-4 p-2">
-      <Card
-        title={<div className="flex justify-content-between mt-3 mb-2">
+    <div className="offer-card md:col-4 p-2" onClick={() => {
+      // navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
+      navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
+    }}>
+      <Card style={{ fontFamily: "Comfortaa" }}
+        title={<div className="flex justify-content-between mt-3 mb-4" style={{ position: "relative", display: "flex", alignItems: "center", padding: "0px 4px" }}>
           <span className="text-900 offer-card-price">
             {euro.format(price)}
           </span>
-          <span className="text-900 text-xl ml-3"><Tag severity="success" value="Продажба" rounded style={{ padding: "3px 9px" }}></Tag></span>
+          {/* <div className="flex justify-content-between" style={{ position: "relative", display: "flex", alignItems: "center" }}>
+            <span className="text-900 font-medium accent-info" style={{margin: "0", fontSize: "20px"}}>
+              {`${roomsToName[String(rooms)] ? roomsToName[String(rooms)] : "Многостаен"} ${propertyType}`}
+            </span>
+          </div> */}
+          <span className="text-900 text-xl ml-3" style={{
+            // position: "absolute",
+            // right: "0px",
+            // top: "-72px",
+          }}>
+            <Tag severity="success" value="Продажба" rounded style={{
+              padding: "3px 9px", fontFamily: "Comfortaa", fontSize: "13px", backgroundColor: "rgba(34, 197, 94, 0.7)"
+            }}></Tag></span>
         </div>}
         className="surface-border surface-card border-round p-0"
         header={
@@ -86,21 +101,21 @@ export const OfferCard: React.FC<Props> = ({
           </div>
         }
       >
-        <div className="flex justify-content-between mt-3 mb-2">
-          <span className="text-900 font-medium text-xl">
-            {`${roomsToName[String(rooms)] ? roomsToName[String(rooms)] : "Многостаен"} ${propertyType}`}
+        <div className="flex justify-content-between mt-3 mb-2" style={{}}>
+          <span className="text-900 font-medium text-xl type-text">
+            {`${roomsToName[String(rooms)] ? roomsToName[String(rooms)] : "Многостаен"} ${propertyType === "Апартамент" ? propertyType.toLocaleLowerCase() : propertyType}`}
           </span>
         </div>
         <div className="flex justify-content-between mt-3 mb-2">
-          <span className="text-900 font-medium text-xl">
+          <span className="text-900 font-medium text-xl" style={{ marginLeft: "0px" }}>
             {/* <img className="offer-location-icon" src="./location-icon.png" />{location}, {district} */}
-            <div className="offer-card-icon-wrapper">
-            <LocationIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }}/>{location}, {district}
+            <div className="offer-card-icon-wrapper" style={{ fontSize: "16px", color: "#4b5563" }}>
+              <LocationIcon style={{ stroke: "#162350", fill: '#162350', width: 30, height: 30 }} />{location}, {district}
             </div>
           </span>
           {/* <span className="text-900 text-xl ml-3">{currency + price}</span> */}
         </div>
-        <div className="flex justify-content-between mt-3 mb-2">
+        <div className="flex justify-content-between mt-4 mb-1" style={{ borderTop: "1.5px solid #a6a6a6", borderBottom: "1.5px solid #a6a6a6", padding: "10px 0px", margin: "18px 0px", borderRadius: "2px" }}>
           {/* <span className="text-600"> <img className="offer-ruler-icon" style={{color: "pink"}} src="./area-icon.svg" />{area} кв.м.</span> */}
           <span className="text-600">
             {/* <img className="offer-ruler-icon" style={{ color: "pink" }} src="./area-icon.svg" />{area} кв.м. */}
@@ -114,7 +129,7 @@ export const OfferCard: React.FC<Props> = ({
               <path d="./area-icon.svg" />
             </svg> */}
             <div className="offer-card-icon-wrapper">
-              <AreaIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }} />
+              <AreaIcon style={{ stroke: "#162350", fill: '#162350', width: 33, height: 33 }} />
               {area} кв.м.
             </div>
           </span>
@@ -122,10 +137,37 @@ export const OfferCard: React.FC<Props> = ({
             {/* {`${DateTime.fromJSDate(yearOfBuilding as Date).toFormat('yyyy')}г.`} */}
             {/* <img className="offer-location-icon" src="./build-icon.png" /> */}
             <div className="offer-card-icon-wrapper">
-              <BuildingTypeIcon style={{ stroke: "#162350", fill: '#162350', width: 35, height: 35 }} />
+              <BuildingTypeIcon style={{ stroke: "#162350", fill: '#162350', width: 33, height: 33 }} />
               {`${new Date(yearOfBuilding).toISOString().split('T')[0]}`}
             </div>
           </span>
+          <span className="text-600">
+            {/* <img className="offer-ruler-icon" style={{ color: "pink" }} src="./area-icon.svg" />{area} кв.м. */}
+            {/* <svg
+              className="area-icon"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+            >
+              <path d="./area-icon.svg" />
+            </svg> */}
+            <div className="offer-card-icon-wrapper">
+              <AreaIcon style={{ stroke: "#162350", fill: '#162350', width: 33, height: 33 }} />
+              {area} кв.м.
+            </div>
+          </span>
+          {/* <Button
+            label="Виж повече"
+            className="p-0"
+            text
+            link
+            onClick={() => {
+              navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
+            }}
+          /> */}
+        </div>
+        {/* <div style={{display: "flex", justifyContent: "center", padding: "10px"}}>
           <Button
             label="Виж повече"
             className="p-0"
@@ -135,7 +177,7 @@ export const OfferCard: React.FC<Props> = ({
               navigate(`${editEnabled ? "/secure" : ""}/properties/${_id}`);
             }}
           />
-        </div>
+        </div> */}
         {editEnabled && <div className="flex justify-content-between mt-3 mb-2">
           {/* <Button
             label="Виж повече"

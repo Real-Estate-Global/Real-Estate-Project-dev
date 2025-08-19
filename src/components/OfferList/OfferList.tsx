@@ -39,7 +39,7 @@ export const OfferList: React.FC<Props> = ({
     layout: DataViewLayoutOptionsProps["layout"]
   ): any => {
     return (
-      <div className="grid grid-nogutter">
+      <div className="grid grid-nogutter offer-list-wrapper-new">
         {offers.map((offer) => (
           <OfferCard
             key={offer._id}

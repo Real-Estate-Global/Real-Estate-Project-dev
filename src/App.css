@@ -322,6 +322,82 @@ header {
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  font-family: "Comfortaa" !important;
+}
+
+.offer-details-page .p-component {
+  font-family: "Comfortaa" !important;
+}
+
+.offer-details-page button.offer-details-button {
+  background-color: #3858CF !important;
+  border-color: #3858CF !important;
+  font-size: 12px;
+}
+
+.offer-action-buttons {
+  display: flex;
+  gap: 12px;
+  /* разстояние между бутоните */
+  justify-content: center;
+  /* или flex-start, ако искаш да са подравнени вляво */
+}
+
+.offer-details-button {
+  flex: 1 1 0;
+  min-width: 120px;
+  /* или според дизайна ти */
+  text-align: center;
+  height: 50px;
+}
+
+
+
+.offer-details-card .p-card-content {
+  display: flex;
+}
+
+.offer-details-card.third-section-details .p-card-body {
+  width: 100%;
+}
+
+.offer-details-page .offer-carousel-wrapper .p-carousel-items-content {
+  border-radius: 10px;
+}
+
+.offer-details-page .offer-specification-paragraph {
+  display: flex;
+  /* align-content: center; */
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.offer-details-page .offer-specification-paragraph svg {
+  width: 26px !important;
+  height: 26px !important;
+  margin-right: 4px;
+}
+
+.offer-details-page .offer-specification-paragraph strong {
+  margin-right: 6px;
+}
+
+.offer-details-page .offer-carousel-wrapper .p-carousel-container {
+  height: 100% !important;
+}
+
+.offer-details-page .offer-carousel-wrapper .p-carousel-items-content {
+  height: 100% !important;
+}
+
+.offer-details-page .offer-carousel-wrapper .p-carousel-items-content .surface-border {
+  /* object-fit: cover; */
+  height: 100% !important;
+}
+
+.offer-details-page .offer-carousel-wrapper .p-carousel-items-content img {
+  object-fit: cover;
+  height: 100% !important;
 }
 
 .photo-container {
@@ -430,15 +506,27 @@ header {
 }
 
 .offer-carousel-wrapper {
-  width: 80% !important;
+  width: 50% !important;
 }
 
-.offer-details-page .offer-details-card{
-   margin: 20px;
-   padding: 20px;
+.offer-details-page .offer-details-card {
+  margin: 20px;
+  padding: 20px 0px;
 }
 
 @media (max-width: 600px) {
+
+  header {
+    padding-top: 15px;
+    position: sticky;
+    top: 87vh;
+    bottom: 0px;
+    z-index: 10;
+    width: 90%;
+    margin: auto;
+    height: 1px;
+  }
+
   .heading-image {
     /* width: 45vw;
     margin-top: 65%;
@@ -452,7 +540,7 @@ header {
   }
 
   .heading-titles h1 {
-    font-size: 50px;
+    font-size: 45px;
     width: 100%;
   }
 
@@ -464,5 +552,44 @@ header {
   .heading-titles {
     z-index: 3;
     position: relative;
+    margin-top: 20px
+  }
+
+  .first-section-offer-details {
+    width: 100% !important;
+  }
+
+  .first-section-offer-details .offer-details-card {
+    width: 100%;
+  }
+
+  .first-section-offer-details .offer-details-card .p-card-body {
+    width: 100%;
+  }
+
+  .offer-details-page {
+    width: 100% !important;
+  }
+
+  ._offer-wrapper_1xu3f_1 {
+    margin: auto;
+    width: 100% !important;
+  }
+
+  .offer-details-page .p-card-content {
+    display: flex;
+    /* align-content: center; */
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .offer-carousel-wrapper {
+    width: 100% !important;
+    height: 300px;
+  }
+
+  .offer-carousel-wrapper .p-carousel-items-content {
+    /* width: 100% !important;  */
   }
 }

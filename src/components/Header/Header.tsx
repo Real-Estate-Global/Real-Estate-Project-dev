@@ -15,6 +15,9 @@ export const Header = () => {
           </Link>
           {isAuthenticated && (
             <div id="user-navigation">
+              <Link className="abonament nav-link" to="/pricing-page">
+                Абонамент
+              </Link>
               <Link className="my-offers nav-link" to="/myoffers">
                 Моите обяви
               </Link>

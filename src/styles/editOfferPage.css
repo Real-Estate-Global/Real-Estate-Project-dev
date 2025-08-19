@@ -1,0 +1,380 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@400..700&display=swap');
+
+.edit-offer-page {
+    --bg: #f8fafc;
+    --surface: #ffffff;
+    --muted: #64748b;
+    --text: #0f172a;
+    --primary: #3858CF;
+    --border: #e2e8f0;
+    --ring: rgba(56, 88, 207, .28);
+    margin: 0;
+    font-family: "Comfortaa", ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial;
+    background: var(--bg);
+    color: var(--text);
+}
+
+.edit-offer-page * {
+    box-sizing: border-box;
+}
+
+.edit-offer-page .container {
+    width: min(1200px, 92vw);
+    margin-inline: auto;
+}
+
+.edit-offer-page .header {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    backdrop-filter: saturate(1.15) blur(8px);
+    background: color-mix(in oklab, var(--bg), transparent 25%);
+    border-bottom: 1px solid var(--border);
+}
+
+.edit-offer-page .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 0;
+}
+
+.edit-offer-page .logo {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-weight: 900;
+}
+
+.edit-offer-page .logo .dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, color-mix(in oklab, var(--primary), #fff 25%), var(--primary));
+}
+
+.edit-offer-page .main {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.edit-offer-page .main .content {
+    flex: 1 1 640px;
+    min-width: 0;
+}
+
+.edit-offer-page .aside {
+    position: sticky;
+    top: 86px;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 0 0 360px;
+}
+
+.edit-offer-page .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(2, 6, 23, .06);
+}
+
+.edit-offer-page .pad {
+    padding: 16px;
+}
+
+.edit-offer-page .gallery {
+    position: relative;
+}
+
+.edit-offer-page .p-galleria .p-galleria-item-nav {
+    background: rgba(15, 23, 42, .55);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+}
+
+.edit-offer-page .p-galleria .p-galleria-item-nav.p-link {
+    color: #fff;
+}
+
+.edit-offer-page .p-galleria .p-galleria-indicators {
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+}
+
+.edit-offer-page .p-galleria .p-galleria-indicator button {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+}
+
+.edit-offer-page .overlay-top {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 42%;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, .35), rgba(0, 0, 0, 0));
+    pointer-events: none;
+}
+
+.edit-offer-page .badges {
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+
+.edit-offer-page .gallery-edit {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 3;
+    display: flex;
+    gap: 8px;
+}
+
+.edit-offer-page .gallery-edit .p-button {
+    background: rgba(15, 23, 42, .55);
+    border: none;
+    color: #fff;
+}
+
+.edit-offer-page .title {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    column-gap: 12px;
+    align-items: start;
+}
+
+.edit-offer-page .h1 {
+    font-size: clamp(22px, 3vw, 34px);
+    margin: 0;
+}
+
+.edit-offer-page .sub {
+    color: var(--muted);
+}
+
+.edit-offer-page .section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.edit-offer-page .specs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.edit-offer-page .loc-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.edit-offer-page .pricebox {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-self: end;
+    gap: 8px;
+}
+
+.edit-offer-page .price-input .p-inputnumber-input {
+    font-weight: 900;
+    font-size: 22px;
+    text-align: right;
+}
+
+.edit-offer-page .price-hint {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.edit-offer-page .section-title {
+    font-size: 18px;
+    margin: 4px 0;
+}
+
+.edit-offer-page .stack {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Form fields */
+.edit-offer-page .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.edit-offer-page .field label {
+    font-size: 12px;
+    letter-spacing: .2px;
+    color: var(--muted);
+}
+
+.edit-offer-page .p-inputtext,
+.edit-offer-page .p-inputnumber {
+    width: 100%;
+}
+
+.edit-offer-page .field .hint {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+/* Image manager */
+.edit-offer-page .img-manager {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 16px;
+    align-items: start;
+}
+
+.edit-offer-page .drop-tile {
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    min-height: 240px;
+    display: grid;
+    place-items: center;
+    padding: 12px;
+    background: #f9fafb;
+}
+
+.edit-offer-page .drop-tile .p-fileupload {
+    width: 100%;
+}
+
+.edit-offer-page .drop-tile .p-fileupload-buttonbar {
+    display: none;
+}
+
+.edit-offer-page .drop-tile .p-fileupload-content {
+    border: none;
+    background: transparent;
+    text-align: center;
+}
+
+.edit-offer-page .drop-hint {
+    color: var(--muted);
+    font-size: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.edit-offer-page .img-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    max-height: 60vh;
+    overflow: auto;
+    padding-right: 4px;
+}
+
+.edit-offer-page .thumb {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.edit-offer-page .thumb img {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+}
+
+.edit-offer-page .thumb .remove {
+    position: absolute;
+    right: 6px;
+    top: 6px;
+}
+
+.edit-offer-page .calc {
+    border: 1px solid var(--border);
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+.edit-offer-page .calc .form-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(180px, 1fr));
+    gap: 12px;
+}
+
+.edit-offer-page .calc .field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.edit-offer-page .calc label {
+    font-size: 12px;
+    letter-spacing: .2px;
+    color: var(--muted);
+}
+
+.edit-offer-page .calc .p-inputnumber,
+.edit-offer-page .calc .p-inputtext {
+    width: 100%;
+}
+
+.edit-offer-page .p-galleria-item-wrapper {
+    height: 700px;
+}
+
+/* Responsive */
+@media (max-width: 1180px) {
+    .edit-offer-page .img-manager {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 1100px) {
+    .edit-offer-page .specs-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+    .edit-offer-page .loc-grid {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+    }
+}
+
+@media (max-width: 980px) {
+    .edit-offer-page .aside {
+        position: static;
+        flex: 1 1 100%;
+    }
+    .edit-offer-page .title {
+        grid-template-columns: 1fr;
+    }
+    .edit-offer-page .pricebox {
+        align-items: flex-start;
+        justify-self: start;
+    }
+    .edit-offer-page .calc .form-row {
+        grid-template-columns: 1fr;
+    }
+    .edit-offer-page .img-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .edit-offer-page .specs-grid,
+    .edit-offer-page .loc-grid {
+        grid-template-columns: 1fr;
+    }
+}

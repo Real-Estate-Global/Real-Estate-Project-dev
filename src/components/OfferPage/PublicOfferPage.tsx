@@ -8,6 +8,7 @@ export const PublicOfferPage = () => {
   const { offerId } = useParams();
   const getPublicOfferQuery = useGetPublicOfferQuery(offerId as string);
   const offer = getPublicOfferQuery.data
+  console.log("IMPORTANT", offer)
 
   return (
     <div className={styles["offer-wrapper"]}>
