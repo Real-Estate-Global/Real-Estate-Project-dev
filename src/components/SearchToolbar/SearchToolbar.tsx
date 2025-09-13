@@ -12,14 +12,13 @@ import {
 } from "react";
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { SearchForm } from "../SearchForm/SearchForm";
+import { HomePageSearchForm } from "../SearchForm/HomePageSearchForm";
 import { useGetCitiesQuery, useGetSelectedFitlersMutation } from "../../store/api/searchData";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
 import { filtersSliceActions, filtersSliceSelectors } from "../../store/slices/filters";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import debounce from "lodash/debounce";
-import { on } from "events";
 import { Dropdown } from "primereact/dropdown";
 import { onlyUnique } from "../../utils";
 
@@ -27,7 +26,7 @@ type Props = {
     setIsLoading: (isLoading: boolean) => void;
 };
 
-export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
+export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
     const dispatch = useAppDispatch();
     const getCitiesQuery = useGetCitiesQuery();
     const cities = getCitiesQuery.data;
@@ -167,7 +166,7 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
                         onClick={onSearchClick}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                        <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
+                        <HomePageSearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
                     </OverlayPanel>
                 </IconField>
                 <div className="search-input-homepage-wrapper">
@@ -219,8 +218,7 @@ export const HomeSearchNew: React.FC<Props> = ({ setIsLoading }) => {
 
     return (
         <div>
-            <div className="searchFformDiv-wrapper">
-
+            <div className="searchFormDiv-wrapper">
                 <div className="heading-titles">
                     <h1>Умно търсене. Реални резултати.</h1>
                     <h3>Discover the perfect home through our best search system</h3>

@@ -21,7 +21,6 @@ const {
 } = require('./offers')
 const {
     getSearchData,
-    getSelectedFitlers,
 } = require('./search')
 const {
     getSelectedFitlersAI,
@@ -38,7 +37,6 @@ app.get('/api/user/logout', userLogout);
 app.get('/api/user/me', authenticateUser, getUserData);
 app.put('/api/user/me', authenticateUser, editUserProfile);
 
-app.get('/api/data/search/getSelectedFitlers', getSelectedFitlers);
 app.get('/api/data/search/getSelectedFitlersAI', getSelectedFitlersAI);
 app.get('/api/data/search/searchData', getSearchData);
 app.get('/api/data/offers', getPublicOffers);

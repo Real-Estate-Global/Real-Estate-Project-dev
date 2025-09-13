@@ -1,4 +1,4 @@
-export const propertyTypes = [
+const propertyTypes = [
     "Едностаен апартамент",
     "Двустаен апартамент",
     "Тристаен апартамент",
@@ -12,3 +12,5 @@ export const propertyTypes = [
     "Търговско помещение",
     "Бизнес предложения"
 ];
+
+module.exports = { propertyTypes };

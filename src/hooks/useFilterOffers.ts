@@ -5,62 +5,51 @@ import { FiltersTypeEnum } from "../types/FiltersType";
 
 export const useFilterOffers = (offers: OfferType[]) => {
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
-
     const filteredOffers = selectedFilters
         ? offers.filter((offer) => {
             if (selectedFilters[FiltersTypeEnum.PropertyType]) {
                 if (offer.propertyType !== selectedFilters[FiltersTypeEnum.PropertyType]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.City]) {
                 if (offer.location !== selectedFilters[FiltersTypeEnum.City]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.District]) {
                 if (offer.district !== selectedFilters[FiltersTypeEnum.District]) {
-                    return false
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.RoomsLowest]) {
-                if (offer.rooms < selectedFilters[FiltersTypeEnum.RoomsLowest]) {
-                    return false
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.RoomsHighest]) {
-                if (offer.rooms > selectedFilters[FiltersTypeEnum.RoomsHighest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.BudgetLowest]) {
                 if (offer.price < selectedFilters[FiltersTypeEnum.BudgetLowest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.BudgetHighest]) {
                 if (offer.price > selectedFilters[FiltersTypeEnum.BudgetHighest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.AreaLowest]) {
                 if (offer.area < selectedFilters[FiltersTypeEnum.AreaLowest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.AreaHighest]) {
                 if (offer.area > selectedFilters[FiltersTypeEnum.AreaHighest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.FloorLowest]) {
                 if (offer.floor < selectedFilters[FiltersTypeEnum.FloorLowest]) {
-                    return false
+                    return false;
                 }
             }
             if (selectedFilters[FiltersTypeEnum.FloorHighest]) {
                 if (offer.floor > selectedFilters[FiltersTypeEnum.FloorHighest]) {
-                    return false
+                    return false;
                 }
             }
             // TODO: Implement year of building filter

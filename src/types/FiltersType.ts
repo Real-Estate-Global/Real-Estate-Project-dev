@@ -24,8 +24,6 @@ export enum FiltersTypeEnum {
   AreaHighest = "areaHighest",
   FloorLowest = "floorLowest",
   FloorHighest = "floorHighest",
-  RoomsLowest = "roomsLowest",
-  RoomsHighest = "roomsHighest",
   YearOfBuildingLowest = "yearOfBuildingLowest",
   YearOfBuildingHighest = "yearOfBuildingHighest",
 }
