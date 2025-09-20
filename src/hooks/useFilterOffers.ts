@@ -2,11 +2,15 @@ import { OfferType } from "../types/OfferType";
 import { useAppSelector } from "../store/hooks";
 import { filtersSliceSelectors } from "../store/slices/filters";
 import { FiltersTypeEnum } from "../types/FiltersType";
+import { useMemo } from "react";
 
 export const useFilterOffers = (offers: OfferType[]) => {
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
-    const filteredOffers = selectedFilters
-        ? offers.filter((offer) => {
+    const filteredOffers = useMemo(() => {
+        if (!selectedFilters) {
+            return offers
+        }
+        return offers.filter((offer) => {
             if (selectedFilters[FiltersTypeEnum.PropertyType]) {
                 if (offer.propertyType !== selectedFilters[FiltersTypeEnum.PropertyType]) {
                     return false;
@@ -56,7 +60,7 @@ export const useFilterOffers = (offers: OfferType[]) => {
 
             return true
         })
-        : offers;
+    }, [selectedFilters, offers])
 
     return {
         selectedFilters,

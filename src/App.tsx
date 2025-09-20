@@ -75,7 +75,7 @@ function App() {
       navigate(Path.Home);
 
       NotificationManager.showSuccess({
-        message: "Успено влязхте в профила си!",
+        message: "Успешно влязохте в профила си!",
       });
     }, [])
   const onLoginSubmit =

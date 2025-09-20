@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FiltersType } from "../../types/FiltersType";
 
 type FiltersState = {
+  isLoading: boolean;
   selectedFilters: Partial<FiltersType> | null;
 };
 

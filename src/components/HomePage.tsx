@@ -6,34 +6,40 @@ import { OfferType } from "../types/OfferType";
 import { SearchToolbar } from "./SearchToolbar/SearchToolbar";
 import { useFilterOffers } from "../hooks/useFilterOffers";
 import { Loader } from "./Loader";
+import { useAppSelector } from "../store/hooks";
+import { publicOffersSliceSelectors } from "../store/slices/publicOffers";
 
 type Props = {
   onGetProfileData: () => void;
 }
 export const HomePage = ({ onGetProfileData }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
-  const [offers, setOffers] = useState<OfferType[]>([]);
-  const [getPublicOffers, { isLoading: isGetPublicOffersLoading }] = useGetPublicOffersMutation();
+  const isPublicOffersLoading = useAppSelector(publicOffersSliceSelectors.isLoading)
+  const publicOffers = useAppSelector(publicOffersSliceSelectors.publicOffers)
+  const [getPublicOffers] = useGetPublicOffersMutation();
 
   useEffect(() => {
-    getPublicOffers(null).then((result) => {
-      if (result.data) {
-        setOffers(result.data);
-      }
-    });
+    getPublicOffers(null);
   }, []);
 
-  useEffect(() => {
-    setIsLoading(isGetPublicOffersLoading)
-  }, [isGetPublicOffersLoading])
-  const { filteredOffers } = useFilterOffers(offers);
+  const { filteredOffers } = useFilterOffers(publicOffers);
 
   return (
-    <>
-      <Loader show={isLoading} />
+    <div className="home-page-wrapper">
+      <Loader show={isPublicOffersLoading || isLoading} />
       <HeadingImage />
-      <SearchToolbar setIsLoading={setIsLoading} />
+      <div className="searchFormDiv-wrapper">
+        <div className="heading-titles">
+          <h1>Умно търсене. Реални резултати.</h1>
+          <h3>Discover the perfect home through our best search system</h3>
+          <div>
+            <button className="heading-button heading-search-button">Search</button>
+            <button className="heading-button heading-why-us-button">Why us?</button>
+          </div>
+        </div>
+        <SearchToolbar setIsLoading={setIsLoading} />
+      </div>
       <OfferList offers={filteredOffers} onGetProfileData={onGetProfileData} />
-    </>
+    </div>
   );
 };

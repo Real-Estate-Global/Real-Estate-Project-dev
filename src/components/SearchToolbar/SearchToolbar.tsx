@@ -217,32 +217,20 @@ export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
     const endContent = <></>;
 
     return (
-        <div>
-            <div className="searchFormDiv-wrapper">
-                <div className="heading-titles">
-                    <h1>Умно търсене. Реални резултати.</h1>
-                    <h3>Discover the perfect home through our best search system</h3>
-                    <div>
-                        <button className="heading-button heading-search-button">Search</button>
-                        <button className="heading-button heading-why-us-button">Why us?</button>
-                    </div>
-                </div>
-                <div className="card" style={{ position: "relative" }}>
-                    <Toolbar
-                        className="toolbar-homepage"
-                        // start={startContent}
-                        center={centerContent}
-                        // end={endContent}
-                        style={{
-                            padding: "24px",
-                            marginLeft: "18px",
-                            marginRight: "18px",
-                            marginTop: "42px",
-                            marginBottom: "8px",
-                        }}
-                    />
-                </div>
-            </div>
+        <div className="card" style={{ position: "relative" }}>
+            <Toolbar
+                className="toolbar-homepage"
+                // start={startContent}
+                center={centerContent}
+                // end={endContent}
+                style={{
+                    padding: "24px",
+                    marginLeft: "18px",
+                    marginRight: "18px",
+                    marginTop: "42px",
+                    marginBottom: "8px",
+                }}
+            />
         </div>
     );
 };
