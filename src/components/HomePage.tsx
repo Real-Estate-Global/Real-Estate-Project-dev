@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useGetPublicOffersMutation } from "../store/api/publicOffers";
 import { OfferType } from "../types/OfferType";
 import { SearchToolbar } from "./SearchToolbar/SearchToolbar";
-import { useFilterOffers } from "../hooks/useFilterOffers";
+import { useGetFilteredOffers } from "../hooks/useFilterOffers";
 import { Loader } from "./Loader";
 import { useAppSelector } from "../store/hooks";
 import { publicOffersSliceSelectors } from "../store/slices/publicOffers";
@@ -12,6 +12,7 @@ import { publicOffersSliceSelectors } from "../store/slices/publicOffers";
 type Props = {
   onGetProfileData: () => void;
 }
+
 export const HomePage = ({ onGetProfileData }: Props) => {
   const [isLoading, setIsLoading] = useState(false)
   const isPublicOffersLoading = useAppSelector(publicOffersSliceSelectors.isLoading)
@@ -22,7 +23,7 @@ export const HomePage = ({ onGetProfileData }: Props) => {
     getPublicOffers(null);
   }, []);
 
-  const { filteredOffers } = useFilterOffers(publicOffers);
+  const { filteredOffers } = useGetFilteredOffers(publicOffers);
 
   return (
     <div className="home-page-wrapper">

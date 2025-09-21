@@ -32,7 +32,7 @@ export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
     const cities = getCitiesQuery.data;
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
     const [searchString, setSearchString] = useState("");
-    const [getSelectedFiltres, { isLoading: isGetSelectedFiltersLoading, isError }] =
+    const [getSelectedFiltres, { isLoading: isGetSelectedFiltersLoading }] =
         useGetSelectedFitlersMutation();
     const [selectedFiltersExternal, setSelectedFiltersExternal] = useState<Partial<FiltersType> | null>(null)
     const overlayPanelRef: any = useRef(null);

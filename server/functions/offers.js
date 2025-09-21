@@ -1,26 +1,31 @@
 const MongoDB = require("./db");
 const { v4: uuidv4 } = require("uuid");
 const { getFromS3, uploadToS3, deleteFromS3 } = require("./aws");
+// TODO: delete
+const getPropertyWithAwsImages = async (property) => {
+    const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
+        if (image.key) {
+            const url = await getFromS3(image.key);
+            return { ...image, url };
+        }
+        return image;
+    }));
+    return { ...property, images: imagesWithUrls };
+}
+const getPropertiesWithAwImages = async (properties) => {
+    const propertiesWithUrls = await Promise.all(properties.map(async (property) => {
+        return await getPropertyWithAwsImages(property)
+    }));
 
+    return propertiesWithUrls
+}
 const getPublicOffers = async (req, res) => {
     try {
         const propertiesCollection = MongoDB.collection('offers');
         const query = req.query || {};
         const properties = await propertiesCollection.find(query).toArray();
 
-        const propertiesWithUrls = await Promise.all(properties.map(async (property) => {
-            const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
-                console.log("Processing image:", image.name);
-                if (image.key) {
-                    console.log("Image key found:", image.key);
-                    const url = await getFromS3(image.key);
-                    console.log("Image URL:", url);
-                    return { ...image, url };
-                }
-                return image;
-            }));
-            return { ...property, images: imagesWithUrls };
-        }));
+        const propertiesWithUrls = getPropertiesWithAwImages(properties);
 
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
@@ -32,6 +37,7 @@ const getPublicOfferById = async (req, res) => {
         const propertiesCollection = MongoDB.collection('offers');
         const query = { _id: req.params.id };
         const propertyById = await propertiesCollection.findOne(query);
+        const propertyWithUrls = await getPropertyWithAwsImages(propertyById);
 
         await propertiesCollection.updateOne(query, {
             $set: {
@@ -40,7 +46,7 @@ const getPublicOfferById = async (req, res) => {
         });
 
         res.status(200).json({
-            ...propertyById,
+            ...propertyWithUrls,
             visited: propertyById.visited + 1
         });
     } catch (error) {
@@ -52,20 +58,8 @@ const getOffersForUser = async (req, res) => {
         const propertiesCollection = MongoDB.collection('offers');
         const query = { ownerId: req.userId };
         const properties = await propertiesCollection.find(query).toArray();
+        const propertiesWithUrls = getPropertiesWithAwImages(properties);
 
-        const propertiesWithUrls = await Promise.all(properties.map(async (property) => {
-            const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
-                console.log("Processing image:", image.name);
-                if (image.key) {
-                    console.log("Image key found:", image.key);
-                    const url = await getFromS3(image.key);
-                    console.log("Image URL:", url);
-                    return { ...image, url };
-                }
-                return image;
-            }));
-            return { ...property, images: imagesWithUrls };
-        }));
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
         res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });

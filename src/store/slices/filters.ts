@@ -7,6 +7,7 @@ type FiltersState = {
 };
 
 const initialState: FiltersState = {
+  isLoading: false,
   selectedFilters: null,
 };
 

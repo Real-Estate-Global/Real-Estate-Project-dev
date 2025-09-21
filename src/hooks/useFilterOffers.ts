@@ -4,7 +4,9 @@ import { filtersSliceSelectors } from "../store/slices/filters";
 import { FiltersTypeEnum } from "../types/FiltersType";
 import { useMemo } from "react";
 
-export const useFilterOffers = (offers: OfferType[]) => {
+export const useGetFilteredOffers = (offers: OfferType[]) => {
+    // TODO add filters state here and fetch data when the filters change instead of filtering on the frontend.
+    // TODO: add isLoading to filters and remove it from SearchToolbar
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
     const filteredOffers = useMemo(() => {
         if (!selectedFilters) {
