@@ -1,33 +1,19 @@
 import { OfferList } from "./OfferList/OfferList";
 import { HeadingImage } from "./HeadingImage";
-import { useState, useEffect } from "react";
-import { useGetPublicOffersMutation } from "../store/api/publicOffers";
-import { OfferType } from "../types/OfferType";
 import { SearchToolbar } from "./SearchToolbar/SearchToolbar";
 import { useGetFilteredOffers } from "../hooks/useFilterOffers";
 import { Loader } from "./Loader";
-import { useAppSelector } from "../store/hooks";
-import { publicOffersSliceSelectors } from "../store/slices/publicOffers";
 
 type Props = {
   onGetProfileData: () => void;
 }
 
 export const HomePage = ({ onGetProfileData }: Props) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const isPublicOffersLoading = useAppSelector(publicOffersSliceSelectors.isLoading)
-  const publicOffers = useAppSelector(publicOffersSliceSelectors.publicOffers)
-  const [getPublicOffers] = useGetPublicOffersMutation();
-
-  useEffect(() => {
-    getPublicOffers(null);
-  }, []);
-
-  const { filteredOffers } = useGetFilteredOffers(publicOffers);
+  const { filteredOffers, selectedFilters, isLoading } = useGetFilteredOffers();
 
   return (
     <div className="home-page-wrapper">
-      <Loader show={isPublicOffersLoading || isLoading} />
+      <Loader show={isLoading} />
       <HeadingImage />
       <div className="searchFormDiv-wrapper">
         <div className="heading-titles">
@@ -38,7 +24,7 @@ export const HomePage = ({ onGetProfileData }: Props) => {
             <button className="heading-button heading-why-us-button">Why us?</button>
           </div>
         </div>
-        <SearchToolbar setIsLoading={setIsLoading} />
+        <SearchToolbar selectedFilters={selectedFilters} />
       </div>
       <OfferList offers={filteredOffers} onGetProfileData={onGetProfileData} />
     </div>

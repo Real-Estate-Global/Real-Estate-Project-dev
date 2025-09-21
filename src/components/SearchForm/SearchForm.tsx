@@ -11,7 +11,7 @@ type Props = {
   cities?: { City: string; District?: string }[];
 };
 
-export const SearchPageSearchForm: React.FC<Props> = ({
+export const SearchForm: React.FC<Props> = ({
   updatedFormValuesExternal,
   onFiltersChange,
   cities

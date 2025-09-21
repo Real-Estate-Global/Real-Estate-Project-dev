@@ -21,12 +21,65 @@ const getPropertiesWithAwImages = async (properties) => {
 }
 const getPublicOffers = async (req, res) => {
     try {
+        // TODO: add pagination 0-100?
+        // TODO: fix filters?
         const propertiesCollection = MongoDB.collection('offers');
-        const query = req.query || {};
-        const properties = await propertiesCollection.find(query).toArray();
+        const filters = req.query || {};
+        const mongoQuery = {};
 
-        const propertiesWithUrls = getPropertiesWithAwImages(properties);
+        // PropertyType, City, District - direct match
+        if (filters.propertyType) {
+            mongoQuery.propertyType = filters.propertyType;
+        }
+        if (filters.city) {
+            mongoQuery.city = filters.city;
+        }
+        if (filters.district) {
+            mongoQuery.district = filters.district;
+        }
+        // BudgetLowest, BudgetHighest
+        if (filters.budgetLowest || filters.budgetHighest) {
+            mongoQuery.price = {};
+            if (filters.budgetLowest) {
+                mongoQuery.price.$gte = Number(filters.budgetLowest);
+            }
+            if (filters.budgetHighest) {
+                mongoQuery.price.$lte = Number(filters.budgetHighest);
+            }
+        }
+        // AreaLowest, AreaHighest
+        if (filters.areaLowest || filters.areaHighest) {
+            mongoQuery.area = {};
+            if (filters.areaLowest) {
+                mongoQuery.area.$gte = Number(filters.areaLowest);
+            }
+            if (filters.areaHighest) {
+                mongoQuery.area.$lte = Number(filters.areaHighest);
+            }
+        }
+        // FloorLowest, FloorHighest
+        if (filters.floorLowest || filters.floorHighest) {
+            mongoQuery.floor = {};
+            if (filters.floorLowest) {
+                mongoQuery.floor.$gte = Number(filters.floorLowest);
+            }
+            if (filters.floorHighest) {
+                mongoQuery.floor.$lte = Number(filters.floorHighest);
+            }
+        }
+        // YearOfBuildingLowest, YearOfBuildingHighest
+        if (filters.yearOfBuildingLowest || filters.yearOfBuildingHighest) {
+            mongoQuery.yearOfBuilding = {};
+            if (filters.yearOfBuildingLowest) {
+                mongoQuery.yearOfBuilding.$gte = Number(filters.yearOfBuildingLowest);
+            }
+            if (filters.yearOfBuildingHighest) {
+                mongoQuery.yearOfBuilding.$lte = Number(filters.yearOfBuildingHighest);
+            }
+        }
 
+        const properties = await propertiesCollection.find(mongoQuery).toArray();
+        const propertiesWithUrls = await getPropertiesWithAwImages(properties);
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
         res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
@@ -34,6 +87,7 @@ const getPublicOffers = async (req, res) => {
 }
 const getPublicOfferById = async (req, res) => {
     try {
+        // TODO: get only one from mongoDB by id.
         const propertiesCollection = MongoDB.collection('offers');
         const query = { _id: req.params.id };
         const propertyById = await propertiesCollection.findOne(query);

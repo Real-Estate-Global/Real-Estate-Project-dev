@@ -31,7 +31,7 @@ export const searchDataApi = createApi({
       },
     });
 
-    const getSelectedFitlers = builder.mutation<FiltersType, string>({
+    const getSelectedFitlers = builder.mutation<Partial<FiltersType>, string>({
       queryFn: async (searchString) => {
         try {
           const response = await fetch(

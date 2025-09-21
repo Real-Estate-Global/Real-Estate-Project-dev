@@ -12,39 +12,35 @@ import {
 } from "react";
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { HomePageSearchForm } from "../SearchForm/HomePageSearchForm";
+import { SearchForm } from "../SearchForm/SearchForm";
 import { useGetCitiesQuery, useGetSelectedFitlersMutation } from "../../store/api/searchData";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
-import { filtersSliceActions, filtersSliceSelectors } from "../../store/slices/filters";
-import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { filtersSliceActions } from "../../store/slices/filters";
+import { useAppDispatch } from "../../store/hooks";
 import debounce from "lodash/debounce";
 import { Dropdown } from "primereact/dropdown";
 import { onlyUnique } from "../../utils";
 
 type Props = {
-    setIsLoading: (isLoading: boolean) => void;
+    selectedFilters: Partial<FiltersType> | null
 };
 
-export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
+export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
     const dispatch = useAppDispatch();
     const getCitiesQuery = useGetCitiesQuery();
     const cities = getCitiesQuery.data;
-    const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
     const [searchString, setSearchString] = useState("");
-    const [getSelectedFiltres, { isLoading: isGetSelectedFiltersLoading }] =
-        useGetSelectedFitlersMutation();
+    const [getSelectedFiltres] = useGetSelectedFitlersMutation();
     const [selectedFiltersExternal, setSelectedFiltersExternal] = useState<Partial<FiltersType> | null>(null)
     const overlayPanelRef: any = useRef(null);
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
 
     useEffect(() => {
-        setIsLoading && setIsLoading(isGetSelectedFiltersLoading);
-    }, [isGetSelectedFiltersLoading, setIsLoading]);
-    useEffect(() => {
         dispatch(filtersSliceActions.setSelectedFilters(selectedFiltersExternal));
     }, [selectedFiltersExternal]);
-
+    console.log('selectedFiltersExternal', selectedFiltersExternal)
+    console.log('selectedFilters', selectedFilters)
     const onSearchClick = async () => {
         try {
             const result = await getSelectedFiltres(searchString);
@@ -105,7 +101,7 @@ export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
     );
     const onFiltersChange = useCallback((params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => {
         dispatch(filtersSliceActions.setSelectedFilters({
-            ...selectedFilters,
+            ...(selectedFilters || {}),
             [params.key]: params.value,
         }));
         setSelectedFiltersExternal((prev) => ({
@@ -166,7 +162,7 @@ export const SearchToolbar: React.FC<Props> = ({ setIsLoading }) => {
                         onClick={onSearchClick}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                        <HomePageSearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
+                        <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
                     </OverlayPanel>
                 </IconField>
                 <div className="search-input-homepage-wrapper">

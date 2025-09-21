@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { FiltersType } from "../../types/FiltersType";
+import { searchDataApi } from "../api/searchData";
 
 type FiltersState = {
   isLoading: boolean;
@@ -26,8 +27,32 @@ export const filtersSlice = createSlice({
     },
   },
   selectors: {
+    isLoading: (state) => state.isLoading,
     selectedFilters: (state) => state.selectedFilters,
   },
+
+  extraReducers: (builder) => {
+    builder.addMatcher(
+      searchDataApi.endpoints.getSelectedFitlers.matchPending,
+      (state) => {
+        state.isLoading = true;
+      }
+    );
+    builder.addMatcher(
+      searchDataApi.endpoints.getSelectedFitlers.matchFulfilled,
+      (state, action) => {
+        state.isLoading = false;
+        // TODO: do not apply from server when null?
+        state.selectedFilters = action.payload;
+      }
+    );
+    builder.addMatcher(
+      searchDataApi.endpoints.getSelectedFitlers.matchRejected,
+      (state) => {
+        state.isLoading = false;
+      }
+    );
+  }
 });
 
 export const filtersSliceActions = filtersSlice.actions;

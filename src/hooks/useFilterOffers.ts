@@ -1,71 +1,35 @@
-import { OfferType } from "../types/OfferType";
 import { useAppSelector } from "../store/hooks";
 import { filtersSliceSelectors } from "../store/slices/filters";
-import { FiltersTypeEnum } from "../types/FiltersType";
-import { useMemo } from "react";
+import { useCallback, useEffect } from "react";
+import { useGetPublicOffersMutation } from "../store/api/publicOffers";
+import { publicOffersSliceSelectors } from "../store/slices/publicOffers";
+import { NotificationManager } from "../components/Notifications";
+import { FiltersType } from "../types/FiltersType";
 
-export const useGetFilteredOffers = (offers: OfferType[]) => {
-    // TODO add filters state here and fetch data when the filters change instead of filtering on the frontend.
-    // TODO: add isLoading to filters and remove it from SearchToolbar
+export const useGetFilteredOffers = () => {
+    const isPublicOffersLoading = useAppSelector(publicOffersSliceSelectors.isLoading);
+    const isGetFiltersLoading = useAppSelector(filtersSliceSelectors.isLoading);
+    const publicOffers = useAppSelector(publicOffersSliceSelectors.publicOffers);
+    const [getPublicOffers] = useGetPublicOffersMutation();
     const selectedFilters = useAppSelector(filtersSliceSelectors.selectedFilters);
-    const filteredOffers = useMemo(() => {
-        if (!selectedFilters) {
-            return offers
-        }
-        return offers.filter((offer) => {
-            if (selectedFilters[FiltersTypeEnum.PropertyType]) {
-                if (offer.propertyType !== selectedFilters[FiltersTypeEnum.PropertyType]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.City]) {
-                if (offer.location !== selectedFilters[FiltersTypeEnum.City]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.District]) {
-                if (offer.district !== selectedFilters[FiltersTypeEnum.District]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.BudgetLowest]) {
-                if (offer.price < selectedFilters[FiltersTypeEnum.BudgetLowest]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.BudgetHighest]) {
-                if (offer.price > selectedFilters[FiltersTypeEnum.BudgetHighest]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.AreaLowest]) {
-                if (offer.area < selectedFilters[FiltersTypeEnum.AreaLowest]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.AreaHighest]) {
-                if (offer.area > selectedFilters[FiltersTypeEnum.AreaHighest]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.FloorLowest]) {
-                if (offer.floor < selectedFilters[FiltersTypeEnum.FloorLowest]) {
-                    return false;
-                }
-            }
-            if (selectedFilters[FiltersTypeEnum.FloorHighest]) {
-                if (offer.floor > selectedFilters[FiltersTypeEnum.FloorHighest]) {
-                    return false;
-                }
-            }
-            // TODO: Implement year of building filter
 
-            return true
-        })
-    }, [selectedFilters, offers])
+    const getPublicOffersAsync = useCallback(async (params: { selectedFilters: Partial<FiltersType> | null }) => {
+        try {
+            await getPublicOffers(params.selectedFilters)
+        } catch (e) {
+            NotificationManager.showSuccess({
+                message: "Неуспешно взимане на оферти.",
+            });
+        }
+    }, [])
+
+    useEffect(() => {
+        getPublicOffersAsync({ selectedFilters })
+    }, [selectedFilters])
 
     return {
         selectedFilters,
-        filteredOffers,
+        filteredOffers: publicOffers,
+        isLoading: isPublicOffersLoading || isGetFiltersLoading
     };
 };

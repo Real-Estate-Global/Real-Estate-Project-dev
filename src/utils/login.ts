@@ -1,3 +1,4 @@
+import { NotificationManager } from "../components/Notifications";
 import { LoginDataType } from "../types/LoginDataType";
 import Cookies from "js-cookie";
 
@@ -16,5 +17,8 @@ export const loginSubmitHandler =
             }
         } catch (e: any) {
             console.error("Error::loginSubmitHandler", e)
+            NotificationManager.showSuccess({
+                message: "Неуспешно влизане в профила.",
+            });
         }
     }

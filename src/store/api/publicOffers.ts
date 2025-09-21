@@ -3,7 +3,7 @@ import { FiltersType } from "../../types/FiltersType";
 import { OfferType } from "../../types/OfferType";
 import { BASE_URL } from "./const";
 
-const buildFiltersQuery = (filters: FiltersType) => {
+const buildFiltersQuery = (filters: Partial<FiltersType> | null) => {
   if (!filters) {
     return "";
   }
@@ -22,7 +22,7 @@ export const publicOffersApi = createApi({
     baseUrl: BASE_URL,
   }),
   endpoints: (builder) => {
-    const getPublicOffers = builder.mutation<OfferType[], FiltersType | null>({
+    const getPublicOffers = builder.mutation<OfferType[], Partial<FiltersType> | null>({
       queryFn: async (filters) => {
         try {
           const response = await fetch(

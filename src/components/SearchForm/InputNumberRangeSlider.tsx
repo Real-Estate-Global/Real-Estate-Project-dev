@@ -1,10 +1,9 @@
 import {
   InputNumber,
-  InputNumberChangeEvent,
   InputNumberValueChangeEvent,
 } from "primereact/inputnumber";
 import { Slider, SliderChangeEvent } from "primereact/slider";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 
 type Props = {
   nameFrom: string;
