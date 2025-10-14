@@ -143,7 +143,7 @@ export const OfferDetails: React.FC<Props> = ({ offerDetails }) => {
             <p className="offer-specification-paragraph">{offerDetails.agent?.agency}</p> */}
             </div>
           </div>
-          <Button className="offer-details-button" label="Изпрати запитване" icon="pi pi-envelope" className="mt-3" />
+          <Button className="offer-details-button mt-3" label="Изпрати запитване" icon="pi pi-envelope" />
         </div>
       </Card>
 
@@ -158,7 +158,7 @@ export const OfferDetails: React.FC<Props> = ({ offerDetails }) => {
             <p>{offerDetails.agent?.agency}</p> */}
           </div>
         </div>
-        <Button className="offer-details-button" label="Изпрати запитване" icon="pi pi-envelope" className="mt-3" />
+        <Button className="offer-details-button mt-3" label="Изпрати запитване" icon="pi pi-envelope" />
       </Card>
 
       {/* Action Buttons */}

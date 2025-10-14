@@ -339,6 +339,12 @@
     height: 700px;
 }
 
+.edit-offer-page .p-galleria-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 /* Responsive */
 @media (max-width: 1180px) {
     .edit-offer-page .img-manager {

@@ -21,6 +21,8 @@ import { useGetMyOfferQuery } from "../../store/api/privateOffers";
 import { useAppSelector } from "../../store/hooks";
 import { authSliceSelectors } from "../../store/slices/auth";
 import { MyOffers } from "../MyOffers/MyOffers";
+import { CreateEditFormNew } from "../CreateEditFormNew/CreateEditFormNew";
+import { OfferDetails } from "../OfferDetails/OfferDetails";
 
 interface Listing {
     id: string;
@@ -168,7 +170,7 @@ export const EditOfferPage = () => {
         <div className="edit-offer-page">
             <Toast ref={toast} />
 
-            <header className="header">
+            {/* <header className="header">
                 <div className="container header-inner">
                     <div className="logo"><span className="dot" /> Acme Estates</div>
                     <div style={{ display: 'flex', gap: 8 }}>
@@ -176,7 +178,7 @@ export const EditOfferPage = () => {
                         <Button label="Публикувай" icon="pi pi-upload" onClick={() => onSave(true)} />
                     </div>
                 </div>
-            </header>
+            </header> */}
 
             <main className="container" style={{ marginTop: 16 }}>
                 <div className="card gallery" onClick={() => setImgManagerOpen(true)} role="button" aria-label="Редактирай снимките">
@@ -191,6 +193,8 @@ export const EditOfferPage = () => {
                     </div>
                     <Galleria value={myOfferPhotosUrls} numVisible={1} circular showThumbnails={false} showIndicators showItemNavigators activeIndex={activeIndex} onItemChange={(e) => setActiveIndex(e.index)} item={(src) => <img src={src as string} alt={form.title} />} />
                 </div>
+
+                <CreateEditFormNew offerData={myOffer} />
 
                 <section className="main" style={{ marginTop: 16 }}>
                     <article className="card pad content" aria-label="Основна информация">

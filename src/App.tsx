@@ -24,10 +24,11 @@ import { ExtendedFetch } from './utils/fetch'
 import { profileSliceActions } from "./store/slices/profileSlice";
 import { Footer } from "./components/Footer/Footer";
 import { CreateOfferPage } from "./components/OfferPage/CreateOfferPage";
-import {OfferPageChatGPT} from "./components/OfferPageChatGPT/OfferPageChatGPT";
-import {EditOfferPage} from "./components/EditOfferPage/EditOfferPage";
+import { OfferPageChatGPT } from "./components/OfferPageChatGPT/OfferPageChatGPT";
+import { EditOfferPage } from "./components/EditOfferPage/EditOfferPage";
 import { PricingPage } from "./components/PricingPage/PricingPage";
 import { MyProfile } from "./components/MyProfile/MyProfile";
+import { CreateOfferPageNew } from "./components/CreateOfferPageNew/CreateOfferPageNew";
 
 function App() {
   const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
@@ -98,13 +99,14 @@ function App() {
         <Route path="/properties/:offerId" element={<OfferPageChatGPT />}></Route>
         {/* <Route path="/properties/edit/:offerId" element={<PublicOfferPage />}></Route> */}
         <Route path="/properties/edit/:_id" element={<EditOfferPage />}></Route>
-        <Route path="/properties/create-new-offer" element={<CreateOfferPage />}></Route>
+        {/* <Route path="/properties/create-new-offer" element={<CreateOfferPage />}></Route> */}
+        <Route path="/properties/create-new-offer" element={<CreateOfferPageNew />}></Route>
         <Route path={Path.Logout} element={<Logout />}></Route>
         <Route path={Path.MyOffers} element={<MyOffers onGetProfileData={onGetProfileData} />}></Route>
         <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
         {/* <Route path={Path.MyProfile} element={<Profile onGetProfileData={onGetProfileData}/>}></Route> */}
-        <Route path="/myprofile" element={<MyProfile/>}></Route>
-        <Route path="/pricing-page" element={<PricingPage/>}></Route>
+        <Route path="/myprofile" element={<MyProfile />}></Route>
+        <Route path="/pricing-page" element={<PricingPage />}></Route>
       </Routes>
       <Footer />
     </>

@@ -196,12 +196,12 @@ export const PricingPage = () => {
         <div>
             <Toast ref={toast} />
 
-            <header className="header">
+            {/* <header className="header">
                 <div className="container header-inner">
                     <div className="logo"><span className="dot" /> Acme Estates</div>
                     <div className="small">Цените са в EUR и включват ДДС.</div>
                 </div>
-            </header>
+            </header> */}
 
             <main className="container">
                 <section className="hero">

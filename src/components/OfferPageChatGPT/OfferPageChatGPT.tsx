@@ -17,6 +17,9 @@ import { useGetPublicOfferQuery } from "../../store/api/publicOffers";
 import { useAppSelector } from "../../store/hooks";
 import { authSliceSelectors } from "../../store/slices/auth";
 import { CreditCalculator } from "../CreditCalculator/CreditCalculator";
+import { OfferPageGallery } from "../OfferPageGallery/OfferPageGallery";
+import { OfferType } from "../../types/OfferType";
+
 
 interface Listing {
     id: string;
@@ -38,33 +41,6 @@ interface Listing {
     description: string;
     features: string[];
 }
-
-const DEMO: Listing = {
-    id: "LOZ-3217",
-    title: "3-стаен апартамент с панорама в кв. Лозенец",
-    priceEUR: 289000,
-    address: "ул. „Крушова градина“ 12",
-    city: "София",
-    district: "Лозенец",
-    areaM2: 112,
-    rooms: 3,
-    baths: 2,
-    floor: "6/8",
-    year: 2014,
-    type: "Апартамент",
-    images: [
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?q=80&w=1400&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1554995207-c18c203602cb?q=80&w=1400&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1400&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?q=80&w=1400&auto=format&fit=crop",
-    ],
-    tags: ["Тераса", "Гледка"],
-    exclusive: true,
-    isNew: true,
-    description:
-        "Светъл и просторен апартамент с невероятна панорамна гледка към Витоша. Функционално разпределение, висок клас довършителни работи, подземно паркомясто.",
-    features: ["Асансьор", "Паркинг", "Контролиран достъп", "Склад", "ТЕЦ", "Климатизация"],
-};
 
 const STYLE_ID = "listing-detail-prime-light-v6";
 
@@ -89,81 +65,6 @@ function useEnsureCss() {
 function useCurrency() {
     return useMemo(() => new Intl.NumberFormat("bg-BG", { style: "currency", currency: "EUR" }), []);
 }
-
-function Icon({ name }: { name: string }) {
-    switch (name) {
-        case 'bath':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 14h18" /><path d="M5 14v3a4 4 0 0 0 4 4h6a4 4 0 0 0 4-4v-3" /><path d="M7 7a2 2 0 0 1 4 0v7" /><path d="M7 7h4" /></svg>);
-        case 'elevator':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="3" width="16" height="18" rx="2" /><path d="M9 7h6v10H9z" /><path d="M12 5v2" /></svg>);
-        case 'parking':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 20V4h7a5 5 0 1 1 0 10H6" /></svg>);
-        case 'access':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="7" width="18" height="12" rx="2" /><path d="M7 7V5a5 5 0 0 1 10 0v2" /></svg>);
-        case 'storage':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="8" width="18" height="12" rx="2" /><path d="M3 8l9-5 9 5" /></svg>);
-        case 'heat':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M8 3c3 3 3 6 0 9s-3 6 0 9" /><path d="M16 3c3 3 3 6 0 9s-3 6 0 9" /></svg>);
-        case 'ac':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3" /><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M5 19l3-3M16 8l3-3" /></svg>);
-        case 'home':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 11l9-7 9 7" /><path d="M5 10v10h14V10" /></svg>);
-        case 'area':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M9 9h6v6H9z" /></svg>);
-        case 'rooms':
-            return (<svg className="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="7" width="7" height="10" /><rect x="14" y="7" width="7" height="10" /></svg>);
-        default:
-            return null;
-    }
-}
-
-function SpecTag({ icon, label }: { icon: string; label: string }) {
-    return (
-        <Tag><span className="tag-inner"><Icon name={icon} />{label}</span></Tag>
-    );
-}
-
-// function MortgageCalculator({ price }: { price: number }) {
-//     const fmt = useCurrency();
-//     const [amount, setAmount] = useState<number>(price);
-//     const [downPct, setDownPct] = useState<number>(20);
-//     const [ratePct, setRatePct] = useState<number>(2.8);
-//     const [years, setYears] = useState<number>(30);
-//     const monthly = useMemo(() => {
-//         const P = amount * (1 - downPct / 100);
-//         const r = (ratePct / 100) / 12;
-//         const n = years * 12;
-//         const m = r === 0 ? (P / n) : (P * (r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1));
-//         return isFinite(m) ? m : 0;
-//     }, [amount, downPct, ratePct, years]);
-//     return (
-//         <div className="calc">
-//             <div className="form-row">
-//                 <div className="field">
-//                     <label htmlFor="mc-price">Цена (€)</label>
-//                     <InputNumber inputId="mc-price" value={amount} onValueChange={(e) => setAmount(e.value || 0)} mode="currency" currency="EUR" locale="bg-BG" />
-//                 </div>
-//                 <div className="field">
-//                     <label htmlFor="mc-down">Първоначална вноска (%)</label>
-//                     <InputNumber inputId="mc-down" value={downPct} onValueChange={(e) => setDownPct(e.value || 0)} suffix="%" min={0} max={100} />
-//                 </div>
-//                 <div className="field">
-//                     <label htmlFor="mc-rate">Лихва (% год.)</label>
-//                     <InputNumber inputId="mc-rate" value={ratePct} onValueChange={(e) => setRatePct(e.value || 0)} suffix="%" min={0} step={0.1} />
-//                 </div>
-//                 <div className="field">
-//                     <label htmlFor="mc-years">Срок (години)</label>
-//                     <InputNumber inputId="mc-years" value={years} onValueChange={(e) => setYears(e.value || 0)} min={1} max={40} />
-//                 </div>
-//             </div>
-//             <Divider />
-//             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-//                 <div style={{ fontWeight: 900, fontSize: 22 }}>Месечна вноска: {fmt.format(monthly)}</div>
-//                 <div className="sub">Ориентировъчно изчисление. За точна оферта се свържете с кредитен консултант.</div>
-//             </div>
-//         </div>
-//     );
-// }
 
 export const OfferPageChatGPT = () => {
 
@@ -229,12 +130,13 @@ export const OfferPageChatGPT = () => {
     }
 
     const navigate = useNavigate()
+    console.log("testets", offerData)
+    // console.log("testetcbsjhdcbss", OfferType)
 
     return (
         <div className="offer-page-new">
-            <Toast ref={toast} />
-
-            <header className="header">
+            {/* <Toast ref={toast} /> */}
+            {/* <header className="header">
                 <div className="container header-inner">
                     <div className="logo"><span className="dot" /> Acme Estates</div>
                     <nav style={{ display: "flex", gap: 8 }}>
@@ -243,7 +145,7 @@ export const OfferPageChatGPT = () => {
                         <Button label="Пусни обява" icon="pi pi-plus" />
                     </nav>
                 </div>
-            </header>
+            </header> */}
 
             <main className="container" style={{ marginTop: 16 }}>
                 <div className="card gallery">
@@ -257,6 +159,7 @@ export const OfferPageChatGPT = () => {
                     {isAuthenticated ? <Button className={`edit ${fav ? "active" : ""}`} rounded icon={fav ? "pi pi-pen" : "pi pi-pencil"} onClick={() => navigate(`/properties/edit/${offerData?._id}`)} aria-label="Запази" /> : ""}
                     <Galleria value={offerPhotosUrls} numVisible={1} circular showThumbnails={false} showIndicators showItemNavigators activeIndex={index} onItemChange={(e) => setIndex(e.index)} item={(src) => <img src={src as string} alt={offerData.title} />} />
                 </div>
+                {/* <OfferPageGallery offerData={offerData} /> */}
 
                 <section className="main" style={{ marginTop: 16 }}>
                     <article className="card pad content" aria-label="Основна информация">
@@ -264,12 +167,10 @@ export const OfferPageChatGPT = () => {
                             <div>
                                 {/* <h1 className="h1">{`${roomsToName[String(offerData?.rooms)] ? roomsToName[String(offerData?.rooms)] : "Многостаен" offerData?.propertyType.toLocaleLowerCase()} в {offerData?.district}}` || `${DEMO.title}` || "hello"}</h1> */}
                                 <h1 className="h1"> {`${roomsToName[String(offerData?.rooms)] ? roomsToName[String(offerData?.rooms)] : "Многостаен"} ${offerData?.propertyType.toLocaleLowerCase()} в ${offerData?.district}`} </h1>
-                                {/* <div className="sub">{offerData?.location}, {offerData?.district} • {offerData?.address ? offerData?.address : "test"} • ID: {offerData?. _id}</div> */}
+                                <div className="sub">{offerData?.location}, {offerData?.district} • {offerData?.address ? offerData?.address : "ул. Лятно кокиче 12"} • ID: {offerData?._id}</div>
                                 <div className="specs" style={{ marginTop: 8 }}>
-                                    {/* <SpecTag icon="home" label={offerData?.propertyType} /> */}
                                     <Tag icon="pi pi-home" value={offerData?.propertyType} />
                                     <Tag icon="pi pi-expand" value={`${offerData?.area} м²`} />
-                                    {/* <SpecTag icon="rooms" value={`${offerData?.rooms} стаи`} /> */}
                                     <Tag icon="pi pi-table" value={`${offerData?.rooms} стаи`} />
                                     {/* <Tag icon="pi-bath" value={`${offerData?.baths || 2} бани`} /> */}
                                     {offerData?.floor && <Tag icon="pi pi-sort-numeric-up" value={`Етаж ${offerData?.floor}`} />}
@@ -291,37 +192,21 @@ export const OfferPageChatGPT = () => {
                         <div className="stack">
                             <h3 className="section-title"><i className="pi pi-info-circle" style={{ marginRight: 8 }} />Описание</h3>
                             <p className="sub" style={{ margin: 0 }}>{offerData?.description}</p>
-
                             <Divider />
-
                             <h3 className="section-title"><i className="pi pi-list-check" style={{ marginRight: 8 }} />Особености</h3>
                             <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                                <Tag><span className="tag-inner"><Icon name="elevator" />Асансьор</span></Tag>
-                                <Tag><span className="tag-inner"><Icon name="parking" />Паркинг</span></Tag>
-                                <Tag><span className="tag-inner"><Icon name="access" />Контролиран достъп</span></Tag>
-                                <Tag><span className="tag-inner"><Icon name="storage" />Склад</span></Tag>
-                                <Tag><span className="tag-inner"><Icon name="heat" />ТЕЦ</span></Tag>
-                                <Tag><span className="tag-inner"><Icon name="ac" />Климатизация</span></Tag>
+                                <Tag icon="pi pi-sort" value="Асансьор" />
+                                <Tag icon="pi pi-car" value="Паркинг" />
+                                <Tag icon="pi pi-shield" value="Контролиран достъп" />
+                                <Tag icon="pi pi-box" value="Склад" />
+                                <Tag icon="pi pi-sun" value="ТЕЦ" />
+                                <Tag icon="pi pi-refresh" value="Климатизация" />
                             </div>
-
                             <Divider />
-
                             <h3 className="section-title"><i className="pi pi-images" style={{ marginRight: 8 }} />План</h3>
                             <div className="planph">План на имота (плейсхолдър)</div>
-
                             <Divider />
-
                             <h3 className="section-title"><i className="pi pi-map-marker" style={{ marginRight: 8 }} />Локация</h3>
-                            {/* <div className="mapph">Карта (плейсхолдър за интеграция)
-                                <div><iframe
-                                    src={`https://www.google.com/maps?q=${offerData?.location}&output=embed`}
-                                    width="50%"
-                                    height="300"
-                                    style={{ border: 0 }}
-                                    allowFullScreen
-                                    loading="lazy"
-                                ></iframe></div>
-                            </div> */}
                             <div className="mapph">
                                 <iframe
                                     src={`https://www.google.com/maps?q=${offerData?.district ? offerData?.district : offerData?.location}&output=embed`}
@@ -332,15 +217,11 @@ export const OfferPageChatGPT = () => {
                                     loading="lazy"
                                 ></iframe>
                             </div>
-
                             <Divider />
-
                             <h3 className="section-title"><i className="pi pi-calculator" style={{ marginRight: 8 }} />Финанси</h3>
                             {/* <MortgageCalculator price={Number(offerData?.price)} /> */}
                             <CreditCalculator price={Number(offerData?.price)} />
-
                             <Divider />
-
                             <h3 className="section-title"><i className="pi pi-file" style={{ marginRight: 8 }} />Документи</h3>
                             <ul style={{ margin: "6px 0" }}>
                                 <li>Скица на имота (налично)</li>
@@ -377,10 +258,6 @@ export const OfferPageChatGPT = () => {
                         </section>
                     </aside>
                 </section>
-
-                {/* <footer>
-          © 2025 Acme Estates — демо страница (PrimeReact/TypeScript, светла тема)
-        </footer> */}
             </main>
 
             <div className="chat-fab" style={{ position: 'fixed', right: 18, bottom: 18, zIndex: 70 }}>

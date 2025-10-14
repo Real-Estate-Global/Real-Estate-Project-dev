@@ -20,6 +20,7 @@ type Props = {
   onGetProfileData: () => void;
 }
 export const MyOffers = ({ onGetProfileData }: Props) => {
+  const navigate = useNavigate();
   const [deleteDialogState, setDeleteDialogState] = useState<{
     isOpen: boolean;
     id: string | null;
@@ -121,23 +122,30 @@ export const MyOffers = ({ onGetProfileData }: Props) => {
       onEditOfferClose,
     ]
   );
+  // const onEditOfferClick = useCallback(
+  //   (id: string, values: OfferType) => {
+  //     setEditDialogState({
+  //       isOpen: true,
+  //       id,
+  //       initialValues: values,
+  //     });
+  //   },
+  //   [setEditDialogState]
+  // );
+
   const onEditOfferClick = useCallback(
     (id: string, values: OfferType) => {
-      setEditDialogState({
-        isOpen: true,
-        id,
-        initialValues: values,
-      });
+      navigate(`/properties/edit/${id}`)
     },
-    [setEditDialogState]
+    []
   );
+
+  // TODO: onEditOfferClick to be removed
 
   // TODO: better login prompt
   if (!isAuthenticated) {
     return <div>Login please</div>;
   }
-
-  const navigate = useNavigate(); 
 
   return (
     <div>

@@ -224,12 +224,12 @@ export const MyProfile = () => {
         <div className="profile-page">
             <Toast ref={toast} />
             <ConfirmDialog />
-            <header className="header">
+            {/* <header className="header">
                 <div className="container header-inner">
                     <div className="logo"><span className="dot" /> Acme Estates</div>
                     <div className="sub">Профил и настройки</div>
                 </div>
-            </header>
+            </header> */}
 
             <main className="container">
                 <section className="hero">

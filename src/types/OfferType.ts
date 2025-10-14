@@ -7,6 +7,7 @@ export type OfferType = {
   district: string;
   rooms: number;
   floor: number;
+  totalFloors?: number;
   number: string;
   currency: string;
   area: number;
@@ -15,8 +16,17 @@ export type OfferType = {
   price: number;
   visited: boolean;
   images: ImageFileType[];
-  constructionType: string
+  constructionType?: string;
+  title: string;
+  address?: string;
+  baths?: number;
+  heating?: boolean,
+  features?: string[],
+  tags?: string[],
+  isNew?: boolean,
+  exclusive?: boolean
 };
+
 
 export enum OfferFormDataEnum {
   PropertyType = "propertyType",
