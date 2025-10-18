@@ -4,7 +4,15 @@ import "./App.css";
 import "./styles/index.css";
 
 import { Header } from "./components/Header/Header";
+import { HomePage } from "./components/HomePage";
+import { Login } from "./components/Login/Login";
+import { SignUp } from "./components/SignUp/SignUp";
+import { PublicOfferPage } from "./components/OfferPage/PublicOfferPage";
 import { Path } from "./paths";
+import { Logout } from "./components/Logout";
+import { MyOffers } from "./components/MyOffers/MyOffers";
+import { MyOfferPage } from "./components/OfferPage/MyOfferPage";
+import { Profile } from "./components/Profile/Profile";
 import { Loader } from "./components/Loader";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { authSliceActions, authSliceSelectors } from "./store/slices/auth";
@@ -18,10 +26,10 @@ import { Footer } from "./components/Footer/Footer"
 import { NotificationsContainer, NotificationManager } from "./components/Notifications";
 
 function App() {
-  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [login, { isLoading: isLoginLoading, isError }] = useLoginMutation();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [getProfileData, { isLoading: isGetProfileDataLoading }] = useGetProfileDataMutation();
+  const [getProfileData, { isLoading: isGetProfileDataLoading, isError: getProfileDataError }] = useGetProfileDataMutation();
   const isAuthenticated = useAppSelector(authSliceSelectors.isAuthenticated);
 
   const onGetProfileData = async () => {
@@ -66,7 +74,7 @@ function App() {
       navigate(Path.Home);
 
       NotificationManager.showSuccess({
-        message: "Успешно влязохте в профила си!",
+        message: "Успено влязхте в профила си!",
       });
     }, [])
   const onLoginSubmit =
@@ -83,6 +91,22 @@ function App() {
       <Header />
       <Loader show={isLoginLoading || isGetProfileDataLoading} />
       <NotificationsContainer />
+      <Routes>
+        <Route path="/" element={<HomePage onGetProfileData={onGetProfileData} />}></Route>
+        <Route
+          path="/login"
+          element={<Login loginSubmitHandler={onLoginSubmit} />}
+        ></Route>
+        <Route
+          path="/signup"
+          element={<SignUp loginSubmitHandler={onLoginSubmit} />}
+        ></Route>
+        <Route path="/properties/:offerId" element={<PublicOfferPage />}></Route>
+        <Route path={Path.Logout} element={<Logout />}></Route>
+        <Route path={Path.MyOffers} element={<MyOffers onGetProfileData={onGetProfileData} />}></Route>
+        <Route path="/secure/properties/:_id" element={<MyOfferPage />}></Route>
+        <Route path={Path.MyProfile} element={<Profile onGetProfileData={onGetProfileData} />}></Route>
+      </Routes>
       <Footer />
     </>
   );
