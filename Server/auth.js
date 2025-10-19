@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const MongoDB = require("./db");
-
+//test
 const authenticateUser = (req, res, next) => {
     try {
         const token = req.headers['x-authorization'].split(' ')[1];
@@ -8,7 +8,7 @@ const authenticateUser = (req, res, next) => {
         // Verify the token
         const decodedToken = jwt.verify(token, 'secretKey');
 
-        // Attach the user ID to the request object
+        // Attach the user the request object
         req.userId = decodedToken.userId;
 
         next();
