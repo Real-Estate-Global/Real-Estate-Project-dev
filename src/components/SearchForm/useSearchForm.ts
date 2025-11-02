@@ -32,7 +32,7 @@ export const useSearchForm = ({
         values,
         onChange: onFormChange,
         setValues
-    } = useForm(() => { }, defaultFormValues);
+    } = useForm(() => {}, defaultFormValues);
     useEffect(() => {
         const filteredValues = updatedFormValuesExternal
             ? Object.keys(updatedFormValuesExternal).reduce((acc, key) => {
@@ -58,7 +58,7 @@ export const useSearchForm = ({
                 | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
                 | DropdownChangeEvent
         ) => {
-
+            console.log('onChange called with event:', e);
             onFormChange(e);
             if (e.target && e.target.value !== null) {
                 onFiltersChange && onFiltersChange({

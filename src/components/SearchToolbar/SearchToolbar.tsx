@@ -16,7 +16,7 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
 import { useGetCitiesQuery, useGetSelectedFiltersMutation } from "../../store/api/searchData";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
-import { propertyTypes } from "../../const";
+import { FILTER_CHANGE_DEBOUNCE_TIME, propertyTypes, SEARCH_DEBOUNCE_TIME } from "../../const";
 import { filtersSliceActions } from "../../store/slices/filters";
 import { useAppDispatch } from "../../store/hooks";
 import debounce from "lodash/debounce";
@@ -34,14 +34,25 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
     const cities = getCitiesQuery.data;
     const [searchString, setSearchString] = useState("");
     const [getSelectedFiltres] = useGetSelectedFiltersMutation();
-    const [selectedFiltersExternal, setSelectedFiltersExternal] = useState<Partial<FiltersType> | null>(null)
+    const [selectedFiltersInternal, setSelectedFiltersInternal] = useState<Partial<FiltersType> | null>(null)
     const overlayPanelRef: any = useRef(null);
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
     const controllerRef = useRef<AbortController | null>(null);
 
+    const debouncedSetSelectedFilters = useMemo(
+        () =>
+            debounce((filters: Partial<FiltersType> | null) => {
+                dispatch(filtersSliceActions.setSelectedFilters(filters));
+            }, FILTER_CHANGE_DEBOUNCE_TIME),
+        [dispatch]
+    );
+
     useEffect(() => {
-        dispatch(filtersSliceActions.setSelectedFilters(selectedFiltersExternal));
-    }, [selectedFiltersExternal]);
+        debouncedSetSelectedFilters(selectedFiltersInternal ?? null);
+        return () => {
+            debouncedSetSelectedFilters.cancel();
+        };
+    }, [selectedFiltersInternal, debouncedSetSelectedFilters]);
 
     const onSearchClick = useCallback(async (params: { searchString: string }) => {
         try {
@@ -69,10 +80,10 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                     }, null);
 
                 if (newSelectedFilters) {
-                    setSelectedFiltersExternal(newSelectedFilters);
+                    setSelectedFiltersInternal(newSelectedFilters);
                 }
             } else {
-                setSelectedFiltersExternal(null);
+                setSelectedFiltersInternal(null);
             }
         } catch (e: any) {
             console.error("Error::onSearchCLick", e);
@@ -114,10 +125,10 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         }, null);
 
                     if (newSelectedFilters) {
-                        setSelectedFiltersExternal(newSelectedFilters);
+                        setSelectedFiltersInternal(newSelectedFilters);
                     }
                 } else {
-                    setSelectedFiltersExternal(null);
+                    setSelectedFiltersInternal(null);
                 }
             } catch (e: any) {
                 console.error("Error::onSearchCLick", e);
@@ -129,7 +140,7 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                     controllerRef.current = null;
                 }
             }
-        }, 1000)
+        }, SEARCH_DEBOUNCE_TIME);
     }, [controllerRef.current]);
 
     const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
@@ -155,15 +166,11 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
         </div>
     );
     const onFiltersChange = useCallback((params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => {
-        dispatch(filtersSliceActions.setSelectedFilters({
-            ...(selectedFilters || {}),
-            [params.key]: params.value,
-        }));
-        setSelectedFiltersExternal((prev) => ({
+        setSelectedFiltersInternal((prev) => ({
             ...prev,
             [params.key]: params.value,
         }));
-    }, [selectedFilters]);
+    }, []);
 
     const centerContent = (
         <div className="search-wrapper">
@@ -188,9 +195,9 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         onClick={(e) => overlayPanelRef?.current?.toggle(e)}
                         style={{ cursor: "pointer", marginLeft: "12px" }}
                     >
-                        {selectedFiltersExternal && (
+                        {selectedFiltersInternal && (
                             <Badge
-                                value={Object.keys(selectedFiltersExternal).length}
+                                value={Object.keys(selectedFiltersInternal).length}
                                 style={{
                                     fontSize: "0.5rem",
                                     minWidth: "15px",
@@ -223,7 +230,11 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         onClick={() => onSearchClick({ searchString })}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
-                        <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
+                        <SearchForm
+                            updatedFormValuesExternal={selectedFiltersInternal}
+                            onFiltersChange={onFiltersChange}
+                            cities={cities}
+                        />
                     </OverlayPanel>
                 </IconField>
                 <div className="search-input-homepage-wrapper">

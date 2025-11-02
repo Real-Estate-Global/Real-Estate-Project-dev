@@ -12,3 +12,6 @@ export const propertyTypes = [
     "Търговско помещение",
     "Бизнес предложения"
 ];
+
+export const SEARCH_DEBOUNCE_TIME = 1200;
+export const FILTER_CHANGE_DEBOUNCE_TIME = 100;

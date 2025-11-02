@@ -11,6 +11,8 @@ type Props = {
 export const HomePage = ({ onGetProfileData }: Props) => {
   const { filteredOffers, selectedFilters, isLoading } = useGetFilteredOffers();
 
+  console.log('selectedFilters:', selectedFilters);
+  console.log('filteredOffers:', filteredOffers);
   return (
     <div className="home-page-wrapper">
       <Loader show={isLoading} />
