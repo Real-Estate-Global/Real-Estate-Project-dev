@@ -33,13 +33,13 @@ export const filtersSlice = createSlice({
 
   extraReducers: (builder) => {
     builder.addMatcher(
-      searchDataApi.endpoints.getSelectedFitlers.matchPending,
+      searchDataApi.endpoints.getSelectedFilters.matchPending,
       (state) => {
         state.isLoading = true;
       }
     );
     builder.addMatcher(
-      searchDataApi.endpoints.getSelectedFitlers.matchFulfilled,
+      searchDataApi.endpoints.getSelectedFilters.matchFulfilled,
       (state, action) => {
         state.isLoading = false;
         // TODO: do not apply from server when null?
@@ -47,7 +47,7 @@ export const filtersSlice = createSlice({
       }
     );
     builder.addMatcher(
-      searchDataApi.endpoints.getSelectedFitlers.matchRejected,
+      searchDataApi.endpoints.getSelectedFilters.matchRejected,
       (state) => {
         state.isLoading = false;
       }

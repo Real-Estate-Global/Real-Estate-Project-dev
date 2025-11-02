@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { CityType  } from "../../types/SearchDataType";
+import { CityType } from "../../types/SearchDataType";
 import { FiltersType } from "../../types/FiltersType";
 import { BASE_URL } from "./const";
 
@@ -31,13 +31,14 @@ export const searchDataApi = createApi({
       },
     });
 
-    const getSelectedFitlers = builder.mutation<Partial<FiltersType>, string>({
-      queryFn: async (searchString) => {
+    const getSelectedFilters = builder.mutation<Partial<FiltersType>, { searchString: string; signal?: AbortSignal }>({
+      queryFn: async ({ searchString, signal }) => {
         try {
           const response = await fetch(
-            `${BASE_URL}/data/search/getSelectedFitlersAI?searchString=${searchString}`,
+            `${BASE_URL}/data/search/getSelectedFiltersAI?searchString=${searchString}`,
             {
               method: "GET",
+              signal,
             }
           );
 
@@ -55,10 +56,10 @@ export const searchDataApi = createApi({
 
     return {
       getCities,
-      getSelectedFitlers,
+      getSelectedFilters,
     };
   },
 });
 
-export const { useGetCitiesQuery, useGetSelectedFitlersMutation } =
+export const { useGetCitiesQuery, useGetSelectedFiltersMutation } =
   searchDataApi;

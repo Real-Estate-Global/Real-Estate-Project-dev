@@ -7,13 +7,14 @@ import {
     ChangeEventHandler,
     useCallback,
     useEffect,
+    useMemo,
     useRef,
     useState,
 } from "react";
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
-import { useGetCitiesQuery, useGetSelectedFitlersMutation } from "../../store/api/searchData";
+import { useGetCitiesQuery, useGetSelectedFiltersMutation } from "../../store/api/searchData";
 import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
 import { propertyTypes } from "../../const";
 import { filtersSliceActions } from "../../store/slices/filters";
@@ -21,6 +22,7 @@ import { useAppDispatch } from "../../store/hooks";
 import debounce from "lodash/debounce";
 import { Dropdown } from "primereact/dropdown";
 import { onlyUnique } from "../../utils";
+import { NotificationManager } from "../Notifications";
 
 type Props = {
     selectedFilters: Partial<FiltersType> | null
@@ -31,19 +33,19 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
     const getCitiesQuery = useGetCitiesQuery();
     const cities = getCitiesQuery.data;
     const [searchString, setSearchString] = useState("");
-    const [getSelectedFiltres] = useGetSelectedFitlersMutation();
+    const [getSelectedFiltres] = useGetSelectedFiltersMutation();
     const [selectedFiltersExternal, setSelectedFiltersExternal] = useState<Partial<FiltersType> | null>(null)
     const overlayPanelRef: any = useRef(null);
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
+    const controllerRef = useRef<AbortController | null>(null);
 
     useEffect(() => {
         dispatch(filtersSliceActions.setSelectedFilters(selectedFiltersExternal));
     }, [selectedFiltersExternal]);
-    console.log('selectedFiltersExternal', selectedFiltersExternal)
-    console.log('selectedFilters', selectedFilters)
-    const onSearchClick = async () => {
+
+    const onSearchClick = useCallback(async (params: { searchString: string }) => {
         try {
-            const result = await getSelectedFiltres(searchString);
+            const result = await getSelectedFiltres({ searchString: params.searchString });
             const data = result.data;
             if (data) {
                 const filterKeys = Object.keys(data) as Array<keyof typeof data>;
@@ -74,16 +76,69 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
             }
         } catch (e: any) {
             console.error("Error::onSearchCLick", e);
+            NotificationManager.showError({
+                message: "Грешка при търсене. Моля, опитайте отново.",
+            });
         }
-    };
+    }, []);
+    const debounceOnSearchClick = useMemo(() => {
+        return debounce(async (params: { searchString: string }) => {
+            if (controllerRef.current) {
+                controllerRef.current.abort();
+            }
+            const c = new AbortController();
+            controllerRef.current = c;
+
+            try {
+                const result = await getSelectedFiltres({ searchString: params.searchString, signal: c.signal });
+                const data = result.data;
+                if (data) {
+                    const filterKeys = Object.keys(data) as Array<keyof typeof data>;
+
+                    const newSelectedFilters =
+                        filterKeys.reduce<Partial<FiltersType> | null>((acc, key) => {
+                            if (data[key]) {
+                                if (acc !== null) {
+                                    return {
+                                        ...acc,
+                                        [key]: data[key],
+                                    };
+                                }
+
+                                return {
+                                    [key]: data[key],
+                                };
+                            }
+
+                            return acc;
+                        }, null);
+
+                    if (newSelectedFilters) {
+                        setSelectedFiltersExternal(newSelectedFilters);
+                    }
+                } else {
+                    setSelectedFiltersExternal(null);
+                }
+            } catch (e: any) {
+                console.error("Error::onSearchCLick", e);
+                NotificationManager.showError({
+                    message: "Грешка при търсене. Моля, опитайте отново.",
+                });
+            } finally {
+                if (controllerRef.current === c) {
+                    controllerRef.current = null;
+                }
+            }
+        }, 1000)
+    }, [controllerRef.current]);
+
     const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
         (e) => {
             setSearchString(e.target.value);
-            const debouncedSearch = useRef(debounce(onSearchClick, 1000)).current;
-            // TODO: fix this
-            debouncedSearch();
+
+            debounceOnSearchClick({ searchString: e.target.value });
         },
-        [setSearchString, onSearchClick]
+        [debounceOnSearchClick]
     );
     const startContent = (
         <div className="flex flex-row flex-wrap gap-2">
@@ -155,11 +210,17 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                             boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
                         }}
                         onChange={onSearchInputChange}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                onSearchClick({ searchString });
+                                debounceOnSearchClick.cancel();
+                            }
+                        }}
                     />
                     <InputIcon
                         className="pi pi-search"
                         style={{ cursor: "pointer", marginRight: "10px" }}
-                        onClick={onSearchClick}
+                        onClick={() => onSearchClick({ searchString })}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
                         <SearchForm updatedFormValuesExternal={selectedFiltersExternal} onFiltersChange={onFiltersChange} cities={cities} />
@@ -200,10 +261,32 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                     />
                     <div className="price-input-container">
                         <div className="icon">€</div>
-                        <input type="text" placeholder="100,000" />
+                        <input
+                            type="text"
+                            value={
+                                selectedFilters && selectedFilters[FiltersTypeEnum.BudgetLowest]
+                                    ? selectedFilters[FiltersTypeEnum.BudgetLowest]
+                                    : ""
+                            }
+                            placeholder="100,000"
+                            onChange={(e) => {
+                                onFiltersChange({ key: FiltersTypeEnum.BudgetLowest, value: Number(e.target.value) });
+                            }}
+                        />
                         <div className="divider"></div>
                         <div className="icon">€</div>
-                        <input type="text" placeholder="100,000" />
+                        <input
+                            type="text"
+                            value={
+                                selectedFilters && selectedFilters[FiltersTypeEnum.BudgetHighest]
+                                    ? selectedFilters[FiltersTypeEnum.BudgetHighest]
+                                    : ""
+                            }
+                            placeholder="100,000"
+                            onChange={(e) => {
+                                onFiltersChange({ key: FiltersTypeEnum.BudgetHighest, value: Number(e.target.value) });
+                            }}
+                        />
                     </div>
                 </div>
             </div>

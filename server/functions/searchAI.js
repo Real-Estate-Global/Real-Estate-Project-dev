@@ -44,7 +44,7 @@ async function getFiltersFromSearchStringAI(searchString) {
     }
 }
 
-const getSelectedFitlersAI = async (req, res) => {
+const getSelectedFiltersAI = async (req, res) => {
     try {
         const searchString = req.query.searchString;
         const filters = await getFiltersFromSearchStringAI(searchString);
@@ -58,4 +58,4 @@ const getSelectedFitlersAI = async (req, res) => {
     }
 };
 
-module.exports = { getSelectedFitlersAI };
+module.exports = { getSelectedFiltersAI };

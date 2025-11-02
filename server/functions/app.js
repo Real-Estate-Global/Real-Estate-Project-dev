@@ -23,7 +23,7 @@ const {
     getSearchData,
 } = require('./search')
 const {
-    getSelectedFitlersAI,
+    getSelectedFiltersAI,
 } = require('./searchAI')
 
 const app = express();
@@ -37,7 +37,7 @@ app.get('/api/user/logout', userLogout);
 app.get('/api/user/me', authenticateUser, getUserData);
 app.put('/api/user/me', authenticateUser, editUserProfile);
 
-app.get('/api/data/search/getSelectedFitlersAI', getSelectedFitlersAI);
+app.get('/api/data/search/getSelectedFiltersAI', getSelectedFiltersAI);
 app.get('/api/data/search/searchData', getSearchData);
 app.get('/api/data/offers', getPublicOffers);
 app.get('/api/data/offers/:id', getPublicOfferById);
