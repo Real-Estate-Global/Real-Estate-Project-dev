@@ -27,20 +27,59 @@ This is the prompt for the AI model:
 `;
 
 function parseJsonFromString(str) {
+    // First, try to find JSON-like content between backticks
+    const backtickMatch = str.match(/```(?:json)?\s*({[\s\S]*?})\s*```/);
+    if (backtickMatch) {
+        return JSON.parse(backtickMatch[1].trim());
+    }
+
+    // If no backticks, try to find the first occurrence of a JSON object
+    const objectMatch = str.match(/{[\s\S]*?}/);
+    if (objectMatch) {
+        return JSON.parse(objectMatch[0].trim());
+    }
+
+    // If still no match, clean up the string and try to parse
     const cleaned = str.replace(/^\s*```(?:json)?|```\s*$/g, '').trim();
-    return JSON.parse(cleaned);
+    if (cleaned.startsWith('{') && cleaned.endsWith('}')) {
+        return JSON.parse(cleaned);
+    }
+
+    throw new Error('Could not find valid JSON in the response');
 }
 
 async function getFiltersFromSearchStringAI(searchString) {
     try {
+        console.log('searchString:', searchString);
         const result = await genAI.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: SYSTEM_PROMPT + searchString,
+            contents: [
+                {
+                    role: "user",
+                    parts: [{ text: SYSTEM_PROMPT + "\n\nUser query: " + searchString }]
+                }
+            ]
         });
+        console.log('AI model raw response:', JSON.stringify(result, null, 2));
+        
+        if (!result?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            throw new Error('Unexpected API response structure');
+        }
+
         const jsonText = result.candidates[0].content.parts[0].text;
-        return parseJsonFromString(jsonText);
+        console.log('Raw JSON text from AI:', jsonText);
+        
+        try {
+            // Try direct parsing first
+            return JSON.parse(jsonText);
+        } catch (parseError) {
+            console.log('Direct parsing failed, trying cleanup:', parseError);
+            // If direct parsing fails, try the cleanup method
+            return parseJsonFromString(jsonText);
+        }
     } catch (error) {
-        throw new Error('Failed to parse model response as JSON', error);
+        console.error('Full error details:', error);
+        throw new Error(`Failed to parse model response as JSON: ${error.message}`);
     }
 }
 
@@ -52,6 +91,7 @@ const getSelectedFiltersAI = async (req, res) => {
             filters,
         });
     } catch (error) {
+        console.error('Error fetching search data:', error);
         res
             .status(500)
             .json({ error: "Something went wrong while fetching the searchData" });

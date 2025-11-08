@@ -3,155 +3,31 @@ import { IconField } from "primereact/iconfield";
 import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
-import {
-    ChangeEventHandler,
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from "react";
+import { useMemo, useRef, useState, } from "react";
 import { Badge } from "primereact/badge";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { SearchForm } from "../SearchForm/SearchForm";
-import { useGetCitiesQuery, useGetSelectedFiltersMutation } from "../../store/api/searchData";
-import { FiltersType, FiltersTypeEnum } from "../../types/FiltersType";
-import { FILTER_CHANGE_DEBOUNCE_TIME, propertyTypes, SEARCH_DEBOUNCE_TIME } from "../../const";
-import { filtersSliceActions } from "../../store/slices/filters";
-import { useAppDispatch } from "../../store/hooks";
-import debounce from "lodash/debounce";
+import { useGetCitiesQuery } from "../../store/api/searchData";
+import { FiltersTypeEnum } from "../../types/FiltersType";
+import { propertyTypes } from "../../const";
 import { Dropdown } from "primereact/dropdown";
 import { onlyUnique } from "../../utils";
-import { NotificationManager } from "../Notifications";
+import { useSearchToolbar } from "./useSearchToolbar";
 
-type Props = {
-    selectedFilters: Partial<FiltersType> | null
-};
 
-export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
-    const dispatch = useAppDispatch();
+export const SearchToolbar: React.FC = () => {
     const getCitiesQuery = useGetCitiesQuery();
     const cities = getCitiesQuery.data;
-    const [searchString, setSearchString] = useState("");
-    const [getSelectedFiltres] = useGetSelectedFiltersMutation();
-    const [selectedFiltersInternal, setSelectedFiltersInternal] = useState<Partial<FiltersType> | null>(null)
     const overlayPanelRef: any = useRef(null);
     const [activeButton, setActiveButton] = useState<'buy' | 'rent'>("buy");
-    const controllerRef = useRef<AbortController | null>(null);
+    const {
+        selectedFiltersInternal,
+        onSearchInputChange,
+        handleSearch,
+        onFiltersChange,
+    } = useSearchToolbar();
 
-    const debouncedSetSelectedFilters = useMemo(
-        () =>
-            debounce((filters: Partial<FiltersType> | null) => {
-                dispatch(filtersSliceActions.setSelectedFilters(filters));
-            }, FILTER_CHANGE_DEBOUNCE_TIME),
-        [dispatch]
-    );
-
-    useEffect(() => {
-        debouncedSetSelectedFilters(selectedFiltersInternal ?? null);
-        return () => {
-            debouncedSetSelectedFilters.cancel();
-        };
-    }, [selectedFiltersInternal, debouncedSetSelectedFilters]);
-
-    const onSearchClick = useCallback(async (params: { searchString: string }) => {
-        try {
-            const result = await getSelectedFiltres({ searchString: params.searchString });
-            const data = result.data;
-            if (data) {
-                const filterKeys = Object.keys(data) as Array<keyof typeof data>;
-
-                const newSelectedFilters =
-                    filterKeys.reduce<Partial<FiltersType> | null>((acc, key) => {
-                        if (data[key]) {
-                            if (acc !== null) {
-                                return {
-                                    ...acc,
-                                    [key]: data[key],
-                                };
-                            }
-
-                            return {
-                                [key]: data[key],
-                            };
-                        }
-
-                        return acc;
-                    }, null);
-
-                if (newSelectedFilters) {
-                    setSelectedFiltersInternal(newSelectedFilters);
-                }
-            } else {
-                setSelectedFiltersInternal(null);
-            }
-        } catch (e: any) {
-            console.error("Error::onSearchCLick", e);
-            NotificationManager.showError({
-                message: "Грешка при търсене. Моля, опитайте отново.",
-            });
-        }
-    }, []);
-    const debounceOnSearchClick = useMemo(() => {
-        return debounce(async (params: { searchString: string }) => {
-            if (controllerRef.current) {
-                controllerRef.current.abort();
-            }
-            const c = new AbortController();
-            controllerRef.current = c;
-
-            try {
-                const result = await getSelectedFiltres({ searchString: params.searchString, signal: c.signal });
-                const data = result.data;
-                if (data) {
-                    const filterKeys = Object.keys(data) as Array<keyof typeof data>;
-
-                    const newSelectedFilters =
-                        filterKeys.reduce<Partial<FiltersType> | null>((acc, key) => {
-                            if (data[key]) {
-                                if (acc !== null) {
-                                    return {
-                                        ...acc,
-                                        [key]: data[key],
-                                    };
-                                }
-
-                                return {
-                                    [key]: data[key],
-                                };
-                            }
-
-                            return acc;
-                        }, null);
-
-                    if (newSelectedFilters) {
-                        setSelectedFiltersInternal(newSelectedFilters);
-                    }
-                } else {
-                    setSelectedFiltersInternal(null);
-                }
-            } catch (e: any) {
-                console.error("Error::onSearchCLick", e);
-                NotificationManager.showError({
-                    message: "Грешка при търсене. Моля, опитайте отново.",
-                });
-            } finally {
-                if (controllerRef.current === c) {
-                    controllerRef.current = null;
-                }
-            }
-        }, SEARCH_DEBOUNCE_TIME);
-    }, [controllerRef.current]);
-
-    const onSearchInputChange: ChangeEventHandler<HTMLInputElement> = useCallback(
-        (e) => {
-            setSearchString(e.target.value);
-
-            debounceOnSearchClick({ searchString: e.target.value });
-        },
-        [debounceOnSearchClick]
-    );
-    const startContent = (
+    const startContent = useMemo(() => (
         <div className="flex flex-row flex-wrap gap-2">
             <Button
                 type="button"
@@ -164,15 +40,9 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                 badgeClassName="p-badge-info"
             />
         </div>
-    );
-    const onFiltersChange = useCallback((params: { key: keyof FiltersType; value: FiltersType[keyof FiltersType] }) => {
-        setSelectedFiltersInternal((prev) => ({
-            ...prev,
-            [params.key]: params.value,
-        }));
-    }, []);
+    ), []);
 
-    const centerContent = (
+    const centerContent = useMemo(() => (
         <div className="search-wrapper">
             <div className="buttons-wrapper">
                 <button
@@ -219,15 +89,14 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         onChange={onSearchInputChange}
                         onKeyDown={(e) => {
                             if (e.key === 'Enter') {
-                                onSearchClick({ searchString });
-                                debounceOnSearchClick.cancel();
+                                handleSearch();
                             }
                         }}
                     />
                     <InputIcon
                         className="pi pi-search"
                         style={{ cursor: "pointer", marginRight: "10px" }}
-                        onClick={() => onSearchClick({ searchString })}
+                        onClick={handleSearch}
                     />
                     <OverlayPanel ref={overlayPanelRef} closeOnEscape dismissable={true}>
                         <SearchForm
@@ -241,8 +110,8 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                     <Dropdown
                         style={{ width: "240px" }}
                         value={
-                            selectedFilters && selectedFilters[FiltersTypeEnum.PropertyType]
-                                ? selectedFilters[FiltersTypeEnum.PropertyType]
+                            selectedFiltersInternal && selectedFiltersInternal[FiltersTypeEnum.PropertyType]
+                                ? selectedFiltersInternal[FiltersTypeEnum.PropertyType]
                                 : propertyTypes[0]
                         }
                         name={FiltersTypeEnum.PropertyType}
@@ -257,8 +126,8 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                     <Dropdown
                         style={{ width: "240px" }}
                         value={
-                            selectedFilters && selectedFilters[FiltersTypeEnum.City]
-                                ? selectedFilters[FiltersTypeEnum.City]
+                            selectedFiltersInternal && selectedFiltersInternal[FiltersTypeEnum.City]
+                                ? selectedFiltersInternal[FiltersTypeEnum.City]
                                 : "София"
                         }
                         name={FiltersTypeEnum.PropertyType}
@@ -275,8 +144,8 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         <input
                             type="text"
                             value={
-                                selectedFilters && selectedFilters[FiltersTypeEnum.BudgetLowest]
-                                    ? selectedFilters[FiltersTypeEnum.BudgetLowest]
+                                selectedFiltersInternal && selectedFiltersInternal[FiltersTypeEnum.BudgetLowest]
+                                    ? selectedFiltersInternal[FiltersTypeEnum.BudgetLowest]
                                     : ""
                             }
                             placeholder="100,000"
@@ -289,8 +158,8 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                         <input
                             type="text"
                             value={
-                                selectedFilters && selectedFilters[FiltersTypeEnum.BudgetHighest]
-                                    ? selectedFilters[FiltersTypeEnum.BudgetHighest]
+                                selectedFiltersInternal && selectedFiltersInternal[FiltersTypeEnum.BudgetHighest]
+                                    ? selectedFiltersInternal[FiltersTypeEnum.BudgetHighest]
                                     : ""
                             }
                             placeholder="100,000"
@@ -302,7 +171,7 @@ export const SearchToolbar: React.FC<Props> = ({ selectedFilters }) => {
                 </div>
             </div>
         </div>
-    );
+    ), [onFiltersChange, onSearchInputChange, handleSearch, selectedFiltersInternal, cities, activeButton]);
 
     const endContent = <></>;
 

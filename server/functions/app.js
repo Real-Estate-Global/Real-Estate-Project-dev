@@ -1,7 +1,7 @@
-const express = require('express')
-const cors = require('cors')
-const serverless = require('serverless-http')
-const { authenticateUser, authorizeUser } = require('./auth')
+const express = require('express');
+const cors = require('cors');
+const serverless = require('serverless-http');
+const { authenticateUser, authorizeUser } = require('./auth');
 const {
     checkUserRegister,
     userRegister,
@@ -9,7 +9,7 @@ const {
     userLogout,
     getUserData,
     editUserProfile
-} = require('./user')
+} = require('./user');
 const {
     getPublicOffers,
     getPublicOfferById,
@@ -18,13 +18,13 @@ const {
     getOfferById,
     editOfferById,
     deleteOfferById,
-} = require('./offers')
+} = require('./offers');
 const {
     getSearchData,
-} = require('./search')
+} = require('./search');
 const {
     getSelectedFiltersAI,
-} = require('./searchAI')
+} = require('./searchAI');
 
 const app = express();
 
@@ -58,4 +58,4 @@ app.listen(3000, () => {
     console.log('Server is running on port 3000');
 });
 
-module.exports.handler = serverless(app)
+module.exports.handler = serverless(app);

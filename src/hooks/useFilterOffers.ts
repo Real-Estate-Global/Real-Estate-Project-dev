@@ -18,7 +18,7 @@ export const useGetFilteredOffers = () => {
             await getPublicOffers(params.selectedFilters)
         } catch (e) {
             NotificationManager.showSuccess({
-                message: "Неуспешно взимане на оферти.",
+                message: "Грешка при търсене. Моля, опитайте отново.",
             });
         }
     }, [])
@@ -28,7 +28,6 @@ export const useGetFilteredOffers = () => {
     }, [selectedFilters])
 
     return {
-        selectedFilters,
         filteredOffers: publicOffers,
         isLoading: isPublicOffersLoading || isGetFiltersLoading
     };

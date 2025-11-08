@@ -9,10 +9,8 @@ type Props = {
 }
 
 export const HomePage = ({ onGetProfileData }: Props) => {
-  const { filteredOffers, selectedFilters, isLoading } = useGetFilteredOffers();
+  const { filteredOffers, isLoading } = useGetFilteredOffers();
 
-  console.log('selectedFilters:', selectedFilters);
-  console.log('filteredOffers:', filteredOffers);
   return (
     <div className="home-page-wrapper">
       <Loader show={isLoading} />
@@ -26,7 +24,7 @@ export const HomePage = ({ onGetProfileData }: Props) => {
             <button className="heading-button heading-why-us-button">Why us?</button>
           </div>
         </div>
-        <SearchToolbar selectedFilters={selectedFilters} />
+        <SearchToolbar />
       </div>
       <OfferList offers={filteredOffers} onGetProfileData={onGetProfileData} />
     </div>

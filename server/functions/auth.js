@@ -42,4 +42,4 @@ const authorizeUser = (requiredRole) => async (req, res, next) => {
 module.exports = {
     authenticateUser,
     authorizeUser,
-}
+};

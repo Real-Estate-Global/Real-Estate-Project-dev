@@ -10,7 +10,10 @@ const buildFiltersQuery = (filters: Partial<FiltersType> | null) => {
   let filtersQuery = "?";
 
   for (const item in filters) {
-    filtersQuery += `item=${filters[item as keyof FiltersType]}`;
+    if (!filters[item as keyof FiltersType]) {
+      continue;
+    }
+    filtersQuery += `${item}=${filters[item as keyof FiltersType]}&`;
   }
 
   return filtersQuery;

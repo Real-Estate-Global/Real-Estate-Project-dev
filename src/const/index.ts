@@ -14,4 +14,4 @@ export const propertyTypes = [
 ];
 
 export const SEARCH_DEBOUNCE_TIME = 1200;
-export const FILTER_CHANGE_DEBOUNCE_TIME = 100;
+export const FILTER_CHANGE_DEBOUNCE_TIME = 800;

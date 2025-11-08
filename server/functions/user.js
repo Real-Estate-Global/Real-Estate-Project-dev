@@ -1,11 +1,14 @@
-const MongoDB = require("./db");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
-const { checkSchema } = require("express-validator");
-const dotenv = require('dotenv');
-const path = require('path');
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+import MongoDB from "./db.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+import { checkSchema } from "express-validator";
+import dotenv from 'dotenv';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: resolve(__dirname, '../../.env') });
 
 const checkUserRegister = checkSchema({
     email: { isEmail: true },
@@ -130,11 +133,11 @@ const getUserData = async (req, res) => {
     }
 }
 
-module.exports = {
+export {
     checkUserRegister,
     userRegister,
     userLogin,
     userLogout,
     getUserData,
     editUserProfile,
-}
+};

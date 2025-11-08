@@ -1,7 +1,9 @@
 const MongoDB = require("./db");
 const { v4: uuidv4 } = require("uuid");
-const { getFromS3, uploadToS3, deleteFromS3 } = require("./aws");
-// TODO: delete
+const { getFromS3, uploadToS3 } = require("./aws");
+const cities = require("./data/cities.json");
+
+// TODO: delete deleteFromS3
 const getPropertyWithAwsImages = async (property) => {
     const imagesWithUrls = await Promise.all(property.images.map(async (image) => {
         if (image.key) {
@@ -19,10 +21,27 @@ const getPropertiesWithAwImages = async (properties) => {
 
     return propertiesWithUrls
 }
+const getCityFromCollection = (value) => {
+    const matchedCity = cities.find(city => city.City?.toLowerCase() === value.toLowerCase());
+
+    if (matchedCity) {
+        return matchedCity.City;
+    }
+
+    return null;
+}
+const getDistrictFromCollection = (value) => {
+    const matchedDistrcit = cities.find(city => city.District?.toLowerCase() === value.toLowerCase());
+
+    if (matchedDistrcit) {
+        return matchedDistrcit.District;
+    }
+
+    return null;
+}
 const getPublicOffers = async (req, res) => {
     try {
         // TODO: add pagination 0-100?
-        // TODO: fix filters?
         const propertiesCollection = MongoDB.collection('offers');
         const filters = req.query || {};
         const mongoQuery = {};
@@ -31,11 +50,12 @@ const getPublicOffers = async (req, res) => {
         if (filters.propertyType) {
             mongoQuery.propertyType = filters.propertyType;
         }
+
         if (filters.city) {
-            mongoQuery.city = filters.city;
+            mongoQuery.location = getCityFromCollection(filters.city);
         }
         if (filters.district) {
-            mongoQuery.district = filters.district;
+            mongoQuery.district = getDistrictFromCollection(filters.district);
         }
         // BudgetLowest, BudgetHighest
         if (filters.budgetLowest || filters.budgetHighest) {
@@ -71,10 +91,10 @@ const getPublicOffers = async (req, res) => {
         if (filters.yearOfBuildingLowest || filters.yearOfBuildingHighest) {
             mongoQuery.yearOfBuilding = {};
             if (filters.yearOfBuildingLowest) {
-                mongoQuery.yearOfBuilding.$gte = Number(filters.yearOfBuildingLowest);
+                mongoQuery.yearOfBuilding.$gte = MongoDB.ISODate(filters.yearOfBuildingLowest);
             }
             if (filters.yearOfBuildingHighest) {
-                mongoQuery.yearOfBuilding.$lte = Number(filters.yearOfBuildingHighest);
+                mongoQuery.yearOfBuilding.$lte = MongoDB.ISODate(filters.yearOfBuildingHighest);
             }
         }
 
@@ -82,7 +102,14 @@ const getPublicOffers = async (req, res) => {
         const propertiesWithUrls = await getPropertiesWithAwImages(properties);
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
+        console.error('getPublicOffers error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            filters: req.query,
+            mongoQuery: typeof mongoQuery !== 'undefined' ? mongoQuery : null
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties', details: error.stack });
     }
 }
 const getPublicOfferById = async (req, res) => {
@@ -104,7 +131,14 @@ const getPublicOfferById = async (req, res) => {
             visited: propertyById.visited + 1
         });
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
+        console.error('getPublicOfferById error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            params: req.params,
+            query: typeof query !== 'undefined' ? query : null
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties', details: error.stack });
     }
 }
 const getOffersForUser = async (req, res) => {
@@ -112,11 +146,17 @@ const getOffersForUser = async (req, res) => {
         const propertiesCollection = MongoDB.collection('offers');
         const query = { ownerId: req.userId };
         const properties = await propertiesCollection.find(query).toArray();
-        const propertiesWithUrls = getPropertiesWithAwImages(properties);
+        const propertiesWithUrls = await getPropertiesWithAwImages(properties);
 
         res.status(200).json(propertiesWithUrls);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties' });
+        console.error('getOffersForUser error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            userId: req.userId
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while fetching the properties', details: error.stack });
     }
 }
 const createOffer = async (req, res) => {
@@ -143,7 +183,13 @@ const createOffer = async (req, res) => {
         })
         res.status(200).json(newProperty);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while creating the property' });
+        console.error('createOffer error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            body: req.body
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while creating the property', details: error.stack });
     }
 }
 const getOfferById = async (req, res) => {
@@ -172,7 +218,14 @@ const editOfferById = async (req, res) => {
 
         res.status(200).json(result);
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while editing the property' });
+        console.error('editOfferById error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            params: req.params,
+            body: req.body
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while editing the property', details: error.stack });
     }
 }
 const deleteOfferById = async (req, res) => {
@@ -183,7 +236,13 @@ const deleteOfferById = async (req, res) => {
 
         res.status(200).json({ message: 'Successfully deleted' });
     } catch (error) {
-        res.status(500).json({ error: error.message || 'Something went wrong while deleting the property' });
+        console.error('deleteOfferById error:', {
+            message: error.message,
+            stack: error.stack,
+            error,
+            params: req.params
+        });
+        res.status(500).json({ error: error.message || 'Something went wrong while deleting the property', details: error.stack });
     }
 }
 
@@ -195,4 +254,4 @@ module.exports = {
     getOfferById,
     editOfferById,
     deleteOfferById,
-}
+};
